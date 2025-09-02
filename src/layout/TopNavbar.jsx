@@ -17,15 +17,13 @@ export default function Topbar({ setIsOpen }) {
         <h1 className="font-bold text-lg hidden sm:block">Admin Dashboard</h1>
       </div>
 
-      {/* Right Section */}
       <div className="flex items-center gap-4 flex-shrink-0 ">
         {/* Bell */}
         <button className="p-2 rounded-full 0">
           <Bell className="w-6 h-6 text-black" />
         </button>
 
-        {/* User Profile */}
-        <div className="flex items-center mr-48 gap-2 cursor-pointer  px-3 py-1 rounded">
+        <div className="flex items-center  gap-2 cursor-pointer  px-3 py-1 rounded">
           <UserCircle size={32} className="text-black" />
           <div className="text-black hidden sm:block">
             <p className="text-sm font-medium">John Doe</p>

@@ -1,3 +1,7 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { sidebarLinks } from "../data/SidebarData";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -7,12 +11,15 @@ export default function Sidebar({
   isCollapsed,
   setIsCollapsed,
 }) {
+  const pathname = usePathname();
+
   return (
     <>
-      {/* Mobile Sidebar Modal */}
+      {/* Mobile Sidebar */}
       {isOpen && (
         <div className="fixed inset-0 z-30 bg-black/50 md:hidden">
           <div className="fixed top-0 left-0 h-full w-64 bg-white shadow-xl p-4">
+            {/* Close button */}
             <button
               className="mb-4 p-2 rounded bg-gray-100"
               onClick={() => setIsOpen(false)}
@@ -20,32 +27,42 @@ export default function Sidebar({
               <X className="w-5 h-5" />
             </button>
 
+            {/* Logo */}
             <div className="flex items-center mb-6">
               <span className="ml-2 font-bold text-lg">Flowpense</span>
             </div>
 
+            {/* Links */}
             <nav className="space-y-2">
-              {sidebarLinks.map((link, i) => (
-                <a
-                  key={i}
-                  href={link.path}
-                  className="flex items-center gap-3 p-2 rounded hover:bg-gray-100"
-                >
-                  {link.icon}
-                  <span>{link.name}</span>
-                </a>
-              ))}
+              {sidebarLinks.map((link, i) => {
+                const isActive = pathname === link.path;
+                return (
+                  <Link
+                    key={i}
+                    href={link.path}
+                    className={`flex items-center gap-3 p-2 rounded hover:bg-gray-100 ${
+                      isActive ? "bg-amber-300 font-semibold" : ""
+                    }`}
+                    onClick={() => setIsOpen(false)} // close mobile menu on click
+                  >
+                    {link.icon}
+                    <span>{link.name}</span>
+                  </Link>
+                );
+              })}
             </nav>
           </div>
         </div>
       )}
 
+      {/* Desktop Sidebar */}
       <div
-        className={`hidden md:flex flex-col bg-white shadow-lg h-screen transition-all duration-300 ${
-          isCollapsed ? "w-20" : "w-80"
+        className={`hidden md:flex flex-col border-r bg-white shadow-lg h-screen transition-all duration-300 ${
+          isCollapsed ? "w-20" : "w-48"
         }`}
       >
-        <div className="flex items-center justify-between p-4 ">
+        {/* Logo + Collapse */}
+        <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
             {!isCollapsed && (
               <span className="font-bold text-lg">Flowpense</span>
@@ -65,16 +82,23 @@ export default function Sidebar({
 
         {/* Links */}
         <nav className="flex-1 p-4 space-y-2">
-          {sidebarLinks.map((link, i) => (
-            <a
-              key={i}
-              href={link.path}
-              className="flex items-center gap-3 p-2 rounded hover:bg-gray-100"
-            >
-              {link.icon}
-              {!isCollapsed && <span>{link.name}</span>}
-            </a>
-          ))}
+          {sidebarLinks.map((link, i) => {
+            const isActive = pathname === link.path;
+            return (
+              <Link
+                key={i}
+                href={link.path}
+                className={`flex items-center  gap-3 px-4 py-2 rounded-4xl hover:bg-gray-100 ${
+                  isActive
+                    ? "bg-[#035638] text-[#E5EE7D] font-medium"
+                    : "linkText"
+                }`}
+              >
+                {link.icon}
+                {!isCollapsed && <span className="">{link.name}</span>}
+              </Link>
+            );
+          })}
         </nav>
       </div>
     </>

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=League+Spartan:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=League+Spartan:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import "react-phone-input-2/lib/style.css";
 
 @import "tailwindcss";
@@ -34,6 +35,28 @@
   background: var(--bg-white-0, #fff);
 }
 .labelText{
-  
+
+}
+.linkText{
+  @apply font-medium text-[16px] leading-[16px] tracking-[0%] text-[#838794] 
+}
+.activeLink{
+  @apply font-medium text-[16px] leading-[16px] tracking-[0%] text-[#92c651] bg-green-300 px-4 py-1 rounded-lg
 }
 
+.pageTitle{
+  @apply font-['Bagel_Fat_One'] font-normal text-[24px] leading-[100%] tracking-[0%];
+}
+.pageSubTitle{
+  @apply  font-medium text-[16px] leading-[100%] tracking-[0] text-[#838794];
+}
+.statcardTitle{
+  @apply  font-semibold text-[16px] leading-[100%] tracking-[0%] text-[#838794];
+}
+.statcardNumber{
+  @apply  font-semibold text-[20px] leading-[100%] tracking-[0%] text-[#000000];
+}
+
+.statcardSubTitle{
+  @apply  font-semibold text-[12px] leading-[100%] tracking-[0%] text-[#838794];
+}
