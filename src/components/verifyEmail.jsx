@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LockKeyhole } from "lucide-react";
 
-// ✅ Zod Schema for 6-digit code
+//  Zod Schema for 6-digit code
 const schema = z.object({
   code: z
     .string()
@@ -20,11 +20,11 @@ export default function VerifyAccount({type,email}) {
 
   const onSubmit = (data) => {
     console.log("Verification Code:", data.code);
-    alert("Code Verified ✅");
+    alert("Code Verified ");
   };
 
   const handleResend = () => {
-    alert("Code Resent ✅");
+    alert("Code Resent ");
   };
 
   return (

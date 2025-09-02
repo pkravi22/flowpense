@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
 });
@@ -13,12 +13,16 @@ export default function ForgetPassword() {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
   });
+  const router=useRouter()
 
   const onSubmit = (data) => {
     console.log("Email to verify:", data.email);
     alert(`Verification email sent to ${data.email} ✅`);
   };
 
+  const handleVerifyEmail=()=>{
+     router.push("/verifyEmail");
+  }
   return (
     <div className="min-h-screen flex items-center justify-center px-4 ">
       <div className="w-full sm:max-w-md bg-white rounded-2xl shadow-md p-8">
@@ -47,6 +51,7 @@ export default function ForgetPassword() {
 
           <button
             type="submit"
+            onClick={handleVerifyEmail}
             className="w-full bg-green-800 hover:bg-green-900 text-white py-3 rounded-4xl mt-2"
           >
             Verify Email

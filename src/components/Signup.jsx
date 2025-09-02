@@ -32,7 +32,7 @@ export default function Signup() {
 
   const onSubmit = (data) => {
     console.log("Form Data:", data);
-    alert("Signup Successful ✅");
+    alert("Signup Successful ");
   };
 
   const rules = [
@@ -82,9 +82,7 @@ export default function Signup() {
             <div className="flex items-center inputFeild rounded-lg px-3 py-2">
               <LockKeyhole size={20} className="text-gray-400 pr-2" />
               <input {...register("password")} type={showPassword ? "text" : "password"} placeholder="Enter password" className="w-full text-sm outline-none" />
-              <span onClick={() => setShowPassword(!showPassword)} className="absolute right-3 cursor-pointer text-gray-500">
-                {showPassword ? <Eye  size={18}/> : <EyeOff  size={18}/>}
-              </span>
+             
             </div>
             <div className="flex flex-wrap  gap-2" >
             {rules.map((rule, i) => (
@@ -100,9 +98,7 @@ export default function Signup() {
             <div className="flex items-center inputFeild rounded-lg px-3 py-2">
               <LockKeyhole size={20} className="text-gray-400 pr-2" />
               <input {...register("confirmPassword")} type={showConfirm ? "text" : "password"} placeholder="Confirm password" className="w-full text-sm outline-none" />
-              <span onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 cursor-pointer text-gray-500">
-                {showConfirm ? <Eye  size={18}/> : <EyeOff  size={18}/>}
-              </span>
+              
             </div>
             <p className="text-xs text-red-500 mt-1">{errors.confirmPassword?.message}</p>
           </div>

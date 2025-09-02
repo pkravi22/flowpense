@@ -33,4 +33,7 @@
   @apply border border-[color:var(--stroke-soft-200,#E2E4E9)] shadow-[0_1px_2px_0_rgba(228,229,231,0.24)] rounded-[10px] border-solid;
   background: var(--bg-white-0, #fff);
 }
+.labelText{
+  
+}
 

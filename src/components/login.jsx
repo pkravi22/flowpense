@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail, LockKeyhole } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 // ✅ Zod Schema for login
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -15,8 +15,9 @@ export default function Login() {
   const { register, handleSubmit, formState: { errors }, setError } = useForm({
     resolver: zodResolver(schema),
   });
+  const router=useRouter();
    const handleForgetPassword = () => {
-    alert("Code Resent ✅");
+    router.push("/forget-password");
   };
 
   const onSubmit = (data) => {
@@ -65,7 +66,7 @@ export default function Login() {
           </div>
           <p className="text-xs text-red-500 mt-1">{errors.email?.message}</p>
 
-          {/* Password */}
+          
           <div className="flex items-center inputFeild rounded-lg px-3 py-2 border">
             <span className="text-gray-400 pr-2"><LockKeyhole size={20} /></span>
             <input
@@ -80,7 +81,7 @@ export default function Login() {
          
           
 
-          {/* Login Button */}
+          
           <button
             type="submit"
             className="w-full bg-green-800 hover:bg-green-900 text-white py-3 rounded-4xl mt-2"

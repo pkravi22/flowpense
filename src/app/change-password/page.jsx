@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -98,7 +98,7 @@ export default function ChangePassword() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 w-80 text-center relative">
             <div className="flex justify-center mb-4">
-              <CheckCircle size={48} className="text-green-600" />
+              <Image src="/check.svg" alt="check tick"  priority width={120} height={120} />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Password Changed!</h3>
             <p className="text-sm text-gray-700 mb-6">
