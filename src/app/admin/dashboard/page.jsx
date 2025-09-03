@@ -3,6 +3,7 @@
 import Piechart from "../../../components/PieChart";
 import Example from "../../../components/Barchart";
 import Card from "../../../components/Card";
+import Slider from "react-slick";
 import {
   ArrowRight,
   BoxSelect,
@@ -12,6 +13,7 @@ import {
   Wallet,
 } from "lucide-react";
 import React, { useState } from "react";
+import DateRangePicker from "../../../components/DatePicker";
 
 const cardDetails = [
   {
@@ -52,10 +54,70 @@ const cardDetails = [
   },
 ];
 const verified = false;
+const cards = [
+  {
+    name: "Engineering",
+    person: "Pramendra Singh",
+    number: "**** **** **** 1234",
+    bgColor: "#2e4f38ff",
+    textColor: "white",
+    monthlyLimit: "$5000",
+    spent: "$2000",
+    balance: "$30000",
+    status: "Active",
+  },
+  {
+    name: "Engineering",
+    person: "Pramendra Singh",
+    number: "**** **** **** 1234",
+    bgColor: "#b83a96ff",
+    textColor: "white",
+    monthlyLimit: "$5000",
+    spent: "$2000",
+    balance: "$30000",
+    status: "Frozen",
+  },
+  {
+    name: "Engineering",
+    person: "Pramendra Singh",
+    number: "**** **** **** 1234",
+    bgColor: "#b46a17ff",
+    textColor: "white",
+    monthlyLimit: "$5000",
+    spent: "$2000",
+    balance: "$30000",
+    status: "Expired",
+  },
+  {
+    name: "Engineering",
+    person: "Pramendra Singh",
+    number: "**** **** **** 1234",
+    bgColor: "#21b5c6ff",
+    textColor: "white",
+    monthlyLimit: "$5000",
+    spent: "$2000",
+    balance: "$30000",
+    status: "Active",
+  },
+];
 
+const settings = {
+  dots: false,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 1, // only 1 card on mobile
+  slidesToScroll: 1,
+  arrows: true,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: "unslick",
+    },
+  ],
+};
 const Page = () => {
   return (
-    <div className="p-6 overflow-auto  bg-gray-100">
+    <div className="p-0 md:p-4  overflow-auto  bg-gray-100">
       <div className="flex flex-col items-center justify-between">
         {!verified && (
           <div className=" border-l-4 bg-[#035638]  rounded-xl flex gap-2 w-full justify-between items-center  p-4 mb-4">
@@ -85,13 +147,8 @@ const Page = () => {
           </div>
           <div>
             {/* Date selection area */}
-            <div className="border border-gray-300 rounded-2xl p-2 flex items-center gap-2">
-              <span className="text-[#2E2E2E] font-medium">
-                Compare To : 4 Jan - 4 Jun, 2025
-              </span>
-              <span>
-                <ChevronDown />
-              </span>
+            <div className="">
+              <DateRangePicker />
             </div>
           </div>
         </div>
@@ -122,36 +179,40 @@ const Page = () => {
       {/*  charts */}
       <div className="flex flex-col  md:flex-row gap-6 mt-6  p-2 rounded-2xl ">
         {/*  Bar charts */}
-        <div className="flex flex-col flex-3 gap-6 bg-white shadow-md p-4 h-[300px] rounded-2xl">
+        <div className="flex flex-col flex-3 gap-6 bg-white shadow-md p-4  md:h-[400px] rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             {/* Header */}
-            <div className="flex flex-col gap-2  ">
+            <div className="flex flex-col gap-2 shadow-md rounded-2xl p-1  ">
               <p className="statcardTitle">Totoal Revenue</p>
               <p className="statcardNumber">$ 0</p>
               <p className="text-red-500">-52% Decline in Revenue</p>
             </div>
-            <div>
-              <div className="bg-[#1D1D2A] rounded-4xl px-4 py-1 border border-black flex gap-2 w-[120px] items-center text-white">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                Expenses
+            <div className="flex flex-col md:flex-row gap-4 items-center">
+              <div>
+                <div className="bg-[#1D1D2A] rounded-4xl px-4 py-1 border border-black flex gap-2 w-[120px] items-center text-white">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  Expenses
+                </div>
               </div>
-            </div>
-            <div>
-              <div className="border border-gray-400 flex gap-4 items-center rounded-2xl px-2 py-1 ">
-                <p>This Month </p>
-                <span>
-                  <ChevronDown />
-                </span>
+              <div>
+                <div className="border border-gray-400 flex gap-4 items-center rounded-2xl px-2 py-1 ">
+                  <p>This Month </p>
+                  <span>
+                    <ChevronDown />
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-          <div className="w-full h-full ">
+          <div className="w-full h-full min-w-[300px] min-h-[300px] ">
             {/* Chart area */}
-            <Example />
+            <div className="w-full h-[250px] ">
+              <Example />
+            </div>
           </div>
         </div>
         {/*  Pie charts */}
-        <div className="flex-2 bg-white h-[300px] flex flex-col items-center justify-center">
+        <div className="flex-2 bg-white h-[300px] flex flex-col items-center md:h-[400px] rounded-2xl justify-center">
           <div>Hello world</div>
           <div>
             <Piechart />
@@ -179,51 +240,21 @@ const Page = () => {
           </div>
         </div>
         {/* Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
-          <Card
-            name="Engineering"
-            person="Pramendra Singh"
-            number="**** **** **** 1234"
-            bgColor="#2e4f38ff"
-            textColor="white"
-            monthlyLimit="$5000"
-            spent="$2000"
-            balance="$30000"
-            status="Active"
-          />
-          <Card
-            name="Engineering"
-            person="Pramendra Singh"
-            number="**** **** **** 1234"
-            bgColor="#b83a96ff"
-            textColor="white"
-            monthlyLimit="$5000"
-            spent="$2000"
-            balance="$30000"
-            status="Frozen"
-          />
-          <Card
-            name="Engineering"
-            person="Pramendra Singh"
-            number="**** **** **** 1234"
-            bgColor="#b46a17ff"
-            textColor="white"
-            monthlyLimit="$5000"
-            spent="$2000"
-            balance="$30000"
-            status="Expired"
-          />
-          <Card
-            name="Engineering"
-            person="Pramendra Singh"
-            number="**** **** **** 1234"
-            bgColor="#21b5c6ff"
-            textColor="white"
-            monthlyLimit="$5000"
-            spent="$2000"
-            balance="$30000"
-            status="Active"
-          />
+        <div className="mt-6">
+          <div className="block lg:hidden">
+            <Slider {...settings}>
+              {cards.map((card, index) => (
+                <Card key={index} {...card} />
+              ))}
+            </Slider>
+          </div>
+
+          {/* Desktop: grid */}
+          <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+            {cards.map((card, index) => (
+              <Card key={index} {...card} />
+            ))}
+          </div>
         </div>
       </div>
     </div>

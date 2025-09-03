@@ -13,10 +13,10 @@ export default function Piechart() {
     <PieChart width={200} height={200}>
       <Pie
         data={data}
-        cx={80}
-        cy={100}
-        innerRadius={30}
-        outerRadius={50}
+        cx={90}
+        cy={120}
+        innerRadius={50}
+        outerRadius={70}
         fill="#8884d8"
         paddingAngle={5}
         dataKey="value"

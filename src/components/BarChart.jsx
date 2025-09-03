@@ -1,55 +1,48 @@
 import React from "react";
-import { BarChart, Bar, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 
 const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
+  { name: "Jan", uv: 4000 },
+  { name: "Feb", uv: 3000 },
+  { name: "Mar", uv: 2000 },
+  { name: "Apr", uv: 2780 },
+  { name: "May", uv: 1890 },
+  { name: "Jun", uv: 2390 },
+  { name: "Jul", uv: 3490 },
+  { name: "Aug", uv: 4200 },
+  { name: "Sep", uv: 3100 },
+  { name: "Oct", uv: 3700 },
+  { name: "Nov", uv: 2900 },
+  { name: "Dec", uv: 4100 },
 ];
 
 const Example = () => {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart width={150} height={40} data={data}>
+      <BarChart data={data}>
+        {/* Grid lines */}
+        <CartesianGrid strokeDasharray="3 3" />
+
+        {/* X Axis → Months */}
+        <XAxis dataKey="name" />
+
+        {/* Y Axis → Money (0, 5k, 10k…) */}
+        <YAxis
+          tickFormatter={(value) => `${value / 1000}k`} // converts 5000 → 5k
+        />
+
+        {/* Hover details */}
+        <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+
+        {/* Bar */}
         <Bar dataKey="uv" fill="#8884d8" />
       </BarChart>
     </ResponsiveContainer>

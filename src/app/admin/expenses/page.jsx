@@ -1,7 +1,79 @@
+import { CreditCard, Users, Wallet } from "lucide-react";
+import DateRangePicker from "../../../components/DatePicker";
 import React from "react";
-
+import TransactionTable from "../../../components/UserTable";
+const cardDetails = [
+  {
+    id: 2,
+    title: "Completed",
+    value: "$15,00,000",
+    icon: <CreditCard />,
+    iconBg: "#FFD6D6",
+    iconColor: "#B91C1C",
+    sub: "15 % increase from last month",
+  },
+  {
+    id: 3,
+    title: "Pending",
+    value: "$45,00,000",
+    icon: <Users />,
+    iconBg: "#E0E7FF",
+    iconColor: "#1E40AF",
+    sub: " 4 % increase from last month",
+  },
+  {
+    id: 4,
+    title: "Pending",
+    value: "$8,250.00",
+    icon: <Wallet />,
+    iconBg: "#D1FAE5",
+    iconColor: "#065F46",
+    sub: "4 % increase from last month",
+  },
+];
 const page = () => {
-  return <div>page</div>;
+  return (
+    <div>
+      <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h1 className="pageTitle">Dashboard</h1>
+          <p className="pageSubTitle mt-2">
+            Monitor your business expenses and card usage
+          </p>
+        </div>
+        <div>
+          {/* Date selection area */}
+          <div className="">
+            <DateRangePicker />
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        {cardDetails.map(
+          ({ id, icon, iconBg, title, value, iconColor, sub }) => (
+            <div
+              key={id}
+              className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start justify-start gap-4"
+            >
+              <div className="flex items-center gap-4 w-full">
+                <div className="rounded-full flex items-center justify-center">
+                  {React.cloneElement(icon, { color: iconColor, size: 24 })}
+                </div>
+                <div className="flex flex-col justify-between h-full">
+                  <p className="statcardTitle">{title}</p>
+                </div>
+              </div>
+              <p className="statcardNumber">{value}</p>
+              <p className="statcardSubTitle">{sub}</p>
+            </div>
+          )
+        )}
+      </div>
+      <div>
+        <TransactionTable />
+      </div>
+    </div>
+  );
 };
 
 export default page;
