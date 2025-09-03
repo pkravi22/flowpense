@@ -55,13 +55,11 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* Desktop Sidebar */}
       <div
         className={`hidden md:flex flex-col border-r bg-white shadow-lg h-screen transition-all duration-300 ${
           isCollapsed ? "w-20" : "w-48"
         }`}
       >
-        {/* Logo + Collapse */}
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
             {!isCollapsed && (
@@ -80,7 +78,6 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* Links */}
         <nav className="flex-1 p-4 space-y-2">
           {sidebarLinks.map((link, i) => {
             const isActive = pathname === link.path;
@@ -88,10 +85,10 @@ export default function Sidebar({
               <Link
                 key={i}
                 href={link.path}
-                className={`flex items-center  gap-3 px-4 py-2 rounded-4xl hover:bg-gray-100 ${
+                className={`flex items-center  gap-3 px-4 py-2 rounded-4xl  text-[#E5EE7D]  ${
                   isActive
-                    ? "bg-[#035638] text-[#E5EE7D] font-medium"
-                    : "linkText"
+                    ? "bg-[#035638] text-[#E5EE7D] hover:bg-[#043b27] font-medium"
+                    : "linkText hover:bg-gray-200"
                 }`}
               >
                 {link.icon}

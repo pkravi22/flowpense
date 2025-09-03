@@ -1,5 +1,7 @@
 "use client";
 
+import Piechart from "../../../components/PieChart";
+import Example from "../../../components/Barchart";
 import Card from "../../../components/Card";
 import {
   ArrowRight,
@@ -9,7 +11,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 
 const cardDetails = [
   {
@@ -49,32 +51,53 @@ const cardDetails = [
     sub: "4 % increase from last month",
   },
 ];
+const verified = false;
 
 const Page = () => {
   return (
     <div className="p-6 overflow-auto  bg-gray-100">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="pageTitle">Dashboard</h1>
-          <p className="pageSubTitle mt-2">
-            Monitor your business expenses and card usage
-          </p>
-        </div>
-        <div>
-          {/* Date selection area */}
-          <div className="border border-gray-300 rounded-2xl p-2 flex items-center gap-2">
-            <span className="text-[#2E2E2E] font-medium">
-              Compare To : 4 Jan - 4 Jun, 2025
-            </span>
-            <span>
-              <ChevronDown />
-            </span>
+      <div className="flex flex-col items-center justify-between">
+        {!verified && (
+          <div className=" border-l-4 bg-[#035638]  rounded-xl flex gap-2 w-full justify-between items-center  p-4 mb-4">
+            <div className="flex flex-col gap-2">
+              <p className="text-[16px] text-[#E5EE7D]">
+                Verify Your Business to Unlock Full Access
+              </p>
+              <p className="text-[12px] text-white">
+                Verify your business to unlock all Funkash Flow features with
+                secure, fast approval.
+              </p>
+            </div>
+            <button className="flex w-[150px] items-center gap-2  rounded-2xl px-4 py-1 hover:bg-green-400 hover:text-white transition duration-300 ease-in-out">
+              <span className="p-2 text-green-400 text-[12px] w-full flex items-center justify-center bg-white rounded-2xl">
+                Verify Now
+                <ArrowRight size={12} />
+              </span>
+            </button>
+          </div>
+        )}
+        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <h1 className="pageTitle">Dashboard</h1>
+            <p className="pageSubTitle mt-2">
+              Monitor your business expenses and card usage
+            </p>
+          </div>
+          <div>
+            {/* Date selection area */}
+            <div className="border border-gray-300 rounded-2xl p-2 flex items-center gap-2">
+              <span className="text-[#2E2E2E] font-medium">
+                Compare To : 4 Jan - 4 Jun, 2025
+              </span>
+              <span>
+                <ChevronDown />
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Cards */}
+      {/* stat-Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
         {cardDetails.map(
           ({ id, icon, iconBg, title, value, iconColor, sub }) => (
@@ -122,13 +145,21 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div>{/* Chart area */}</div>
+          <div className="w-full h-full ">
+            {/* Chart area */}
+            <Example />
+          </div>
         </div>
         {/*  Pie charts */}
-        <div className="flex-2 bg-white h-[300px]">
-          <div></div>
-          <div></div>
-          <div></div>
+        <div className="flex-2 bg-white h-[300px] flex flex-col items-center justify-center">
+          <div>Hello world</div>
+          <div>
+            <Piechart />
+          </div>
+          <div>
+            <p>Hello </p>
+            <p>Hfnkwnfnskf</p>
+          </div>
         </div>
       </div>
       {/* Active Cards */}
@@ -148,16 +179,50 @@ const Page = () => {
           </div>
         </div>
         {/* Cards */}
-        <div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
           <Card
             name="Engineering"
             person="Pramendra Singh"
             number="**** **** **** 1234"
-            bgColor="#292927ff"
+            bgColor="#2e4f38ff"
             textColor="white"
             monthlyLimit="$5000"
             spent="$2000"
             balance="$30000"
+            status="Active"
+          />
+          <Card
+            name="Engineering"
+            person="Pramendra Singh"
+            number="**** **** **** 1234"
+            bgColor="#b83a96ff"
+            textColor="white"
+            monthlyLimit="$5000"
+            spent="$2000"
+            balance="$30000"
+            status="Frozen"
+          />
+          <Card
+            name="Engineering"
+            person="Pramendra Singh"
+            number="**** **** **** 1234"
+            bgColor="#b46a17ff"
+            textColor="white"
+            monthlyLimit="$5000"
+            spent="$2000"
+            balance="$30000"
+            status="Expired"
+          />
+          <Card
+            name="Engineering"
+            person="Pramendra Singh"
+            number="**** **** **** 1234"
+            bgColor="#21b5c6ff"
+            textColor="white"
+            monthlyLimit="$5000"
+            spent="$2000"
+            balance="$30000"
+            status="Active"
           />
         </div>
       </div>
