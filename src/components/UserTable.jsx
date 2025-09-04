@@ -202,15 +202,13 @@ export default function TransactionTable() {
     return items;
   };
 
-  // reset to page 1 when filters change
+  
   React.useEffect(() => setPage(1), [query, status, category, rowsPerPage]);
 
   return (
-    <div className="p-4">
-      {/* Top toolbar */}
+    <div className="flex flex-col gap-4 mt-4">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-1 items-center gap-2">
-          {/* Search */}
           <div className="relative w-full md:max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
@@ -221,7 +219,6 @@ export default function TransactionTable() {
             />
           </div>
 
-          {/* Filter button */}
           <div className="relative">
             <button
               onClick={() => setShowFilter((s) => !s)}
@@ -231,7 +228,6 @@ export default function TransactionTable() {
               Filter
             </button>
 
-            {/* Simple filter popover */}
             {showFilter && (
               <div className="absolute z-20 mt-2 w-56 rounded-lg border bg-white shadow-lg p-3">
                 <label className="text-xs text-gray-500">Category</label>
@@ -251,9 +247,7 @@ export default function TransactionTable() {
           </div>
         </div>
 
-        {/* Right controls */}
-        <div className="flex items-center gap-2">
-          {/* Status select */}
+        <div className="flex items-center gap-2 mt-4">
           <div className="relative">
             <select
               value={status}
@@ -268,7 +262,6 @@ export default function TransactionTable() {
             <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           </div>
 
-          {/* Export */}
           <button
             onClick={exportCSV}
             className="h-10 px-3 rounded-lg bg-lime-200 text-gray-900 border border-lime-300 flex items-center gap-2 hover:bg-lime-300"
@@ -280,9 +273,8 @@ export default function TransactionTable() {
         </div>
       </div>
 
-      {/* Table wrapper (mobile horizontal scroll) */}
-      <div className="mt-3 overflow-x-auto">
-        <table className="w-full border-collapse min-w-[900px] bg-white">
+      <div className="mt-3 h-[500px]  w-[360px] sm:w-[500px] md:w-[600px] lg:w-[1000px] overflow-auto">
+        <table className=" w-full  border-collapse">
           <thead>
             <tr className="bg-gray-100 text-left text-sm font-medium text-gray-600">
               <th className="p-3">Date</th>
@@ -331,7 +323,6 @@ export default function TransactionTable() {
         </table>
       </div>
 
-      {/* Bottom pagination */}
       <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3 text-sm text-gray-600">
           <div className="flex items-center gap-2">

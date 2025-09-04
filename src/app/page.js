@@ -1,38 +1,28 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return (
-    <main className="min-h-screen p-8">
-      {/* Using the custom color variables directly */}
-      <h1 className="text-4xl font-bold bg-foreground text-primary">
-        Welcome to FlowPense
-      </h1>
+  const router = useRouter();
 
-      <div className="mt-6 p-6 bg-white rounded-lg">
-        <p>This uses the primary brand color as background.</p>
-      </div>
+  useEffect(() => {
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
 
-      <button className="mt-4 px-4 py-2 bg-brand-primary text-white rounded hover:bg-brand-primary-hover transition-colors">
-        Primary Button
-      </button>
+    if (token) {
+      // decode token to get role (optional)
+      //const payload = JSON.parse(atob(token.split(".")[1]));
+      const payload = "admin";
+      const destination =
+        payload === "admin" ? "/admin/dashboard" : "/user/dashboard";
+      router.replace(destination); // redirect to dashboard
+    } else {
+      router.replace("/login"); // redirect to signin if not logged in
+    }
+  }, [router]);
 
-      <div className="mt-6 p-6 bg-brand-secondary text-white rounded-lg">
-        <p>This uses the secondary brand color.</p>
-      </div>
-
-      {/* Using the neutral palette */}
-      <div className="mt-6 grid grid-cols-3 gap-4">
-        {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
-          <div
-            key={shade}
-            className={`p-4 bg-neutral-${shade} ${
-              shade < 500 ? "text-neutral-900" : "text-neutral-100"
-            } rounded`}
-          >
-            Neutral {shade}
-          </div>
-        ))}
-      </div>
-    </main>
-  );
+  return <div className="flex justify-center items-center">Loading...</div>; // simple placeholder
 }

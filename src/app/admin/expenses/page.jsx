@@ -33,10 +33,10 @@ const cardDetails = [
 ];
 const page = () => {
   return (
-    <div>
+    <div className="">
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="pageTitle">Dashboard</h1>
+          <h1 className="pageTitle">Expenses</h1>
           <p className="pageSubTitle mt-2">
             Monitor your business expenses and card usage
           </p>
@@ -48,7 +48,7 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {cardDetails.map(
           ({ id, icon, iconBg, title, value, iconColor, sub }) => (
             <div

@@ -1,25 +1,21 @@
 import Image from "next/image";
-import ForgotPassword from "../../components/ForgotPassword";
+import Login from "../../../components/login";
 export default function HeroSplit() {
   return (
     <section className="relative w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:min-h-screen bg-[url(/bgImage.png)] bg-cover bg-center">
-
-    
-       <div className=" p-2 md:px-12 md:py-6  ">
-        <div className=""></div>
-        <ForgotPassword/>
+        <div className=" p-2 md:px-12 md:py-6  ">
+          <div className=""></div>
+          <Login />
         </div>
 
-          
-        <div className="relative  w-[1/2] h-full">
+        <div className="relative  w-[1/2] h-full bg-[#d7ce90]">
           <Image
             src="/main.svg"
             alt="Showcase"
-             fill
+            fill
             priority
-
-            className=" absolute  object-cover object-center"
+            className=" absolute  object-contain object-center"
           />
 
           <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />

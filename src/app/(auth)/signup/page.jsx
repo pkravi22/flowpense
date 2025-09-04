@@ -1,24 +1,20 @@
 import Image from "next/image";
-import Signup from "../../components/Signup";
+import Signup from "../../../components/Signup";
 export default function HeroSplit() {
   return (
     <section className="relative w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:min-h-screen bg-[url(/bgImage.png)] bg-cover bg-center">
-
-    
-       <div className=" p-2 md:px-12 md:py-6  ">
-        <div className=""></div>
-        <Signup/>
+        <div className=" p-2 md:px-12 md:py-6  ">
+          <div className=""></div>
+          <Signup />
         </div>
 
-          
         <div className="relative  w-[1/2] h-full">
           <Image
             src="/signup.svg"
             alt="Showcase"
-             fill
+            fill
             priority
-
             className=" absolute  object-cover object-center"
           />
 
@@ -28,4 +24,3 @@ export default function HeroSplit() {
     </section>
   );
 }
-
