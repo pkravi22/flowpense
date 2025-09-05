@@ -1,10 +1,19 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken"; // npm i jsonwebtoken
+import jwt from "jsonwebtoken"; // npm install jsonwebtoken
 
-export async function middleware(req) {
+export function middleware(req) {
   const { pathname } = req.nextUrl;
 
-  // Public routes (no auth needed)
+  // 🔹 STEP 1: Bypass toggle (set true to skip auth)
+  const BYPASS_AUTH = true; // change to false when you want real auth
+
+  // 🔹 STEP 2: If bypass is enabled → allow access
+  if (BYPASS_AUTH) {
+    console.log("⚠️ Auth bypass enabled - Dev mode only!");
+    return NextResponse.next();
+  }
+
+  // 🔹 STEP 3: Allow public routes
   if (
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
@@ -13,18 +22,17 @@ export async function middleware(req) {
     return NextResponse.next();
   }
 
-  // Read JWT from cookie
+  // 🔹 STEP 4: Get JWT token from cookies
   const token = req.cookies.get("token")?.value;
-
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
   try {
-    // ✅ Verify JWT (must use SAME secret as backend)
-    const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET);
+    // 🔹 STEP 5: Hardcode JWT secret
+    const decoded = jwt.verify(token, "my_secret_key"); // <-- secret directly here
 
-    // Role-based access
+    // 🔹 STEP 6: Role-based access
     if (pathname.startsWith("/admin") && decoded.role !== "admin") {
       return NextResponse.redirect(new URL("/login", req.url));
     }
@@ -33,14 +41,15 @@ export async function middleware(req) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
 
-    return NextResponse.next(); // ✅ allow access
+    // ✅ Everything good → allow request
+    return NextResponse.next();
   } catch (err) {
     console.error("JWT error:", err.message);
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }
 
-// Protect only user/admin routes
+// 🔹 STEP 7: Protect only admin/user routes
 export const config = {
   matcher: ["/admin/:path*", "/user/:path*"],
 };

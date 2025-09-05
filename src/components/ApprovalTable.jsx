@@ -63,24 +63,24 @@ const Page = () => {
 
       {/* Tabs */}
       <div>
-        <div className="mt-6 w-full flex items-center bg-gray-200 h-[45px] p-2 rounded-2xl shadow-md">
+        <div className="mt-6 w-full flex items-center bg-white h-[45px] p-2 rounded-2xl shadow-md">
           <button
-            className={`w-1/2 rounded-2xl shadow-md h-[30px] cursor-pointer border border-gray-300 
+            className={`w-1/2 rounded-2xl shadow-md h-[30px] cursor-pointer 
               ${
                 activeTab === "pending"
-                  ? "bg-white text-[#101113] font-sans font-[600]"
-                  : "bg-gray-200 text-gray-600 "
+                  ? "bg-blue-300 text-white"
+                  : "bg-gray-100 text-black"
               }`}
             onClick={() => setActiveTab("pending")}
           >
             Pending
           </button>
           <button
-            className={`w-1/2 rounded-2xl shadow-md h-[30px] cursor-pointer border border-gray-300 
+            className={`w-1/2 rounded-2xl shadow-md h-[30px] cursor-pointer 
               ${
                 activeTab === "processed"
-                  ? "bg-white text-[#101113] font-sans"
-                  : "bg-gray-100 text-gray-600 "
+                  ? "bg-blue-300 text-white"
+                  : "bg-gray-100 text-black"
               }`}
             onClick={() => setActiveTab("processed")}
           >
@@ -98,7 +98,7 @@ const Page = () => {
               >
                 {/* Left side */}
                 <div>
-                  <h2 className="font-semibold font-sans">{item.merchant}</h2>
+                  <h2 className="font-semibold">{item.merchant}</h2>
                   <p className="text-sm text-gray-500">{item.card}</p>
                   <p className="text-sm text-gray-400">{item.date}</p>
                 </div>

@@ -9,6 +9,9 @@
   --foreground: #6c8f7fff;
 
 }
+@theme {
+  --font-sans: "Host Grotesk", sans-serif; /* Replaces the default sans-serif stack */
+}
 
 @theme inline {
   --color-text-primary: #000000;
@@ -18,7 +21,7 @@
   --color-background: var(--background);
   --color-brand: var(--background);
   --color-foreground: var(--foreground);
-  --font-brand:"Host Grotesk";
+  
   --color-borderColor:#E2E4E9;
 }
 
