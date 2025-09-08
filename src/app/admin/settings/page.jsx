@@ -1,42 +1,15 @@
 "use client";
+import NotificationSettings from "../../../components/NotificationSettings";
+import BusinessVerification from "../../../components/BusinessVerification";
+import Subscription from "../../../components/Subscription";
+import Verification from "../../../components/Verification";
 import { useState } from "react";
-
-function BusinessVerification() {
-  return <div className="p-4">Business Verification Settings</div>;
-}
-
-function Verification() {
-  return <div className="p-4">User Verification Settings</div>;
-}
-
-function Subscription() {
-  return <div className="p-4">Subscription Settings</div>;
-}
-
-function NotificationSettings() {
-  return (
-    <div className="p-4">
-      <h2 className="text-lg font-semibold mb-2">Notifications</h2>
-      <div>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" /> Email Notifications
-        </label>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" /> SMS Notifications
-        </label>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" /> Push Notifications
-        </label>
-      </div>
-    </div>
-  );
-}
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("business");
 
   const tabs = [
-    { id: "business", label: "Business Verification" },
+    { id: "business", label: "Business" },
     { id: "verification", label: "Verification" },
     { id: "subscription", label: "Subscription" },
     { id: "notification", label: "Notification" },
@@ -54,10 +27,10 @@ export default function SettingsPage() {
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            className={`flex-1 rounded-2xl shadow-md h-[30px] cursor-pointer border border-gray-300 
+            className={`flex-1 rounded-2xl  h-[30px] cursor-pointer  
               ${
                 activeTab === tab.id
-                  ? "bg-white text-[#101113] font-sans font-[600]"
+                  ? "bg-white text-[#101113] font-sans font-[600] shadow-md"
                   : "bg-gray-200 text-gray-600"
               }`}
             onClick={() => setActiveTab(tab.id)}
