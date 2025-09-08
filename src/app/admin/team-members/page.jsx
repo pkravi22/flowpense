@@ -324,7 +324,6 @@ const Page = () => {
                     </div>
                   </div>
 
-                  {/* Team Size Column */}
                   <div className="flex flex-1 flex-col gap-1">
                     <p className="font-semibold">Team Size</p>
                     <span className="bg-blue-100 w-[120px] text-center py-1 rounded-3xl">
@@ -332,7 +331,6 @@ const Page = () => {
                     </span>
                   </div>
 
-                  {/* Created Date Column */}
                   <div className="flex flex-1 flex-col gap-1">
                     <p className="font-semibold">Created Date</p>
                     <span>{team.createdDate}</span>
@@ -359,7 +357,6 @@ const Page = () => {
               </div>
             ))}
 
-          {/* Employee Tab */}
           {activeTab === "employee" && (
             <EmployeeTable employees={employeeData} />
           )}

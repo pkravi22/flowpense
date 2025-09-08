@@ -50,7 +50,6 @@ const Page = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Dashboard</h1>
@@ -61,7 +60,6 @@ const Page = () => {
         <DateRangePicker />
       </div>
 
-      {/* Tabs */}
       <div>
         <div className="mt-6 w-full flex items-center bg-gray-200 h-[45px] p-2 rounded-2xl shadow-md">
           <button
@@ -88,7 +86,6 @@ const Page = () => {
           </button>
         </div>
 
-        {/* Tab Content */}
         <div className="mt-4 space-y-3">
           {activeTab === "pending" &&
             pendingData.map((item) => (
@@ -96,14 +93,12 @@ const Page = () => {
                 key={item.id}
                 className="flex items-center justify-between bg-white p-4 rounded-lg shadow-md"
               >
-                {/* Left side */}
                 <div>
                   <h2 className="font-semibold font-sans">{item.merchant}</h2>
                   <p className="text-sm text-gray-500">{item.card}</p>
                   <p className="text-sm text-gray-400">{item.date}</p>
                 </div>
 
-                {/* Amount + Actions */}
                 <div className="flex items-center gap-6">
                   <div className="text-right">
                     <p className="text-sm text-gray-500">Amount</p>
@@ -127,14 +122,12 @@ const Page = () => {
                 key={item.id}
                 className="flex items-center justify-between bg-white p-4 rounded-lg shadow-md"
               >
-                {/* Left side */}
                 <div>
                   <h2 className="font-semibold">{item.merchant}</h2>
                   <p className="text-sm text-gray-500">{item.card}</p>
                   <p className="text-sm text-gray-400">{item.date}</p>
                 </div>
 
-                {/* Amount + Status */}
                 <div className="flex items-center gap-6">
                   <div className="text-right">
                     <p className="text-sm text-gray-500">Amount</p>
