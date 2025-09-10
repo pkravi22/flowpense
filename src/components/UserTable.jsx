@@ -47,7 +47,7 @@ const seed = [
   },
 ];
 
-// make a longer list for pagination demo
+
 const transactions = Array.from({ length: 120 }, (_, i) => {
   const row = seed[i % seed.length];
   return {
