@@ -62,7 +62,7 @@ export default function Subscription() {
               <span className="text-sm font-normal">/mo</span>
             </p>
 
-            <ul className="mt-4 space-y-2 text-sm text-gray-600">
+            <ul className="mt-4 space-y-2 text-md text-gray-600">
               {plan.features.map((f, i) => (
                 <li key={i}>• {f}</li>
               ))}
@@ -72,17 +72,17 @@ export default function Subscription() {
               {isCurrent ? (
                 <button
                   disabled
-                  className="w-full py-2 rounded-lg bg-gray-200 text-gray-600 font-semibold cursor-not-allowed"
+                  className="w-full py-2 rounded-4xl bg-gray-200 text-gray-600 font-semibold cursor-not-allowed"
                 >
                   Current Plan
                 </button>
               ) : (
                 <button
                   onClick={() => handleChangePlan(plan.name)}
-                  className={`w-full py-2 rounded-lg font-semibold ${
+                  className={`w-full py-2 rounded-4xl font-semibold ${
                     isUpgrade
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "bg-green-600 text-white hover:bg-green-700"
+                      ? "bg-black text-white hover:bg-blue-700"
+                      : " text-green-400  bg-white border border-green-400"
                   }`}
                 >
                   {isUpgrade ? "Upgrade" : "Downgrade"}

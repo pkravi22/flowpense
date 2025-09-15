@@ -14,7 +14,7 @@ export default function NotificationSettings() {
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-6 p-6 bg-gray-50 ">
+    <div className="grid md:grid-cols-2 gap-6   ">
       <div className="bg-white p-6 rounded-xl shadow-md">
         <h2 className="text-lg font-semibold mb-0">🔔 Notifications</h2>
         <p className="text-sm text-gray-500 mb-4">

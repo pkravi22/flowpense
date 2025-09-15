@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import DateRangePicker from "../../../components/DatePicker";
+import VerifyAccount from "../../../components/verification_pages/VerificationFlow";
+
+//import VerificationFlow from "../../../components/verification_pages/VerificationFlow";
 
 const cardDetails = [
   {
@@ -53,7 +56,7 @@ const cardDetails = [
     sub: "4 % increase from last month",
   },
 ];
-const verified = false;
+//const verified = false;
 const cards = [
   {
     name: "Engineering",
@@ -116,11 +119,22 @@ const settings = {
   ],
 };
 const Page = () => {
+  const [verified, setVerified] = useState(false);
+  const [showVerification, setShowVerification] = useState(false);
+
+  const handleVerifyClick = () => {
+    setShowVerification(true);
+  };
+
+  const handleVerificationComplete = () => {
+    setVerified(true);
+    setShowVerification(false);
+  };
   return (
     <div className="p-0 md:p-4  overflow-auto  bg-gray-100">
       <div className="flex flex-col items-center justify-between">
         {!verified && (
-          <div className=" border-l-4 bg-[#035638]  rounded-xl flex gap-2 w-full justify-between items-center  p-4 mb-4">
+          <div className="border-l-4 bg-[#035638] rounded-xl flex gap-2 w-full justify-between items-center p-4 mb-4">
             <div className="flex flex-col gap-2">
               <p className="text-[16px] text-[#E5EE7D]">
                 Verify Your Business to Unlock Full Access
@@ -130,12 +144,26 @@ const Page = () => {
                 secure, fast approval.
               </p>
             </div>
-            <button className="flex w-[150px] items-center gap-2  rounded-2xl px-4 py-1 hover:bg-green-400 hover:text-white transition duration-300 ease-in-out">
+            <button
+              onClick={handleVerifyClick}
+              className="flex w-[150px] items-center gap-2 rounded-2xl px-4 py-1 cursor-pointer hover:text-white transition duration-300 ease-in-out"
+            >
               <span className="p-2 text-green-400 text-[12px] w-full flex items-center justify-center bg-white rounded-2xl">
                 Verify Now
                 <ArrowRight size={12} />
               </span>
             </button>
+          </div>
+        )}
+
+        {showVerification && (
+          <div className="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center z-50">
+            <div className="bg-white  rounded-xl w-[90%] md:w-[600px] shadow-lg">
+              <VerifyAccount
+                onComplete={handleVerificationComplete} // call when done
+                onCancel={() => setShowVerification(false)}
+              />
+            </div>
           </div>
         )}
         <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
