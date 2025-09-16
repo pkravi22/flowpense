@@ -9,7 +9,10 @@ import {
 import DateRangePicker from "../../../components/DatePicker";
 import React from "react";
 import TransactionTable from "../../../components/UserTable";
-import BankDetails from "../../../components/BankDetails";
+import BankDetails from "../../../components/walletPages/BankDetails";
+import RecentTransactions from "../../../components/walletPages/RecentTransactions";
+import BalanceBreakdown from "../../../components/walletPages/BalanceBreakdown";
+
 const cardDetails = [
   {
     id: 2,
@@ -93,8 +96,19 @@ const page = () => {
           )
         )}
       </div>
-      <div>
-        <BankDetails />
+      <div className="flex flex-col">
+        <div className="flex flex-col md:flex-row gap-4 mt-4 ">
+          <div className="flex-1">
+            <BankDetails />
+          </div>
+          <div className="flex-2">
+            {" "}
+            <RecentTransactions />
+          </div>
+        </div>
+        <div>
+          <BalanceBreakdown />
+        </div>
       </div>
     </div>
   );

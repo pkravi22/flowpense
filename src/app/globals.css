@@ -63,3 +63,7 @@
 .statcardSubTitle{
   @apply  font-semibold text-[12px] leading-[100%] tracking-[0%] text-[#838794];
 }
+.topHeading1{
+   @apply text-black text-2xl not-italic font-normal leading-[100%];
+  font-family: "Bagel Fat One";
+}

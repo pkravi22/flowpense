@@ -41,16 +41,16 @@ const VerifyAccount = () => {
 
   return (
     <div className="bg-white rounded-xl max-w-3xl max-h-[96vh] flex flex-col">
-      <div className="border-b border-gray-200 p-4 flex justify-between">
+      <div className="border-b border-gray-200 p-4 flex flex-col md:flex-row justify-between">
         <div>
-          <h1 className="pageTitle ">Verify Account</h1>
+          <h1 className="topHeading1">Verify Account</h1>
 
           <p className="pageSubTitle mt-2">
             You need to verify your business account to get full access.
           </p>
         </div>
-        <div>
-          <p className="bg-[#035638] text-white px-4 py-1 text-sm rounded-4xl">
+        <div className="min-w-[50px] bg-[#035638]">
+          <p className=" text-white px-1 md:px-4 py-1 text-sm  rounded-4xl">
             Step {step} of 4
           </p>
         </div>
