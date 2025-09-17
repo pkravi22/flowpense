@@ -138,7 +138,7 @@ export default function BusinessVerification() {
         />
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 flex self-auto">
         <button className="bg-black text-white px-6 py-2 rounded-md shadow hover:bg-gray-800">
           Save Changes
         </button>

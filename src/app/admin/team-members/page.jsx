@@ -1,9 +1,183 @@
 "use client";
+import { Plus, Settings, User } from "lucide-react";
 import EmployeeTable from "../../../components/EmployeeTable";
 import React, { useState } from "react";
 
+// Modals -------------------------
+const AddEmployeeModal = ({ setAddEmployeeModalOpen }) => {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg ">
+        <div className="border-b border-gray-200 p-4">
+          {" "}
+          <h2 className="formHeading">Add New Employee</h2>
+          <p className="smText">Add a new employee to the organization.</p>
+        </div>
+
+        <form className="space-y-4 p-4">
+          <div>
+            <label className="text-sm font-medium">Name</label>
+            <input
+              type="text"
+              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              placeholder="Enter employee name"
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Email</label>
+            <input
+              type="email"
+              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              placeholder="Enter email"
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Department</label>
+            <input
+              type="text"
+              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              placeholder="Enter department"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setAddEmployeeModalOpen(false)}
+              className="px-4 py-1  border w-[1/2] border-background text-sm rounded-full"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-1   bg-background text-sm rounded-full text-white "
+            >
+              Add Employee
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+const CreateTeamModal = ({ setCreateTeamModal }) => {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg ">
+        <div className="border-b border-gray-200 p-4">
+          <h2 className="formHeading">Create New Team</h2>
+          <p className="smText">
+            Create a new team and set up its initial configuration.
+          </p>
+        </div>
+
+        <form className="space-y-4 p-4">
+          <div>
+            <label className="labelText">Team Name</label>
+            <input
+              type="text"
+              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              placeholder="Enter team name"
+            />
+          </div>
+          <div>
+            <label className="labelText">Description</label>
+            <textarea
+              className="w-full border border-gray-200 p-2 rounded-md mt-1"
+              rows="3"
+              placeholder="Enter team description"
+            />
+          </div>
+          <div>
+            <label className="labelText">Budget</label>
+            <input
+              type="number"
+              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              placeholder="Enter budget"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setCreateTeamModal(false)}
+              className="px-4 py-1  border w-[1/2] border-background text-sm rounded-full"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-1   bg-background text-sm rounded-full text-white "
+            >
+              Create Team
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+const AddMemberModal = ({ setAddMemberModal }) => {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6">
+        <h2 className="formHeading ">Add Team Member</h2>
+        <p className="smText">
+          Add an existing employee to Product Development.
+        </p>
+        <div className="h-[.5px] bg-gray-200 w-full mb-2 mt-1"></div>
+        <form className="space-y-4">
+          <div>
+            <label className="labelText">Member Name</label>
+            <input
+              type="text"
+              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              placeholder="Enter member name"
+            />
+          </div>
+          <div>
+            <label className="labelText">Role</label>
+            <input
+              type="text"
+              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              placeholder="Enter role"
+            />
+          </div>
+          <div>
+            <label className="labelText">Profile Image URL</label>
+            <input
+              type="url"
+              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              placeholder="Enter image URL"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setAddMemberModal(false)}
+              className="px-4 py-1  border w-[1/2] border-background text-sm rounded-full"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-1   bg-background text-sm rounded-full text-white "
+            >
+              Add Member
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Main Page -------------------------
 const Page = () => {
   const [activeTab, setActiveTab] = useState("team");
+  const [addEmployeeModalOpen, setAddEmployeeModalOpen] = useState(false);
+  const [createTeamModal, setCreateTeamModal] = useState(false);
+  const [addMemberModal, setAddMemberModal] = useState(false);
 
   const teamData = [
     {
@@ -44,150 +218,73 @@ const Page = () => {
     },
     {
       id: 2,
-      name: "Finance Team",
-      subheading: "Manages company finances",
-      budget: "₦800,000",
-      monthlyLimit: "₦80,000",
-      size: 4,
-      createdDate: "15 July, 2025",
+      name: "Sales Team",
+      subheading: "Handles all marketing campaigns",
+      budget: "₦500,000",
+      monthlyLimit: "₦50,000",
+      size: 5,
+      createdDate: "01 August, 2025",
       members: [
         {
-          name: "Jane Smith",
+          name: "John Doe",
           role: "Manager",
-          img: "https://randomuser.me/api/portraits/women/12.jpg",
+          img: "https://randomuser.me/api/portraits/men/32.jpg",
+        },
+        {
+          name: "Diana Prince",
+          role: "Executive",
+          img: "https://randomuser.me/api/portraits/women/44.jpg",
         },
         {
           name: "Ethan Hunt",
-          role: "Analyst",
+          role: "Coordinator",
           img: "https://randomuser.me/api/portraits/men/54.jpg",
         },
         {
-          name: "Bob Williams",
-          role: "Executive",
-          img: "https://randomuser.me/api/portraits/men/43.jpg",
+          name: "Fiona Gallagher",
+          role: "Analyst",
+          img: "https://randomuser.me/api/portraits/women/65.jpg",
         },
         {
-          name: "Alice Johnson",
-          role: "Coordinator",
-          img: "https://randomuser.me/api/portraits/women/65.jpg",
+          name: "George Martin",
+          role: "Intern",
+          img: "https://randomuser.me/api/portraits/men/22.jpg",
         },
       ],
     },
     {
       id: 3,
-      name: "HR Team",
-      subheading: "Handles recruitment and employee welfare",
-      budget: "₦400,000",
-      monthlyLimit: "₦40,000",
-      size: 3,
-      createdDate: "20 June, 2025",
+      name: "Project Management Team",
+      subheading: "Handles all marketing campaigns",
+      budget: "₦500,000",
+      monthlyLimit: "₦50,000",
+      size: 5,
+      createdDate: "01 August, 2025",
       members: [
-        {
-          name: "Alice Johnson",
-          role: "Manager",
-          img: "https://randomuser.me/api/portraits/women/65.jpg",
-        },
-        {
-          name: "Fiona Gallagher",
-          role: "Executive",
-          img: "https://randomuser.me/api/portraits/women/21.jpg",
-        },
-        {
-          name: "Charlie Brown",
-          role: "Intern",
-          img: "https://randomuser.me/api/portraits/men/34.jpg",
-        },
-      ],
-    },
-    {
-      id: 4,
-      name: "Engineering Team",
-      subheading: "Develops and maintains products",
-      budget: "₦1,200,000",
-      monthlyLimit: "₦120,000",
-      size: 8,
-      createdDate: "10 May, 2025",
-      members: [
-        {
-          name: "Bob Williams",
-          role: "Lead Engineer",
-          img: "https://randomuser.me/api/portraits/men/43.jpg",
-        },
-        {
-          name: "George Martin",
-          role: "Engineer",
-          img: "https://randomuser.me/api/portraits/men/22.jpg",
-        },
-        {
-          name: "Hannah Lee",
-          role: "Engineer",
-          img: "https://randomuser.me/api/portraits/women/33.jpg",
-        },
         {
           name: "John Doe",
-          role: "Intern",
+          role: "Manager",
           img: "https://randomuser.me/api/portraits/men/32.jpg",
         },
         {
           name: "Diana Prince",
-          role: "Intern",
+          role: "Executive",
           img: "https://randomuser.me/api/portraits/women/44.jpg",
-        },
-        {
-          name: "Fiona Gallagher",
-          role: "Engineer",
-          img: "https://randomuser.me/api/portraits/women/65.jpg",
         },
         {
           name: "Ethan Hunt",
-          role: "Engineer",
+          role: "Coordinator",
           img: "https://randomuser.me/api/portraits/men/54.jpg",
         },
         {
-          name: "Alice Johnson",
-          role: "Engineer",
+          name: "Fiona Gallagher",
+          role: "Analyst",
           img: "https://randomuser.me/api/portraits/women/65.jpg",
-        },
-      ],
-    },
-    {
-      id: 5,
-      name: "Sales Team",
-      subheading: "Manages client relationships and sales",
-      budget: "₦600,000",
-      monthlyLimit: "₦60,000",
-      size: 6,
-      createdDate: "05 April, 2025",
-      members: [
-        {
-          name: "Charlie Brown",
-          role: "Manager",
-          img: "https://randomuser.me/api/portraits/men/34.jpg",
-        },
-        {
-          name: "Hannah Lee",
-          role: "Executive",
-          img: "https://randomuser.me/api/portraits/women/33.jpg",
         },
         {
           name: "George Martin",
-          role: "Salesperson",
+          role: "Intern",
           img: "https://randomuser.me/api/portraits/men/22.jpg",
-        },
-        {
-          name: "Diana Prince",
-          role: "Salesperson",
-          img: "https://randomuser.me/api/portraits/women/44.jpg",
-        },
-        {
-          name: "John Doe",
-          role: "Salesperson",
-          img: "https://randomuser.me/api/portraits/men/32.jpg",
-        },
-        {
-          name: "Alice Johnson",
-          role: "Salesperson",
-          img: "https://randomuser.me/api/portraits/women/65.jpg",
         },
       ],
     },
@@ -239,11 +336,21 @@ const Page = () => {
       status: "Active",
       dateJoined: "05 May, 2025",
     },
-    // ...more employees
   ];
 
   return (
     <div>
+      {/* Show Modals */}
+      {addEmployeeModalOpen && (
+        <AddEmployeeModal setAddEmployeeModalOpen={setAddEmployeeModalOpen} />
+      )}
+      {createTeamModal && (
+        <CreateTeamModal setCreateTeamModal={setCreateTeamModal} />
+      )}
+      {addMemberModal && (
+        <AddMemberModal setAddMemberModal={setAddMemberModal} />
+      )}
+
       {/* Header */}
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
@@ -252,6 +359,22 @@ const Page = () => {
             Manage your teams and employees efficiently
           </p>
         </div>
+        <div className="flex gap-2">
+          <div
+            onClick={() => setAddEmployeeModalOpen(true)}
+            className="flex gap-2 border border-green-600 px-2 py-1 text-sm text-green-600 rounded-full cursor-pointer"
+          >
+            <User />
+            <span>Add Employee</span>
+          </div>
+          <div
+            onClick={() => setCreateTeamModal(true)}
+            className="border bg-green-900 px-4 py-1 text-sm text-white flex gap-2 rounded-full cursor-pointer"
+          >
+            <Plus />
+            <span>Create Team</span>
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -259,22 +382,22 @@ const Page = () => {
         <div className="mt-6 w-full flex items-center bg-gray-200 h-[45px] p-2 rounded-2xl shadow-md">
           <button
             className={`w-1/2 rounded-2xl shadow-md h-[30px] cursor-pointer border border-gray-300 
-              ${
-                activeTab === "team"
-                  ? "bg-white text-[#101113] font-semibold"
-                  : "bg-gray-200 text-gray-600"
-              }`}
+            ${
+              activeTab === "team"
+                ? "bg-white text-[#101113] font-semibold"
+                : "bg-gray-200 text-gray-600"
+            }`}
             onClick={() => setActiveTab("team")}
           >
             Team Management
           </button>
           <button
             className={`w-1/2 rounded-2xl shadow-md h-[30px] cursor-pointer border border-gray-300 
-              ${
-                activeTab === "employee"
-                  ? "bg-white text-[#101113] font-semibold"
-                  : "bg-gray-200 text-gray-600"
-              }`}
+            ${
+              activeTab === "employee"
+                ? "bg-white text-[#101113] font-semibold"
+                : "bg-gray-200 text-gray-600"
+            }`}
             onClick={() => setActiveTab("employee")}
           >
             Employee
@@ -283,59 +406,65 @@ const Page = () => {
 
         {/* Tab Content */}
         <div className="mt-4 space-y-4">
-          {/* Team Management Tab */}
           {activeTab === "team" &&
             teamData.map((team) => (
               <div
                 key={team.id}
                 className="bg-white p-4 rounded-lg shadow-md flex flex-col gap-4"
               >
-                {/* Row 1: Team Name + Subheading + Button */}
+                {/* Row 1 */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="font-sans text-[#020817] text-xl not-italic font-semibold leading-[100%] tracking-[-0.6px];">
+                    <h2 className="font-sans text-[#020817] text-xl font-semibold tracking-[-0.6px]">
                       {team.name}
                     </h2>
-                    <p className="text-slate-500 text-[13.563px] not-italic font-normal leading-5">
+                    <p className="text-slate-500 text-[13.563px] leading-5">
                       {team.subheading}
                     </p>
                   </div>
-                  <button className="bg-blue-500 text-white px-4 py-1 rounded-md">
-                    Add Member
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setAddMemberModal(true)}
+                      className=" flex gap-2  rounded-md  text-black  border  px-4 py-1 "
+                    >
+                      <User />
+                      Add Member
+                    </button>
+                    <button className=" border rounded-md px-2 ">
+                      <Settings />
+                    </button>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-4  gap-6 text-sm text-gray-700">
-                  {/* Budget Column */}
-                  <div className="flex flex-3 flex-col gap-1 ">
+                {/* Row 2 */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-sm text-gray-700">
+                  <div className="flex flex-col gap-1">
                     <p className="font-semibold">Budget Usage</p>
                     <div className="flex items-center justify-between gap-2">
-                      <p className=" text-[color:var(--Neutral-Neutral400,#838794)] text-xs not-italic font-light leading-[100%]">
-                        Monthly Spent
-                      </p>
+                      <p className="text-gray-500 text-xs">Monthly Spent</p>
                       <span>{team.budget}</span>
                     </div>
-
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-[color:var(--Neutral-Neutral400,#838794)] text-xs not-italic font-light leading-[100%]">
-                        25% used {"   "}This Month
+                      <p className="text-gray-500 text-xs">
+                        25% used This Month
                       </p>
                       <span>{team.monthlyLimit}</span>
                     </div>
                   </div>
 
-                  <div className="flex flex-1 flex-col gap-1">
+                  <div className="flex flex-col gap-1">
                     <p className="font-semibold">Team Size</p>
                     <span className="bg-blue-100 w-[120px] text-center py-1 rounded-3xl">
                       {team.size} Members
                     </span>
                   </div>
 
-                  <div className="flex flex-1 flex-col gap-1">
+                  <div className="flex flex-col gap-1">
                     <p className="font-semibold">Created Date</p>
                     <span>{team.createdDate}</span>
                   </div>
-                  <div className="flex flex-1 flex-col gap-1">
+
+                  <div className="flex flex-col gap-1">
                     <p className="font-semibold">Team Members</p>
                     <div className="flex -space-x-2">
                       {team.members.slice(0, 3).map((member, idx) => (

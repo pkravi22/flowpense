@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import DateRangePicker from "../../../components/DatePicker";
+import { CircleCheckBig, CircleCheckBigIcon } from "lucide-react";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("pending");
@@ -105,10 +106,12 @@ const Page = () => {
                     <p className="font-bold">{item.amount}</p>
                   </div>
                   <div className="flex gap-2">
-                    <button className="bg-blue-500 text-white px-4 py-1 rounded-md">
+                    <button className=" flex gap-2 items-center bg-blue-500 text-white px-4 py-1 rounded-md">
+                      <CircleCheckBig size={16} />
                       Approve
                     </button>
-                    <button className="border border-red-500 text-red-500 px-4 py-1 rounded-md">
+                    <button className=" flex gap-2 items-center border border-red-500 text-red-500 px-4 py-1 rounded-md">
+                      <CircleCheckBig size={16} />
                       Reject
                     </button>
                   </div>
@@ -133,13 +136,16 @@ const Page = () => {
                     <p className="text-sm text-gray-500">Amount</p>
                     <p className="font-bold">{item.amount}</p>
                   </div>
+                </div>
+                <div>
                   <span
-                    className={`px-3 py-1 rounded-md text-sm font-semibold ${
+                    className={`px-3 py-1 flex gap-2 items-center rounded-md text-sm font-semibold ${
                       item.status === "Approved"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
+                        ? "bg-black px-8 py-2 text-white "
+                        : " px-8 py-2 border border-red-500 text-red-600"
                     }`}
                   >
+                    <CircleCheckBig size={16} />
                     {item.status}
                   </span>
                 </div>

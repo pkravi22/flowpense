@@ -32,7 +32,7 @@ export default function Verification() {
               placeholder="Eg: Acme Corporation"
               className="mt-1 w-full border  border-gray-200 rounded-lg p-2"
             />
-            <button className="mt-2 bg-green-700 text-white px-4 py-2 rounded-lg">
+            <button className="mt-2 bg-background text-white px-4 py-1 min-w-[200px] rounded-full">
               Submit
             </button>
           </div>
@@ -44,7 +44,7 @@ export default function Verification() {
               placeholder="Eg: Acme Corporation"
               className="mt-1 w-full border  border-gray-200 rounded-lg p-2"
             />
-            <button className="mt-2 bg-green-700 text-white px-4 py-2 rounded-lg">
+            <button className="mt-2 bg-background text-white px-4 py-1 min-w-[200px] rounded-full">
               Submit
             </button>
           </div>
@@ -61,7 +61,7 @@ export default function Verification() {
               placeholder="Eg: Acme Corporation"
               className="mt-1 w-full border  border-gray-200 rounded-lg p-2"
             />
-            <button className="mt-2 bg-green-700 text-white px-4 py-2 rounded-lg">
+            <button className="mt-2 bg-background text-white px-4 py-1 min-w-[200px] rounded-full">
               Submit
             </button>
           </div>
@@ -73,7 +73,7 @@ export default function Verification() {
               placeholder="Eg: Acme Corporation"
               className="mt-1 w-full border  border-gray-200 rounded-lg p-2"
             />
-            <button className="mt-2 bg-green-700 text-white px-4 py-2 rounded-lg">
+            <button className="mt-2 bg-background text-white px-4 py-1 min-w-[200px] rounded-full">
               Submit
             </button>
           </div>

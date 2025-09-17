@@ -55,19 +55,19 @@ const page = () => {
         <div>
           <div className="flex gap-2">
             <div>
-              <button className="rounded-[10px] border-[.5px] boder-gray-50 p-1">
+              <button className=" flex items-center px-2 rounded-[10px] border-[.5px] boder-gray-50 p-1">
                 <Download className="inline mr-2" size={16} />
                 <span>Export Statement</span>
               </button>
             </div>
             <div>
-              <button className="rounded-[10px] border-[1px] boder-gray-50 p-1">
+              <button className=" flex items-center px-2  rounded-[10px] border-[1px] boder-gray-50 p-1">
                 <ArrowUpRight className="inline mr-2" size={16} />
                 <span> TRansfer Funds</span>
               </button>
             </div>
             <div>
-              <button className="rounded-[10px] border-[1px] boder-gray-0 p-1 bg-[#035638] text-white">
+              <button className=" flex items-center px-2 rounded-[10px] border-[1px] boder-gray-0 p-1 bg-[#035638] text-white">
                 <Plus className="inline mr-2" size={16} />
                 <span> Fund Wallet</span>
               </button>

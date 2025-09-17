@@ -16,7 +16,7 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="w-full  mx-auto mt-6">
+    <div className="w-full  mx-auto mt-0">
       <div>
         <h1 className="pageTitle">Setting</h1>
         <p className="pageSubTitle mt-2">
