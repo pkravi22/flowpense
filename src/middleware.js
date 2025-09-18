@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken"; // npm install jsonwebtoken
+//import jwt from "jsonwebtoken"; // npm install jsonwebtoken
 
 export function middleware(req) {
   const { pathname } = req.nextUrl;
