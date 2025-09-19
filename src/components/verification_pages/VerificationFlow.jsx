@@ -49,8 +49,8 @@ const VerifyAccount = () => {
             You need to verify your business account to get full access.
           </p>
         </div>
-        <div className="min-w-[50px] bg-[#035638]">
-          <p className=" text-white px-1 md:px-4 py-1 text-sm  rounded-4xl">
+        <div className="min-w-[50px] bg-[#035638]  rounded-full flex justify-center items-center">
+          <p className=" text-[#E5EE7D] px-1 md:px-4 py-1 text-sm ">
             Step {step} of 4
           </p>
         </div>

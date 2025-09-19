@@ -5,18 +5,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail, LockKeyhole } from "lucide-react";
 import { useRouter } from "next/navigation";
-// ✅ Zod Schema for login
+
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 export default function Login() {
-  const { register, handleSubmit, formState: { errors }, setError } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm({
     resolver: zodResolver(schema),
   });
-  const router=useRouter();
-   const handleForgetPassword = () => {
+  const router = useRouter();
+  const handleForgetPassword = () => {
     router.push("/forget-password");
   };
 
@@ -25,12 +30,15 @@ export default function Login() {
 
     // Example conditional logic
     if (data.email !== "test@example.com" || data.password !== "123456") {
-      setError("email", { type: "manual", message: "Invalid email or password" });
+      setError("email", {
+        type: "manual",
+        message: "Invalid email or password",
+      });
       setError("password", { type: "manual", message: "" });
       return;
     }
 
-    alert("Login Successful ✅");
+    alert("Login Successful");
   };
 
   return (
@@ -47,16 +55,20 @@ export default function Login() {
         </h2>
         <p className="text-sm text-[#696E7E]  mt-1">
           Don't have an account?{" "}
-          <a href="/signup" className="text-green-700 font-medium hover:underline">
+          <a
+            href="/signup"
+            className="text-green-700 font-medium hover:underline"
+          >
             Sign Up →
           </a>
         </p>
 
-        {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
           {/* Email */}
           <div className="flex items-center inputFeild rounded-lg px-3 py-2 border">
-            <span className="text-gray-400 pr-2"><Mail size={20} /></span>
+            <span className="text-gray-400 pr-2">
+              <Mail size={20} />
+            </span>
             <input
               {...register("email")}
               type="email"
@@ -66,22 +78,21 @@ export default function Login() {
           </div>
           <p className="text-xs text-red-500 mt-1">{errors.email?.message}</p>
 
-          
           <div className="flex items-center inputFeild rounded-lg px-3 py-2 border">
-            <span className="text-gray-400 pr-2"><LockKeyhole size={20} /></span>
+            <span className="text-gray-400 pr-2">
+              <LockKeyhole size={20} />
+            </span>
             <input
               {...register("password")}
               type="password"
               placeholder="Enter password"
-              className="w-full text-sm outline-none"
+              className="w-full text-sm outline-none "
             />
           </div>
-          <p className="text-xs text-red-500 mt-1">{errors.password?.message}</p>
+          <p className="text-xs text-red-500 mt-1">
+            {errors.password?.message}
+          </p>
 
-         
-          
-
-          
           <button
             type="submit"
             className="w-full bg-green-800 hover:bg-green-900 text-white py-3 rounded-4xl mt-2"
@@ -93,7 +104,7 @@ export default function Login() {
             onClick={handleForgetPassword}
             className="w-full text-blue-600 py-3 rounded-4xl mt-2 "
           >
-           Forgot your Password?
+            Forgot your Password?
           </button>
         </form>
       </div>

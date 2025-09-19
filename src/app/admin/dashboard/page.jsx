@@ -66,7 +66,7 @@ const cards = [
   {
     name: "Engineering",
     person: "Pramendra Singh",
-    number: "**** **** **** 1234",
+    number: "3242 **** **** 1234",
     bgColor: "#2e4f38ff",
     textColor: "white",
     monthlyLimit: "$5000",
@@ -76,8 +76,8 @@ const cards = [
   },
   {
     name: "Engineering",
-    person: "Pramendra Singh",
-    number: "**** **** **** 1234",
+    person: "Adebayo Okafor",
+    number: "4563 **** **** 1234",
     bgColor: "#b83a96ff",
     textColor: "white",
     monthlyLimit: "$5000",
@@ -88,7 +88,7 @@ const cards = [
   {
     name: "Engineering",
     person: "Pramendra Singh",
-    number: "**** **** **** 1234",
+    number: "6573 **** **** 1234",
     bgColor: "#b46a17ff",
     textColor: "white",
     monthlyLimit: "$5000",
@@ -98,8 +98,8 @@ const cards = [
   },
   {
     name: "Engineering",
-    person: "Pramendra Singh",
-    number: "**** **** **** 1234",
+    person: "Adebayo Okafor",
+    number: "6784 **** **** 1234",
     bgColor: "#21b5c6ff",
     textColor: "white",
     monthlyLimit: "$5000",
@@ -257,7 +257,7 @@ const Page = () => {
         </div>
       </div>
       {/* Active Cards */}
-      <div className="mt-6 bg-white p-4 rounded-2xl shadow-md">
+      <div className="mt-6 bg-white p-2 rounded-2xl shadow-md">
         <div className="flex items-center justify-between ">
           <div>
             <p className="pageTitle">Active Cards</p>
@@ -274,7 +274,7 @@ const Page = () => {
         </div>
         {/* Cards */}
         <div className="mt-6">
-          <div className="block lg:hidden">
+          <div className="block lg:hidden ">
             <Slider {...settings}>
               {cards.map((card, index) => (
                 <Card key={index} {...card} />
