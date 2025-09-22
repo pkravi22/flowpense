@@ -1,13 +1,17 @@
+"use client";
 import {
   ArrowUpRight,
   CreditCard,
   Download,
   Plus,
+  PlusIcon,
   Users,
   Wallet,
+  X,
 } from "lucide-react";
+//import { X, PlusIcon } from "lucide-react";
 import DateRangePicker from "../../../components/DatePicker";
-import React from "react";
+import React, { useState } from "react";
 import TransactionTable from "../../../components/UserTable";
 import BankDetails from "../../../components/walletPages/BankDetails";
 import RecentTransactions from "../../../components/walletPages/RecentTransactions";
@@ -42,38 +46,42 @@ const cardDetails = [
     sub: "4 % increase from last month",
   },
 ];
-const page = () => {
-const fundWallet = () => {
-  console.log("lets fund pur wallet");
-};
 
-return (
-  <div className="">
-    <div className="w-full flex flex-col md:flex-row items-center  justify-start md:justify-between gap-4">
-      <div className="flex flex-col justify-start -ml-8 sm:ml-0">
-        <h1 className="pageTitle">Wallet</h1>
-        <p className="pageSubTitle mt-2">
-          Manage organization funds and transfer to cards
-        </p>
-      </div>
-      <div className="overflow-scroll">
-        <div className="flex flex-wrap gap-1 md:gap-2 overflow-x-auto">
-          <div>
-            <button className=" flex items-center px-2 rounded-[10px] border-[.5px] boder-gray-50 p-1">
+const Page = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fundWallet = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  return (
+    <div className="">
+      <div className="w-full flex flex-col md:flex-row items-center justify-start md:justify-between gap-4">
+        <div className="flex flex-col justify-start -ml-8 sm:ml-0">
+          <h1 className="pageTitle">Wallet</h1>
+          <p className="pageSubTitle mt-2">
+            Manage organization funds and transfer to cards
+          </p>
+        </div>
+        <div className="overflow-scroll">
+          <div className="flex flex-wrap gap-1 md:gap-2 overflow-x-auto">
+            <button className="flex items-center px-2 rounded-[10px] border p-1">
               <Download className="inline md:mr-2" size={16} />
               <span className="text-sm">Export Statement</span>
             </button>
-          </div>
-          <div>
-            <button className=" flex items-center px-2  rounded-[10px] border-[1px] boder-gray-50 p-1">
+
+            <button className="flex items-center px-2 rounded-[10px] border p-1">
               <ArrowUpRight className="inline md:mr-2" size={16} />
-              <span className="text-sm"> TRansfer Funds</span>
+              <span className="text-sm">Transfer Funds</span>
             </button>
-          </div>
-          <div>
+
             <button
-              className=" flex items-center px-2 rounded-[10px] border-[1px] boder-gray-0 p-1 bg-[#035638] text-white"
-              onClick={fundWallet()}
+              className="flex items-center px-2 rounded-[10px] border p-1 bg-[#035638] text-white"
+              onClick={fundWallet}
             >
               <Plus className="inline md:mr-2" size={16} />
               <span className="text-sm"> Fund Wallet</span>
@@ -81,42 +89,121 @@ return (
           </div>
         </div>
       </div>
-    </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-      {cardDetails.map(({ id, icon, iconBg, title, value, iconColor, sub }) => (
-        <div
-          key={id}
-          className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start justify-start gap-4"
-        >
-          <div className="flex items-center gap-4 w-full">
-            <div className="rounded-full flex items-center justify-center">
-              {React.cloneElement(icon, { color: iconColor, size: 24 })}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        {cardDetails.map(
+          ({ id, icon, iconBg, title, value, iconColor, sub }) => (
+            <div
+              key={id}
+              className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start justify-start gap-4"
+            >
+              <div className="flex items-center gap-4 w-full">
+                <div className="rounded-full flex items-center justify-center">
+                  {React.cloneElement(icon, { color: iconColor, size: 24 })}
+                </div>
+                <div className="flex flex-col justify-between h-full">
+                  <p className="statcardTitle">{title}</p>
+                </div>
+              </div>
+              <p className="statcardNumber">{value}</p>
+              <p className="statcardSubTitle">{sub}</p>
             </div>
-            <div className="flex flex-col justify-between h-full">
-              <p className="statcardTitle">{title}</p>
-            </div>
+          )
+        )}
+      </div>
+
+      <div className="flex flex-col">
+        <div className="flex flex-col md:flex-row gap-4 mt-4 ">
+          <div className="flex-1">
+            <BankDetails />
           </div>
-          <p className="statcardNumber">{value}</p>
-          <p className="statcardSubTitle">{sub}</p>
+          <div className="flex-2">
+            <RecentTransactions />
+          </div>
         </div>
-      ))}
-    </div>
-    <div className="flex flex-col">
-      <div className="flex flex-col md:flex-row gap-4 mt-4 ">
-        <div className="flex-1">
-          <BankDetails />
-        </div>
-        <div className="flex-2">
-          {" "}
-          <RecentTransactions />
+        <div>
+          <BalanceBreakdown />
         </div>
       </div>
-      <div>
-        <BalanceBreakdown />
-      </div>
+
+      {isModalOpen && (
+        <div
+          id="backdrop"
+          onClick={handleBackdropClick}
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+        >
+          <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-lg relative">
+            <button
+              onClick={closeModal}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="mb-4">
+              <h2 className="text-[24px] text-[#035638]">
+                Fund Organization Wallet
+              </h2>
+              <p className="text-[#838794] text-[16px]">
+                Add funds to wallet from your bank account
+              </p>
+            </div>
+
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Select Bank
+                </label>
+                <select className="w-full border border-gray-200 p-2 rounded">
+                  <option value="">Select Bank Account</option>
+                  <option value="bank1">Bank 1</option>
+                  <option value="bank2">Bank 2</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Amount</label>
+                <input
+                  type="number"
+                  placeholder="Enter Amount"
+                  className="w-full border border-gray-200 p-2 rounded"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Payment Method
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. UPI / NetBanking / Card"
+                  className="w-full border border-gray-200 p-2 rounded"
+                />
+              </div>
+
+              {/* Buttons */}
+              <div className="flex  gap-2 mt-4">
+                <button
+                  type="button"
+                  className="px-4 py-2 flex-1 rounded-full bg-gray-200"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 flex flex-1 items-center gap-2 rounded-full bg-[#035638] text-white"
+                >
+                  <PlusIcon size={16} />
+                  Add Funds
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
 };
 
-export default page;
+export default Page;

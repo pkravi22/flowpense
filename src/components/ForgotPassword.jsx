@@ -21,7 +21,7 @@ export default function ForgetPassword() {
   };
 
   const handleVerifyEmail=()=>{
-     router.push("/verifyEmail");
+     router.push("/forget-password/verify-otp");
   }
   return (
     <div className="min-h-screen flex items-center justify-center px-4 ">

@@ -5,6 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail, LockKeyhole } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { authService } from "@/services/authServices";
+import { useState } from "react";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -17,32 +19,52 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
     setError,
+    resetField,
   } = useForm({
     resolver: zodResolver(schema),
   });
+
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const handleForgetPassword = () => {
     router.push("/forget-password");
   };
 
-  const onSubmit = (data) => {
-    console.log("Login Data:", data);
+  const onSubmit = async (data) => {
+    setLoading(true);
 
-    // Example conditional logic
-    if (data.email !== "test@example.com" || data.password !== "123456") {
+    try {
+      const payload = {
+        email: data.email,
+        password: data.password,
+      };
+
+      console.log("Sending payload:", payload);
+      const res = await authService.signin(payload);
+
+      console.log("Signin successful:", res);
+      alert("Login successful! Redirecting...");
+      localStorage.setItem("token", res.Token);
+      router.push("/admin/dashboard"); // or wherever you want to redirect
+    } catch (err) {
+      console.error(err.response?.data?.message || "Login failed");
+
+      // Show backend error in a friendly way
       setError("email", {
         type: "manual",
-        message: "Invalid email or password",
+        message: err.response?.data?.message || "Invalid credentials",
       });
-      setError("password", { type: "manual", message: "" });
-      return;
-    }
 
-    alert("Login Successful");
+      // Clear password field
+      resetField("password");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 ">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full sm:max-w-md bg-white rounded-2xl shadow-md p-8">
         {/* Logo */}
         <div className="flex justify-center mb-6">
@@ -53,7 +75,7 @@ export default function Login() {
         <h2 className="text-xl font-semibold text-gray-900 ">
           Login to your account
         </h2>
-        <p className="text-sm text-[#696E7E]  mt-1">
+        <p className="text-sm text-[#696E7E] mt-1">
           Don't have an account?{" "}
           <a
             href="/signup"
@@ -74,10 +96,12 @@ export default function Login() {
               type="email"
               placeholder="namesurname@gmail.com"
               className="w-full text-sm outline-none"
+              disabled={loading}
             />
           </div>
           <p className="text-xs text-red-500 mt-1">{errors.email?.message}</p>
 
+          {/* Password */}
           <div className="flex items-center inputFeild rounded-lg px-3 py-2 border">
             <span className="text-gray-400 pr-2">
               <LockKeyhole size={20} />
@@ -86,23 +110,33 @@ export default function Login() {
               {...register("password")}
               type="password"
               placeholder="Enter password"
-              className="w-full text-sm outline-none "
+              className="w-full text-sm outline-none"
+              disabled={loading}
             />
           </div>
           <p className="text-xs text-red-500 mt-1">
             {errors.password?.message}
           </p>
 
+          {/* Login button */}
           <button
             type="submit"
-            className="w-full bg-green-800 hover:bg-green-900 text-white py-3 rounded-4xl mt-2"
+            disabled={loading}
+            className={`w-full text-white py-3 rounded-4xl mt-2 ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-green-800 hover:bg-green-900"
+            }`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
+
+          {/* Forget Password */}
           <button
             type="button"
             onClick={handleForgetPassword}
             className="w-full text-blue-600 py-3 rounded-4xl mt-2 "
+            disabled={loading}
           >
             Forgot your Password?
           </button>

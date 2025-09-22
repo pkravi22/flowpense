@@ -1,5 +1,5 @@
 "use client";
-import { Plus, Settings, User } from "lucide-react";
+import { Cross, CrossIcon, Plus, Settings, User, X } from "lucide-react";
 import EmployeeTable from "../../../components/EmployeeTable";
 import React, { useState } from "react";
 
@@ -7,7 +7,10 @@ import React, { useState } from "react";
 const AddEmployeeModal = ({ setAddEmployeeModalOpen }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg ">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg relative ">
+        <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+          <X size={20} />
+        </button>
         <div className="border-b border-gray-200 p-4">
           {" "}
           <h2 className="formHeading">Add New Employee</h2>
@@ -63,7 +66,10 @@ const AddEmployeeModal = ({ setAddEmployeeModalOpen }) => {
 const CreateTeamModal = ({ setCreateTeamModal }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg ">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg relative ">
+        <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+          <X size={20} />
+        </button>
         <div className="border-b border-gray-200 p-4">
           <h2 className="formHeading">Create New Team</h2>
           <p className="smText">
@@ -120,7 +126,7 @@ const CreateTeamModal = ({ setCreateTeamModal }) => {
 const AddMemberModal = ({ setAddMemberModal }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6">
+      <div className="relative bg-white rounded-xl shadow-lg w-full max-w-lg p-6">
         <h2 className="formHeading ">Add Team Member</h2>
         <p className="smText">
           Add an existing employee to Product Development.
@@ -151,17 +157,17 @@ const AddMemberModal = ({ setAddMemberModal }) => {
               placeholder="Enter image URL"
             />
           </div>
-          <div className="flex justify-end gap-2">
+          <div className="flex  gap-2">
             <button
               type="button"
               onClick={() => setAddMemberModal(false)}
-              className="px-4 py-1  border w-[1/2] border-background text-sm rounded-full"
+              className="px-4 py-1 flex-1  border w-[1/2] border-background text-sm rounded-full"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-1   bg-background text-sm rounded-full text-white "
+              className="px-4 py-1  flex-1  bg-background text-sm rounded-full text-white "
             >
               Add Member
             </button>
@@ -362,16 +368,16 @@ const Page = () => {
         <div className="flex gap-2">
           <div
             onClick={() => setAddEmployeeModalOpen(true)}
-            className="flex gap-2 border border-green-600 px-2 py-1 text-sm text-green-600 rounded-full cursor-pointer"
+            className="flex w-[200px] items-center flex-1 gap-2 border border-green-600 px-2 py-1 text-sm text-green-600 rounded-full cursor-pointer"
           >
-            <User />
+            <User  size={16}/>
             <span>Add Employee</span>
           </div>
           <div
             onClick={() => setCreateTeamModal(true)}
-            className="border bg-green-900 px-4 py-1 text-sm text-white flex gap-2 rounded-full cursor-pointer"
+            className="border flex-1 items-center bg-green-900 px-4 py-1 text-sm text-white flex gap-2 rounded-full cursor-pointer"
           >
-            <Plus />
+            <Plus size={16} />
             <span>Create Team</span>
           </div>
         </div>
