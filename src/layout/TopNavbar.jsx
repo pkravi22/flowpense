@@ -4,7 +4,11 @@ import { ArrowBigRight, Bell, Menu, UserCircle } from "lucide-react";
 import { useState } from "react";
 
 export default function Topbar({ setIsOpen }) {
-  const token = localStorage.getItem("token");
+   const [token, setToken] = useState(null);
+   useEffect(() => {
+     const t = localStorage.getItem("token");
+     setToken(t);
+   }, []);
   console.log(token);
   const payload = JSON.parse(atob(token.split(".")[1]));
   console.log(payload);
