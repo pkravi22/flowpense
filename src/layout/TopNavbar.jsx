@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowBigRight, Bell, Menu, UserCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Topbar({ setIsOpen }) {
    const [token, setToken] = useState(null);
