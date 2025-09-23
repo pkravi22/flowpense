@@ -1,7 +1,7 @@
 "use client";
 
 import Piechart from "../../../components/PieChart";
-import Example from "../../../components/Barchart";
+
 import Card from "../../../components/Card";
 import Slider from "react-slick";
 import {
@@ -15,6 +15,7 @@ import {
 import React, { useState } from "react";
 import DateRangePicker from "../../../components/DatePicker";
 import VerifyAccount from "../../../components/verification_pages/VerificationFlow";
+import Example from "@/components/BarChart";
 
 //import VerificationFlow from "../../../components/verification_pages/VerificationFlow";
 
