@@ -162,7 +162,7 @@ const Page = () => {
         )}
 
         {showVerification && (
-          <div className="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-black/50 bg-opacity-25 flex items-center justify-center z-50">
             <div className="bg-white  rounded-xl w-[90%] md:w-[600px] shadow-lg">
               <VerifyAccount
                 onComplete={handleVerificationComplete} // call when done
@@ -212,7 +212,7 @@ const Page = () => {
       {/*  charts */}
       <div className="flex flex-col  md:flex-row gap-6 mt-6  p-2 rounded-2xl ">
         {/*  Bar charts */}
-        <div className="flex flex-col flex-3 gap-6 bg-white shadow-md p-4  md:h-[400px] rounded-2xl">
+        <div className="flex flex-col flex-3 gap-6 bg-white shadow-md p-4  md:min-h-[400px] rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             {/* Header */}
             <div className="flex flex-col gap-2 shadow-md rounded-2xl p-1  ">
@@ -245,14 +245,40 @@ const Page = () => {
           </div>
         </div>
         {/*  Pie charts */}
-        <div className="flex-2 bg-white h-[300px] flex flex-col items-center md:h-[400px] rounded-2xl justify-center">
-          <div>Hello world</div>
-          <div>
+        <div className="flex-2 bg-white flex gap-3 flex-col items-center md:min-h-[400px] rounded-2xl justify-center">
+          <div className="flex justify-between w-full px-6 py-4">
+            <p className="font-semibold text-gray-800">Spend Category</p>
+            <p>
+              <select
+                className="border rounded-md px-2 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                defaultValue="September"
+              >
+                <option>January</option>
+                <option>February</option>
+                <option>March</option>
+                <option>April</option>
+                <option>May</option>
+                <option>June</option>
+                <option>July</option>
+                <option>August</option>
+                <option>September</option>
+                <option>October</option>
+                <option>November</option>
+                <option>December</option>
+              </select>
+            </p>
+          </div>
+
+          <div className="flex justify-center">
             <Piechart />
           </div>
-          <div>
-            <p>Hello </p>
-            <p>Hfnkwnfnskf</p>
+          <div className="w-full px-6 my-2">
+            <button className="text-text-primary  cursor-pointer flex items-center justify-center gap-2  rounded w-full py-2 text-center border border-borderColor">
+              View Details
+              <span>
+                <ArrowRight size={18} />
+              </span>
+            </button>
           </div>
         </div>
       </div>

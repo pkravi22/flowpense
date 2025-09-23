@@ -1,3 +1,4 @@
+"use client";
 import {
   ArrowRight,
   BoxSelect,
@@ -8,8 +9,9 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import Card from "../../../components/Card";
+import CardFlow from "../../../components/new_card_creation/CardFlow";
 const cardDetails = [
   {
     id: 1,
@@ -49,6 +51,7 @@ const cardDetails = [
   },
 ];
 const page = () => {
+  const [showCardFlow, setShowCardFlow] = useState(false);
   return (
     <div>
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
@@ -101,7 +104,10 @@ const page = () => {
             </p>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center mt-4">
-            <div className="border border-black text-white bg-[#035638] flex p-2 w-[130px] text-[12px] justify-center items-center gap-1 rounded-4xl mt-4 cursor-pointer hover:bg-[#035638] hover:text-white transition duration-300 ease-in-out">
+            <div
+              className="border border-black text-white bg-[#035638] flex p-2 w-[130px] text-[12px] justify-center items-center gap-1 rounded-4xl mt-4 cursor-pointer hover:bg-[#035638] hover:text-white transition duration-300 ease-in-out"
+              onClick={() => setShowCardFlow(true)}
+            >
               <Plus size={12} />
               <p>Add new card</p>
             </div>
@@ -188,6 +194,22 @@ const page = () => {
             />
           </div>
         </div>
+
+        {/* Modal for CardFlow */}
+        {showCardFlow && (
+          <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white rounded-2xl shadow-lg w-full max-w-lg  relative">
+              {/* Close button */}
+              <button
+                onClick={() => setShowCardFlow(false)}
+                className="absolute top-3 right-3 text-gray-500 hover:text-black"
+              >
+                ✕
+              </button>
+              <CardFlow />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

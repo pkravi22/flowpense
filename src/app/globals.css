@@ -14,15 +14,14 @@
 }
 
 @theme inline {
-  --color-text-primary: #000000;
-  --color-text-primary:#696E7E;
-  --color-text-primary:#B7BE64;
+  --color-text-primary: #035638;
+
   --color-bg-foundation:#CED671;
   --color-background: var(--background);
   --color-brand: var(--background);
   --color-foreground: var(--foreground);
   
-  --color-borderColor:#E2E4E9;
+  --color-borderColor:#035638;
 }
 
 .heading{

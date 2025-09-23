@@ -7,7 +7,7 @@ import ComplianceVerification from "./Step3";
 import BankingInfo from "./Step4";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const VerifyAccount = () => {
+const VerifyAccount = ({ onComplete, onCancel }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     businessName: "",
@@ -94,7 +94,10 @@ const VerifyAccount = () => {
           </button>
         ) : (
           <button
-            onClick={() => console.log(formData)}
+            onClick={() => {
+              console.log(formData);
+              onComplete();
+            }}
             className="bg-background flex gap-2 items-center text-white px-4 py-1 rounded-full"
           >
             Submit for Verification

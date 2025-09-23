@@ -9,22 +9,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { name: "Jan", uv: 4000 },
-  { name: "Feb", uv: 3000 },
-  { name: "Mar", uv: 2000 },
-  { name: "Apr", uv: 2780 },
-  { name: "May", uv: 1890 },
-  { name: "Jun", uv: 2390 },
-  { name: "Jul", uv: 3490 },
-  { name: "Aug", uv: 4200 },
-  { name: "Sep", uv: 3100 },
-  { name: "Oct", uv: 3700 },
-  { name: "Nov", uv: 2900 },
-  { name: "Dec", uv: 4100 },
-];
+// 
+const data=[];
 
 const Example = () => {
+  if (data.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[250px]  w-full text-gray-500 font-medium">
+        No Data Available
+      </div>
+    );
+  }
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={data}>

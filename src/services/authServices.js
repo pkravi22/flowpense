@@ -3,6 +3,7 @@ import api from "./api";
 
 export const authService = {
   signin: async (payload) => {
+    console.log("payload",payload)
     const { data } = await api.post("api/auth/login", payload);
     return data;
   },
@@ -45,7 +46,7 @@ forgotPassword: async ({ email }) => {
   },
 
   resetPassword: async (payload) => {
-    const { data } = await api.post("/auth/reset-password", payload);
+    const { data } = await api.post("api/auth/reset-password", payload);
     return data;
   },
 
