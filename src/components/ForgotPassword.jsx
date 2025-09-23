@@ -5,24 +5,35 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { authService } from "@/services/authServices";
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
 });
 
 export default function ForgetPassword() {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(schema),
   });
-  const router=useRouter()
+  const router = useRouter();
 
-  const onSubmit = (data) => {
-    console.log("Email to verify:", data.email);
-    alert(`Verification email sent to ${data.email} ✅`);
+  const onSubmit = async (data) => {
+    try {
+      const res = await authService.forgotPassword({ email: data.email });
+      alert("Otp sent succeefully");
+      localStorage.setItem("forgetToken", res.TemporaryToken); // <-- here
+      router.push("/forget-password/verify-otp");
+    } catch (e) {
+      alert("error in sending otp");
+    }
   };
 
-  const handleVerifyEmail=()=>{
-     router.push("/forget-password/verify-otp");
-  }
+  const handleVerifyEmail = async () => {
+    console.log("Otp sent to ur email");
+  };
   return (
     <div className="min-h-screen flex items-center justify-center px-4 ">
       <div className="w-full sm:max-w-md bg-white rounded-2xl shadow-md p-8">
@@ -39,7 +50,9 @@ export default function ForgetPassword() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
           <div className="flex items-center inputFeild rounded-lg px-3 py-2 border">
-            <span className="text-gray-400 pr-2"><Mail size={20} /></span>
+            <span className="text-gray-400 pr-2">
+              <Mail size={20} />
+            </span>
             <input
               {...register("email")}
               type="email"
@@ -51,8 +64,7 @@ export default function ForgetPassword() {
 
           <button
             type="submit"
-            onClick={handleVerifyEmail}
-            className="w-full bg-green-800 hover:bg-green-900 text-white py-3 rounded-4xl mt-2"
+            className="w-full bg-green-800 hover:bg-green-900 cursor-pointer text-white py-3 rounded-4xl mt-2"
           >
             Verify Email
           </button>

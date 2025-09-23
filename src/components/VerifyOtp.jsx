@@ -1,12 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LockKeyhole } from "lucide-react";
 import { authService } from "@/services/authServices";
+import { useRouter } from "next/navigation";
 
-// ✅ Zod Schema for 6-digit code
 const schema = z.object({
   code: z
     .string()
@@ -14,29 +15,31 @@ const schema = z.object({
     .regex(/^\d+$/, "Code must be numeric"),
 });
 
-export default function VerifyAccount() {
+export default function VerifyAccount({ type, email: propEmail }) {
+  const [email, setEmail] = useState(propEmail || "");
+  const [token, setToken] = useState(null);
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema),
-  });
-  let email;
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoiYXNoaXNoa3VtYXJpbmZvNkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJjb21wYW55SWQiOm51bGwsImlhdCI6MTc1NzE4Njg2NywiZXhwIjoxNzU3MTkwNDY3fQ.ZsdzUGPHMoZLeOiylNPlqvfk2cyM94FTVUFr-TPIQOc";
-  try {
-    if (token) {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      console.log(payload);
-      email = payload.email || propEmail;
-      console.log(email);
-    } else {
-      email = propEmail;
+  } = useForm({ resolver: zodResolver(schema) });
+
+  useEffect(() => {
+    // This runs only in browser
+    const t = localStorage.getItem("token");
+    setToken(t);
+
+    if (t) {
+      try {
+        const payload = JSON.parse(atob(t.split(".")[1]));
+        setEmail(payload.email || propEmail);
+      } catch {
+        setEmail(propEmail);
+      }
     }
-  } catch (err) {
-    email = propEmail;
-  }
+  }, [propEmail]);
 
   const onSubmit = async (data) => {
     try {
@@ -44,35 +47,29 @@ export default function VerifyAccount() {
         alert("Token missing!");
         return;
       }
-      console.log("lets verify otp for  forget  password");
-      const res = await authService.verifyForgetPasswordOtp({
-        otpCode: data.code,
-        token,
-      });
-      console.log("Verification successful:", res);
+      const res = await authService.verifyEmail({ otp: data.code, token });
       alert("Code Verified Successfully");
+      router.push("/login");
     } catch (err) {
       console.error(err.response?.data?.message || "Verification failed");
       alert(err.response?.data?.message || "Verification failed");
     }
   };
 
-  const handleResend = () => {
-    alert("Code Resent ✅");
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center  px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full sm:max-w-md bg-white rounded-2xl shadow-md p-8">
         <div className="flex justify-center mb-6">
           <img src="/logo 1.png" alt="Flowpense" className="h-16" />
         </div>
-        <h2 className="text-2xl font-semibold text-gray-900 ">
+        <h2 className="text-2xl font-semibold text-gray-900">
           Verify your account
         </h2>
-        <p className="smText font-medium w-2/3 mt-2">
-          Enter 6-digit code sent to the {email}
-        </p>
+        {email && (
+          <p className="smText font-medium w-2/3 mt-2">
+            Enter 6-digit code sent to {email}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
           <div className="flex items-center border rounded-lg px-3 py-2 inputFeild">
@@ -98,8 +95,8 @@ export default function VerifyAccount() {
 
           <button
             type="button"
-            onClick={handleResend}
-            className="w-full text-blue-600 py-3 rounded-4xl mt-2 "
+            onClick={() => alert("Code Resent")}
+            className="w-full text-blue-600 py-3 rounded-4xl mt-2"
           >
             Resend Code
           </button>

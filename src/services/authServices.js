@@ -15,7 +15,7 @@ export const authService = {
   verifyEmail: async ({ otp, token }) => {
     // Send OTP in body and token in Authorization header
     const { data } = await api.post(
-      "/api/auth/verify-email",
+      "api/auth/verify-email",
       { otp },
       {
         headers: {
@@ -27,11 +27,13 @@ export const authService = {
   },
 
 
-  forgotPassword: async (payload) => {
-    const { data } = await api.post("/api/auth/forgot-password", payload);
-    return data;
-  },
+forgotPassword: async ({ email }) => {
+  console.log("email:", email)
+  const { data } = await api.post("api/auth/forgot-password", { email });
+  return data;
+},
   verifyForgetPasswordOtp:async ({otpCode,token}) => {
+    console.log(otpCode,token)
     const { data } = await api.post("api/auth/verify/forgot-pass-otp",
       { otpCode },
       {

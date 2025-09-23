@@ -122,7 +122,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full text-white py-3 rounded-4xl mt-2 ${
+            className={`w-full text-white cursor-pointer py-3 rounded-4xl mt-2 ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-green-800 hover:bg-green-900"
@@ -135,7 +135,7 @@ export default function Login() {
           <button
             type="button"
             onClick={handleForgetPassword}
-            className="w-full text-blue-600 py-3 rounded-4xl mt-2 "
+            className="w-full text-blue-600 cursor-pointer py-3 rounded-4xl mt-2 "
             disabled={loading}
           >
             Forgot your Password?

@@ -6,6 +6,8 @@ import { z } from "zod";
 import { LockKeyhole } from "lucide-react";
 import { authService } from "@/services/authServices";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
 // Zod Schema for 6-digit code
 const schema = z.object({
   code: z
@@ -22,34 +24,34 @@ export default function VerifyAccount({ type, email: propEmail }) {
   } = useForm({
     resolver: zodResolver(schema),
   });
-  const router = useRouter();
-  let email;
-  const token = localStorage.getItem("token");
 
-  try {
-    if (token) {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      console.log(payload);
-      email = payload.email || propEmail;
-      console.log(email);
-    } else {
-      email = propEmail;
+  const router = useRouter();
+  const [token, setToken] = useState(null);
+  const [email, setEmail] = useState(propEmail);
+
+  // ✅ Run only on client
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedToken = localStorage.getItem("token");
+      if (savedToken) {
+        setToken(savedToken);
+        try {
+          const payload = JSON.parse(atob(savedToken.split(".")[1]));
+          setEmail(payload.email || propEmail);
+        } catch {
+          setEmail(propEmail);
+        }
+      }
     }
-  } catch (err) {
-    email = propEmail;
-  }
+  }, [propEmail]);
 
   const onSubmit = async (data) => {
-    console.log("hi");
     try {
-      console.log("hi2");
       if (!token) {
         alert("Token missing!");
         return;
       }
-      console.log("lets verify email");
       const res = await authService.verifyEmail({ otp: data.code, token });
-      console.log("Verification successful:", res);
       alert("Code Verified Successfully");
       router.push("/login");
     } catch (err) {
@@ -94,7 +96,7 @@ export default function VerifyAccount({ type, email: propEmail }) {
 
           <button
             type="submit"
-            className="w-full bg-green-800 hover:bg-green-900 text-white py-3 rounded-4xl mt-2"
+            className="w-full bg-green-800 cursor-pointer hover:bg-green-900 text-white py-3 rounded-4xl mt-2"
           >
             Verify
           </button>
