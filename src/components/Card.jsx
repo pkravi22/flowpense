@@ -1,5 +1,15 @@
-import { Ellipsis } from "lucide-react";
-import React from "react";
+import {
+  Ellipsis,
+  Wallet,
+  Trash2,
+  Eye,
+  Snowflake,
+  Edit,
+  Settings,
+  ArrowUpDown,
+  BanknoteArrowUp,
+} from "lucide-react";
+import React, { useState } from "react";
 
 const Card = ({
   name,
@@ -20,31 +30,73 @@ const Card = ({
       : status === "Expired"
       ? "text-red-400"
       : "text-gray-400";
+
+  const [cardDetailsOpen, setCardDetailsOpen] = useState(false);
+
+  const handleThreeDots = () => {
+    setCardDetailsOpen((prev) => !prev);
+  };
+
   return (
-    <div className="m-4 w-[300px] h-[180px]">
-      <div className="flex justify-between  mb-2 px-4">
+    <div className="m-4 w-[300px] h-[180px] relative">
+      <div className="flex justify-between mb-2 px-4">
         <p className="text-sm">{name}</p>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative">
           <p className={statusColor}>{status}</p>
-          <Ellipsis className=" bg-gray-200 px-1 py-[.2] rounded-3xl" />
+          <Ellipsis
+            className="bg-gray-200 px-1 py-[.2rem] rounded-3xl cursor-pointer hover:bg-gray-300"
+            onClick={handleThreeDots}
+          />
+
+          {/* Dropdown Menu */}
+          {cardDetailsOpen && (
+            <div
+              className="absolute right-0 top-6 w-48 bg-white shadow-lg rounded-lg border p-2 z-50"
+              id="closeModal"
+              onClick={() => {
+                setCardDetailsOpen(false);
+              }}
+            >
+              <button className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md">
+                <Eye size={16} /> View Details
+              </button>
+              <button className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md">
+                <BanknoteArrowUp size={16} /> Fund Card
+              </button>
+
+              <button className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md">
+                <Snowflake size={16} /> Freeze Card
+              </button>
+              <button className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md">
+                <ArrowUpDown size={16} /> Transfer Balance
+              </button>
+              <button className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md">
+                <Settings size={16} /> Edit Limit
+              </button>
+              <button className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md">
+                <Trash2 size={16} /> Delete Card
+              </button>
+            </div>
+          )}
         </div>
       </div>
+
       <div
         className="w-full h-[160px] rounded-2xl p-3"
         style={{ backgroundColor: bgColor, color: textColor }}
       >
-        <div className="flex flex-col justify-between  gap-0 ">
-          <div className="flex text-[#B1CBC1]  justify-between text-sm ">
+        <div className="flex flex-col justify-between gap-0">
+          <div className="flex text-[#B1CBC1] justify-between text-sm">
             <p>Team Lead</p>
             <p>Balance</p>
           </div>
-          <div className="flex  justify-between ">
-            <p className="text-[20px] text-[#F7FAD7] font-medium ">{person}</p>
-            <p className="text-xl font-medium ">{balance}</p>
+          <div className="flex justify-between">
+            <p className="text-[20px] text-[#F7FAD7] font-medium">{person}</p>
+            <p className="text-xl font-medium">{balance}</p>
           </div>
         </div>
         <div>
-          <p className="text-[30px] font-medium text-[#FCFDF2] my-1 ">
+          <p className="text-[30px] font-medium text-[#FCFDF2] my-1">
             {number}
           </p>
         </div>

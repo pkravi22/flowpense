@@ -57,6 +57,9 @@ const Page = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const handleBackdropClick = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="">

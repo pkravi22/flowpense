@@ -1,5 +1,13 @@
 "use client";
-import { Cross, CrossIcon, Plus, Settings, User, X } from "lucide-react";
+import {
+  Cross,
+  CrossIcon,
+  Plus,
+  PlusIcon,
+  Settings,
+  User,
+  X,
+} from "lucide-react";
 import EmployeeTable from "../../../components/EmployeeTable";
 import React, { useState } from "react";
 
@@ -9,15 +17,23 @@ const AddEmployeeModal = ({ setAddEmployeeModalOpen }) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-lg relative ">
         <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-          <X size={20} />
+          <X
+            size={20}
+            onClick={() => setAddEmployeeModalOpen(false)}
+            className="bg-gray-400 text-black rounded-full p-1"
+          />
         </button>
-        <div className="border-b border-gray-200 p-4">
+        <div className=" p-4">
           {" "}
-          <h2 className="formHeading">Add New Employee</h2>
-          <p className="smText">Add a new employee to the organization.</p>
+          <h2 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6">
+            Add New Employee
+          </h2>
+          <p className="text-[color:var(--Neutral-Neutral400,#838794)] text-base not-italic font-normal leading-4 mt-1 mb-3">
+            Add a new employee to the organization.
+          </p>
         </div>
 
-        <form className="space-y-4 p-4">
+        <form className="space-y-4 px-8 py-4">
           <div>
             <label className="text-sm font-medium">Name</label>
             <input
@@ -30,7 +46,7 @@ const AddEmployeeModal = ({ setAddEmployeeModalOpen }) => {
             <label className="text-sm font-medium">Email</label>
             <input
               type="email"
-              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
               placeholder="Enter email"
             />
           </div>
@@ -38,22 +54,23 @@ const AddEmployeeModal = ({ setAddEmployeeModalOpen }) => {
             <label className="text-sm font-medium">Department</label>
             <input
               type="text"
-              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
               placeholder="Enter department"
             />
           </div>
-          <div className="flex justify-end gap-2">
+          <div className="flex w-full justify-between gap-2">
             <button
               type="button"
               onClick={() => setAddEmployeeModalOpen(false)}
-              className="px-4 py-1  border w-[1/2] border-background text-sm rounded-full"
+              className="px-4 py-1  flex-1 border w-[1/2] border-background text-sm rounded-full"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-1   bg-background text-sm rounded-full text-white "
+              className="px-4 py-[10px] flex gap-2 items-center justify-center  flex-1 bg-background text-sm rounded-full text-white "
             >
+              <PlusIcon />
               Add Employee
             </button>
           </div>
@@ -68,28 +85,34 @@ const CreateTeamModal = ({ setCreateTeamModal }) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-lg relative ">
         <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-          <X size={20} />
+          <X
+            size={20}
+            onClick={() => setCreateTeamModal(false)}
+            className="bg-gray-400 text-black rounded-full p-1"
+          />
         </button>
-        <div className="border-b border-gray-200 p-4">
-          <h2 className="formHeading">Create New Team</h2>
-          <p className="smText">
+        <div className=" p-4">
+          <h2 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6">
+            Create New Team
+          </h2>
+          <p className="text-[color:var(--Neutral-Neutral400,#838794)] text-base not-italic font-normal leading-4 mt-1 mb-3">
             Create a new team and set up its initial configuration.
           </p>
         </div>
 
-        <form className="space-y-4 p-4">
+        <form className="space-y-4 px-8 py-4">
           <div>
             <label className="labelText">Team Name</label>
             <input
               type="text"
-              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
               placeholder="Enter team name"
             />
           </div>
           <div>
             <label className="labelText">Description</label>
             <textarea
-              className="w-full border border-gray-200 p-2 rounded-md mt-1"
+              className="w-full border outline-none border-gray-200 p-2 rounded-md mt-1"
               rows="3"
               placeholder="Enter team description"
             />
@@ -98,21 +121,21 @@ const CreateTeamModal = ({ setCreateTeamModal }) => {
             <label className="labelText">Budget</label>
             <input
               type="number"
-              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
               placeholder="Enter budget"
             />
           </div>
-          <div className="flex justify-end gap-2">
+          <div className="flex w-full  justify-between items-center gap-2">
             <button
               type="button"
               onClick={() => setCreateTeamModal(false)}
-              className="px-4 py-1  border w-[1/2] border-background text-sm rounded-full"
+              className="px-4 py-[10px] flex-1  border  border-background text-sm rounded-full"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-1   bg-background text-sm rounded-full text-white "
+              className="px-4 py-[10px]   flex-1  bg-background text-sm rounded-full text-white "
             >
               Create Team
             </button>
@@ -126,18 +149,27 @@ const CreateTeamModal = ({ setCreateTeamModal }) => {
 const AddMemberModal = ({ setAddMemberModal }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-      <div className="relative bg-white rounded-xl shadow-lg w-full max-w-lg p-6">
-        <h2 className="formHeading ">Add Team Member</h2>
-        <p className="smText">
+      <div className="relative bg-white rounded-xl shadow-lg w-full max-w-lg p-4">
+        <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+          <X
+            size={20}
+            onClick={() => setAddMemberModal(false)}
+            className="bg-gray-400 text-black rounded-full p-1"
+          />
+        </button>
+        <h2 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6 ">
+          Add Team Member
+        </h2>
+        <p className="text-[color:var(--Neutral-Neutral400,#838794)] text-base not-italic font-normal leading-4 mt-1 mb-3">
           Add an existing employee to Product Development.
         </p>
-        <div className="h-[.5px] bg-gray-200 w-full mb-2 mt-1"></div>
-        <form className="space-y-4">
+
+        <form className="space-y-4 px-8 py-4">
           <div>
             <label className="labelText">Member Name</label>
             <input
               type="text"
-              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
               placeholder="Enter member name"
             />
           </div>
@@ -145,19 +177,12 @@ const AddMemberModal = ({ setAddMemberModal }) => {
             <label className="labelText">Role</label>
             <input
               type="text"
-              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
               placeholder="Enter role"
             />
           </div>
-          <div>
-            <label className="labelText">Profile Image URL</label>
-            <input
-              type="url"
-              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
-              placeholder="Enter image URL"
-            />
-          </div>
-          <div className="flex  gap-2">
+
+          <div className="flex w-full  gap-2 ">
             <button
               type="button"
               onClick={() => setAddMemberModal(false)}
@@ -167,8 +192,9 @@ const AddMemberModal = ({ setAddMemberModal }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-1  flex-1  bg-background text-sm rounded-full text-white "
+              className="px-4 py-[10px] flex gap-2 items-center justify-center  flex-1  bg-background text-sm rounded-full text-white "
             >
+              <PlusIcon />
               Add Member
             </button>
           </div>

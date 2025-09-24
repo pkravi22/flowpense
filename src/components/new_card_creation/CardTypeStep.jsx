@@ -21,7 +21,11 @@ export default function CardTypeStep({ nextStep, updateData, data }) {
             >
               <Wallet />
               Virtual Card
-              <p className="text-[color:var(--Neutral-Neutral400,#838794)] text-center text-base not-italic font-normal leading-[100%];">
+              <p
+                className={`text-[color:var(--Neutral-Neutral400,#838794)] text-center text-base not-italic font-normal leading-[100%] ${
+                  data.cardType === "Virtual" ? " text-white" : ""
+                }`}
+              >
                 Virtual Issuance
               </p>
             </button>
@@ -38,7 +42,11 @@ export default function CardTypeStep({ nextStep, updateData, data }) {
             >
               <Wallet />
               Physical Card
-              <p className="text-[color:var(--Neutral-Neutral400,#838794)] text-center text-base not-italic font-normal leading-[100%];">
+              <p
+                className={`text-[color:var(--Neutral-Neutral400,#838794)] text-center text-base not-italic font-normal leading-[100%] ${
+                  data.cardType === "Physical" ? " text-white" : ""
+                }`}
+              >
                 Physical Issuance
               </p>
             </button>
@@ -49,7 +57,7 @@ export default function CardTypeStep({ nextStep, updateData, data }) {
           <input
             type="text"
             placeholder="e.g John Travel Card,Marketing Team Card"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
           />
           <div className="text-[color:var(--Neutral-600,#475467)] flex items-center  gap-1 my-1 text-xs not-italic font-normal leading-[160%]">
             <Info size={12} />

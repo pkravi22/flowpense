@@ -10,14 +10,13 @@ export default function CardDetailsStep({
   const [enabled, setEnabled] = useState(false);
   const toggleSwitch = () => setEnabled(!enabled);
 
-  // Dropdown states
+
   const [holderOpen, setHolderOpen] = useState(false);
   const [selectedHolders, setSelectedHolders] = useState([]);
 
   const [approverOpen, setApproverOpen] = useState(false);
-  const [selectedApprover, setSelectedApprover] = useState(null); // single approver
+  const [selectedApprover, setSelectedApprover] = useState(null);
 
-  // Options
   const holders = [
     { name: "John Doe", role: "Software Developer", department: "Engineering" },
     { name: "Jane Smith", role: "Designer", department: "Marketing" },
@@ -40,10 +39,9 @@ export default function CardDetailsStep({
     }
   };
 
-  // Toggle approver selection (only one allowed)
   const toggleApprover = (approver) => {
     setSelectedApprover(approver);
-    setApproverOpen(false); // close dropdown after selecting
+    setApproverOpen(false);
   };
 
   return (
@@ -54,7 +52,6 @@ export default function CardDetailsStep({
       </div>
 
       <div className="flex flex-col gap-4 p-8">
-        {/* Card Holder(s) */}
         <div className="relative">
           <label className="block text-sm font-medium mb-1">
             Card Holder(s)
@@ -100,7 +97,6 @@ export default function CardDetailsStep({
           )}
         </div>
 
-        {/* Team Leader / Approver */}
         <div className="relative">
           <label className="block text-sm font-medium mb-1">
             Team Leader / Approver
@@ -142,7 +138,6 @@ export default function CardDetailsStep({
           )}
         </div>
 
-        {/* Switch */}
         <div className="flex items-center justify-between p-4 bg-[#FCFDF2] rounded-lg shadow-sm">
           <div>
             <p className="text-[color:var(--Foundation-Green-Normal,#035638)] text-base not-italic font-medium leading-[100%]">
@@ -156,12 +151,14 @@ export default function CardDetailsStep({
           <button
             onClick={toggleSwitch}
             className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
-              enabled ? "bg-green-200" : "bg-green-200"
+              enabled ? "bg-green-200" : "bg-gray-400"
             }`}
           >
             <div
-              className={`bg-background w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
-                enabled ? "translate-x-6" : "translate-x-0"
+              className={` w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                enabled
+                  ? "translate-x-6 bg-background"
+                  : "translate-x-0 bg-white"
               }`}
             />
           </button>

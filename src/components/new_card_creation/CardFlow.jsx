@@ -3,15 +3,20 @@ import { useState } from "react";
 import CardTypeStep from "./CardTypeStep";
 import CardDetailsStep from "./CardDetailstep";
 import ReviewStep from "./ReviewStep";
+
 import SuccessStep from "./SuccessStep";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import ReviewSummaryStep from "./ReviewCard";
 
 export default function CardFlow() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     cardType: "",
     name: "",
+    approver: "",
     currency: "",
     limit: "",
+    blocked: "No",
   });
 
   const nextStep = () => setStep((prev) => prev + 1);
@@ -22,14 +27,13 @@ export default function CardFlow() {
   };
 
   return (
-    <div className="max-h-screen flex flex-col justify-center rounded-2xl items-center bg-gray-100">
-      {/* Top common header only if step < 4 */}
-      {step < 4 && (
-        <div className="flex flex-col gap-0 border-b border-gray-200 py-4">
+    <div className="max-h-screen flex flex-col justify-center rounded-2xl items-center ">
+      {step < 5 && (
+        <div className="flex flex-col gap-0 py-4">
           <h1 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6">
             Create New Card
           </h1>
-          <p className="pageSubTitle">
+          <p className="pageSubTitle mt-1">
             Follow the steps to create and configure a new corporate card
           </p>
         </div>
@@ -55,17 +59,24 @@ export default function CardFlow() {
         {step === 3 && (
           <ReviewStep nextStep={nextStep} prevStep={prevStep} data={formData} />
         )}
-        {step === 4 && <SuccessStep />}
+        {step === 4 && (
+          <ReviewSummaryStep
+            nextStep={nextStep}
+            prevStep={prevStep}
+            data={formData}
+          />
+        )}
+        {step === 5 && <SuccessStep />}
       </div>
 
-      {/* Navigation buttons only if step < 4 */}
-      {step < 4 && (
+      {step < 5 && (
         <div className="flex justify-between w-full px-4 my-4">
           {step > 1 ? (
             <button
               onClick={prevStep}
-              className="px-6 py-1 cursor-pointer min-w-[120px] bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
+              className="px-6 py-[10px] text-sm cursor-pointer min-w-[120px] flex items-center gap-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
             >
+              <ChevronLeft size={14} />
               Previous
             </button>
           ) : (
@@ -73,9 +84,10 @@ export default function CardFlow() {
           )}
           <button
             onClick={nextStep}
-            className="px-6 py-1 bg-background cursor-pointer text-white rounded-full hover:bg-background"
+            className="px-12 py-[10px] bg-background cursor-pointer flex items-center gap-2 text-sm text-white rounded-full hover:bg-background"
           >
-            Next
+            {step === 4 ? "Create Card" : "Next"} {/* ✅ Button changes */}
+            {step < 4 && <ChevronRight size={14} />}
           </button>
         </div>
       )}

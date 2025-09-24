@@ -13,7 +13,7 @@ export default function ReviewStep({ nextStep, prevStep, data }) {
               value={data.cardType || ""}
               readOnly
               placeholder="10000"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50"
+              className="w-full border border-gray-300  outline-0 rounded-lg px-3 py-2 bg-gray-50"
             />
           </div>
 
@@ -26,7 +26,7 @@ export default function ReviewStep({ nextStep, prevStep, data }) {
               value={data.name || ""}
               readOnly
               placeholder="30000"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50"
+              className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 bg-gray-50"
             />
           </div>
 
@@ -39,7 +39,7 @@ export default function ReviewStep({ nextStep, prevStep, data }) {
               value={data.currency || ""}
               readOnly
               placeholder="50000"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50"
+              className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 bg-gray-50"
             />
           </div>
 
@@ -51,7 +51,7 @@ export default function ReviewStep({ nextStep, prevStep, data }) {
               type="text"
               value={data.limit || ""}
               readOnly
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50"
+              className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 bg-gray-50"
             />
           </div>
         </div>

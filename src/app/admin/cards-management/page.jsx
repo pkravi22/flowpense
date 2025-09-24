@@ -62,7 +62,6 @@ const page = () => {
           </p>
         </div>
         <div>
-          {/* Date selection area */}
           <div className="border border-gray-300 rounded-2xl p-2 flex items-center gap-2">
             <span className="text-[#2E2E2E] font-medium">
               Compare To : 4 Jan - 4 Jun, 2025
@@ -73,7 +72,7 @@ const page = () => {
           </div>
         </div>
       </div>
-      {/* stat-Cards */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
         {cardDetails.map(
           ({ id, icon, iconBg, title, value, iconColor, sub }) => (
@@ -134,7 +133,7 @@ const page = () => {
             </select>
           </div>
         </div>
-        {/* Cards */}
+
         <div>
           <div className="grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
             <Card
@@ -195,10 +194,9 @@ const page = () => {
           </div>
         </div>
 
-        {/* Modal for CardFlow */}
         {showCardFlow && (
-          <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-2xl shadow-lg w-full max-w-lg  relative">
+          <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex justify-center items-center z-50">
+            <div className=" rounded-2xl shadow-lg w-full max-w-lg bg-red-300  relative">
               {/* Close button */}
               <button
                 onClick={() => setShowCardFlow(false)}
