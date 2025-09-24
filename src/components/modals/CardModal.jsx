@@ -1,25 +1,41 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 
 const CardModal = ({ card, onClose }) => {
   const [activeTab, setActiveTab] = useState("transactions");
+  const [show, setShow] = useState(false);
 
-  if (!card) return null;
+  useEffect(() => {
+    setShow(true); // trigger animation on mount
+  }, []);
   const spentValue = Number(card.spent.replace(/[^0-9.-]+/g, ""));
   const limitValue = Number(card.monthlyLimit.replace(/[^0-9.-]+/g, ""));
   const percentage = limitValue ? (spentValue / limitValue) * 100 : 0;
   return (
     <div className="fixed inset-0 flex z-50">
       {/* Background overlay */}
-      <div className="flex-1 bg-black/40" onClick={onClose}></div>
+      <div
+        className={`flex-1 bg-black/40 transition-opacity duration-300 ${
+          show ? "opacity-100" : "opacity-0"
+        }`}
+        onClick={() => {
+          setShow(false);
+          setTimeout(onClose, 300); // wait for animation to finish
+        }}
+      ></div>
 
-      {/* Drawer */}
-      <div className="w-[600px] bg-white shadow-lg h-full p-6 overflow-y-auto transition-transform duration-300 ease-in-out transform translate-x-0">
-        {/* Close button */}
+      <div
+        className={`w-[600px] bg-white shadow-lg h-full p-6 overflow-y-auto transition-transform duration-300 ease-in-out transform ${
+          show ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
         <button
-          onClick={onClose}
-          className="absolute top-0 bg-gray-400 p-1 rounded-full right-4 text-gray-500 hover:text-black"
+          onClick={() => {
+            setShow(false);
+            setTimeout(onClose, 300);
+          }}
+          className="absolute top-0 right-4 text-gray-500 bg-gray-200 p-1 rounded-full hover:text-black"
         >
           <X size={20} />
         </button>
