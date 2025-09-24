@@ -4,11 +4,12 @@ export default function SuccessStep() {
   return (
     <div className="text-center ">
       <div className="flex flex-col gap-1 justify-center items-center py-8">
-        <Wallet size={48} />
+        <img src="/credit-card1.png" alt="Credit Card" />
+
         <h2 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-">
           Card Created Successfully
         </h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 w-[300px]">
           You can now view card details or fund the card.
         </p>
       </div>

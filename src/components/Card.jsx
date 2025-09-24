@@ -36,7 +36,10 @@ const Card = ({
   const handleThreeDots = () => {
     setCardDetailsOpen((prev) => !prev);
   };
-
+  const total = parseFloat(String(monthlyLimit).replace(/[^0-9.-]+/g, "")) || 0;
+  const spentmoney = parseFloat(String(spent).replace(/[^0-9.-]+/g, "")) || 0;
+  const percentage = total > 0 ? (spentmoney / total) * 100 : 0;
+  console.log(percentage);
   return (
     <div className="m-4 w-[300px] h-[180px] relative">
       <div className="flex justify-between mb-2 px-4">
@@ -82,36 +85,43 @@ const Card = ({
       </div>
 
       <div
-        className="w-full h-[160px] rounded-2xl p-3"
+        className="w-full h-[160px] rounded-2xl p-3 fle flex-col gap-2"
         style={{ backgroundColor: bgColor, color: textColor }}
       >
         <div className="flex flex-col justify-between gap-0">
-          <div className="flex text-[#B1CBC1] justify-between text-sm">
+          <div className="flex text-[#B1CBC1] justify-between text-[12px">
             <p>Team Lead</p>
             <p>Balance</p>
           </div>
           <div className="flex justify-between">
             <p className="text-[20px] text-[#F7FAD7] font-medium">{person}</p>
-            <p className="text-xl font-medium">{balance}</p>
+            <p className="text-[20px] font-medium">{balance}</p>
           </div>
         </div>
         <div>
-          <p className="text-[30px] font-medium text-[#FCFDF2] my-1">
+          <p className="text-[24px] font-medium text-[#FCFDF2] my-1">
             {number}
           </p>
         </div>
-        <div>
+        <div className="w-full max-w-md ">
           <div className="flex justify-between text-[12px] text-[#B1CBC1]">
             <p>Monthly Limit</p>
             <p>{monthlyLimit}</p>
           </div>
-        </div>
-        <div>
+          <div className="w-full bg-gray-200 flex items-center rounded-full h-[6px] overflow-hidden">
+            <div
+              className="bg-[#CED671] h-[4px] rounded-full"
+              style={{ width: `${Math.min(percentage, 100)}%` }}
+            ></div>
+          </div>
+
           <div className="flex justify-between text-[12px] text-[#B1CBC1]">
             <p>Monthly Spent</p>
             <p>{spent}</p>
           </div>
         </div>
+        <div></div>
+        <div></div>
       </div>
     </div>
   );

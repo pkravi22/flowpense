@@ -1,9 +1,9 @@
 export default function ReviewStep({ nextStep, prevStep, data }) {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 border-b border-background">
       {/* Second Div */}
-      <div className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-6 ">
+        <div className="grid grid-cols-2 gap-4 ">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Daily Spend Limit(NGN)

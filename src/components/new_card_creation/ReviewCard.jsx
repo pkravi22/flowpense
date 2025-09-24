@@ -11,16 +11,13 @@ export default function ReviewSummaryStep({ data }) {
   ];
 
   return (
-    <div className="p-6">
-      <div className="border-b border-gray-200 flex justify-between items-center p-4">
-        <p>
-          Review and create Card Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Amet, temporibus.
-        </p>
+    <div className="">
+      <div className="border-b border-gray-200 flex justify-between items-center p-2">
+        <p>Review and create Card</p>
         <p className="text-[#035638] text-[16px]">Step 4 Of 6</p>
       </div>{" "}
       {/* Grid with 3 items per row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm p-4 border-b border-background">
         {details.map((item, index) => (
           <div
             key={index}
@@ -35,9 +32,6 @@ export default function ReviewSummaryStep({ data }) {
           </div>
         ))}
       </div>
-      <p className="mt-4 text-xs text-gray-500">
-        Please review the details carefully before creating your card.
-      </p>
     </div>
   );
 }

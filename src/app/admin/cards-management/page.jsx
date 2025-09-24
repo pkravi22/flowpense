@@ -1,6 +1,5 @@
 "use client";
 import {
-  ArrowRight,
   BoxSelect,
   ChevronDown,
   CreditCard,
@@ -8,10 +7,12 @@ import {
   Search,
   Users,
   Wallet,
+  X,
 } from "lucide-react";
 import React, { useState } from "react";
 import Card from "../../../components/Card";
-import CardFlow from "../../../components/new_card_creation/CardFlow";
+import CardModal from "@/components/modals/CardModal";
+
 const cardDetails = [
   {
     id: 1,
@@ -50,10 +51,18 @@ const cardDetails = [
     sub: "4 % increase from last month",
   },
 ];
-const page = () => {
+
+const Page = () => {
   const [showCardFlow, setShowCardFlow] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
+  };
+
   return (
     <div>
+      {/* Header */}
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Card Management</h1>
@@ -73,6 +82,7 @@ const page = () => {
         </div>
       </div>
 
+      {/* Stats cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
         {cardDetails.map(
           ({ id, icon, iconBg, title, value, iconColor, sub }) => (
@@ -94,6 +104,8 @@ const page = () => {
           )
         )}
       </div>
+
+      {/* Active Cards Section */}
       <div className="mt-6 bg-white p-4 rounded-2xl shadow-md">
         <div className="flex items-center justify-between ">
           <div>
@@ -112,9 +124,10 @@ const page = () => {
             </div>
           </div>
         </div>
+
         {/* search + status */}
         <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 mt-6">
-          <div className=" gap-2 border border-gray-300 flex items-center px-4 text-sm outline-none rounded-3xl  py-1">
+          <div className="gap-2 border border-gray-300 flex items-center px-4 text-sm outline-none rounded-3xl py-1">
             <input
               type="text"
               className="outline-none"
@@ -124,7 +137,7 @@ const page = () => {
               <Search size={16} />
             </span>
           </div>
-          <div className="border border-gray-300 flex items-center px-2 rounded-3xl  py-1">
+          <div className="border border-gray-300 flex items-center px-2 rounded-3xl py-1">
             <select className="px-1 text-sm outline-none">
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -134,83 +147,82 @@ const page = () => {
           </div>
         </div>
 
+        {/* Cards */}
         <div>
           <div className="grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
-            <Card
-              name="Engineering"
-              person="Pramendra Singh"
-              number="**** **** **** 1234"
-              bgColor="#4e4f2eff"
-              textColor="white"
-              monthlyLimit="$5000"
-              spent="$2000"
-              balance="$30000"
-              status="Active"
-            />
-            <Card
-              name="Engineering"
-              person="Pramendra Singh"
-              number="**** **** **** 1234"
-              bgColor="#1d2c91ff"
-              textColor="white"
-              monthlyLimit="$5000"
-              spent="$2000"
-              balance="$30000"
-              status="Active"
-            />
-            <Card
-              name="Engineering"
-              person="Pramendra Singh"
-              number="**** **** **** 1234"
-              bgColor="#b83a96ff"
-              textColor="white"
-              monthlyLimit="$5000"
-              spent="$2000"
-              balance="$30000"
-              status="Frozen"
-            />
-            <Card
-              name="Engineering"
-              person="Pramendra Singh"
-              number="**** **** **** 1234"
-              bgColor="#b46a17ff"
-              textColor="white"
-              monthlyLimit="$5000"
-              spent="$2000"
-              balance="$30000"
-              status="Expired"
-            />
-            <Card
-              name="Engineering"
-              person="Pramendra Singh"
-              number="**** **** **** 1234"
-              bgColor="#21b5c6ff"
-              textColor="white"
-              monthlyLimit="$5000"
-              spent="$2000"
-              balance="$30000"
-              status="Active"
-            />
+            {[
+              {
+                name: "Engineering",
+                person: "Pramendra Singh",
+                number: "3432 **** **** 1234",
+                bgColor: "#4e4f2eff",
+                textColor: "white",
+                monthlyLimit: "$5000",
+                spent: "$2000",
+                balance: "$30000",
+                status: "Active",
+              },
+              {
+                name: "Engineering ",
+                person: "Pramendra Singh",
+                number: "7865 **** **** 1234",
+                bgColor: "#1d2c91ff",
+                textColor: "white",
+                monthlyLimit: "$10000",
+                spent: "$2000",
+                balance: "$30000",
+                status: "Active",
+              },
+              {
+                name: "Engineering Team Card",
+                person: "Pramendra Singh",
+                number: "7865 **** **** 1234",
+                bgColor: "#13aa64ff",
+                textColor: "white",
+                monthlyLimit: "$3000",
+                spent: "$2000",
+                balance: "$30000",
+                status: "Frozen",
+              },
+              {
+                name: "Sales Team Card",
+                person: "Adebayo  ",
+                number: "7865 **** **** 1234",
+                bgColor: "red",
+                textColor: "white",
+                monthlyLimit: "$6000",
+                spent: "$2000",
+                balance: "$30000",
+                status: "Inactive",
+              },
+            ].map((card, idx) => (
+              <div key={idx} onClick={() => handleCardClick(card)}>
+                <Card {...card} />
+              </div>
+            ))}
           </div>
         </div>
-
-        {showCardFlow && (
-          <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex justify-center items-center z-50">
-            <div className=" rounded-2xl shadow-lg w-full max-w-lg bg-red-300  relative">
-              {/* Close button */}
-              <button
-                onClick={() => setShowCardFlow(false)}
-                className="absolute top-3 right-3 text-gray-500 hover:text-black"
-              >
-                ✕
-              </button>
-              <CardFlow />
-            </div>
-          </div>
-        )}
       </div>
+
+      {selectedCard && (
+        <CardModal card={selectedCard} onClose={() => setSelectedCard(null)} />
+      )}
+
+      {showCardFlow && (
+        <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="rounded-2xl shadow-lg w-full max-w-lg bg-white relative">
+            <button
+              onClick={() => setShowCardFlow(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-black bg-gray-300 rounded-full p-1"
+            >
+              <X size={14} />
+            </button>
+            <CardFlow />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default page;
+export default Page;

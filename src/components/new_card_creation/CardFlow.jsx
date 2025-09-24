@@ -27,9 +27,9 @@ export default function CardFlow() {
   };
 
   return (
-    <div className="max-h-screen flex flex-col justify-center rounded-2xl items-center ">
+    <div className="max-h-screen flex flex-col  rounded-2xl  ">
       {step < 5 && (
-        <div className="flex flex-col gap-0 py-4">
+        <div className="flex flex-col gap-0 px-4  py-4">
           <h1 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6">
             Create New Card
           </h1>
