@@ -139,7 +139,7 @@ const Page = () => {
     <div className="p-0 md:p-4  overflow-auto  bg-gray-100">
       <div className="flex flex-col items-center justify-between">
         {!verified && (
-          <div className="border-l-4 bg-[#035638] rounded-xl flex gap-2 w-full justify-between items-center p-4 mb-4">
+          <div className="border-l-4 bg-[#035638] rounded-xl flex flex-col md:flex-row gap-2 w-full justify-between items-center p-4 mb-4">
             <div className="flex flex-col gap-2">
               <p className="text-[16px] text-[#E5EE7D]">
                 Verify Your Business to Unlock Full Access
@@ -151,7 +151,7 @@ const Page = () => {
             </div>
             <button
               onClick={handleVerifyClick}
-              className="flex w-[150px] items-center gap-2 rounded-2xl px-4 py-1 cursor-pointer hover:text-white transition duration-300 ease-in-out"
+              className="flex md:w-[150px] items-center gap-2 rounded-2xl px-4 py-1 cursor-pointer hover:text-white transition duration-300 ease-in-out"
             >
               <span className="p-2 text-green-400 text-[12px] w-full flex items-center justify-center bg-white rounded-2xl">
                 Verify Now

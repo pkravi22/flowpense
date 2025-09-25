@@ -71,6 +71,11 @@
    @apply text-black text-2xl not-italic font-normal leading-[100%];
   font-family: "Bagel Fat One";
 }
+
+* {
+  outline: 1px solid red !important;
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,

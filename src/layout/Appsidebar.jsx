@@ -40,8 +40,10 @@ export default function Sidebar({
                   <Link
                     key={i}
                     href={link.path}
-                    className={`flex items-center gap-3 p-2 rounded hover:bg-gray-100 ${
-                      isActive ? "bg-amber-300 font-semibold" : ""
+                    className={`flex items-center gap-3 p-2 rounded-full px-4 hover:bg-gray-100 ${
+                      isActive
+                        ? "bg-[#035638] text-[#E5EE7D] hover:bg-[#043b27]"
+                        : "linkText hover:bg-gray-200"
                     }`}
                     onClick={() => setIsOpen(false)} // close mobile menu on click
                   >

@@ -4,7 +4,7 @@ const BalanceBreakdown = () => {
   return (
     <div className="flex flex-col p-2 min-h-[200px] shadow-md text-[24px]">
       BalanceBreakdown
-      <div className="flex text-sm w-full justify-between gap-6">
+      <div className="flex text-sm w-full justify-between  gap-2 md:gap-6">
         <div className="flex-1 flex flex-col gap-1 ">
           <p className="text-md">Available Funds</p>
           <div className="flex justify-between items-center">

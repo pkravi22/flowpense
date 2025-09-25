@@ -71,7 +71,7 @@ const Page = () => {
           </p>
         </div>
         <div className="overflow-scroll">
-          <div className="flex flex-wrap gap-1 md:gap-2 overflow-x-auto">
+          <div className="flex flex-wrap gap-2">
             <button className="flex items-center px-2 rounded-[10px] border p-1">
               <Download className="inline md:mr-2" size={16} />
               <span className="text-sm">Export Statement</span>
@@ -184,7 +184,6 @@ const Page = () => {
                 />
               </div>
 
-              {/* Buttons */}
               <div className="flex  gap-2 mt-4">
                 <button
                   type="button"
