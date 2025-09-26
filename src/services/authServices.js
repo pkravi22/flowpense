@@ -46,13 +46,39 @@ forgotPassword: async ({ email }) => {
   },
 
   resetPassword: async (payload) => {
-    const { data } = await api.post("api/auth/reset-password", payload);
+    const { data } = await api.post("api/auth/reset-password", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });;
     return data;
   },
 
 
-  resendOtp: async (payload) => {
+  resendOtp: async (paylo) => {
     const { data } = await api.post("/auth/resend-otp", payload);
     return data;
   },
 };
+
+ enable2fa=async(payload)=>{
+       const { data } = await api.post("/api/mfa/generate-secret", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    return data;
+ }
+  verify2fa=async({otpcode,token})=>{
+       const { data } = await api.post("/api/mfa/generate-secret", 
+         {
+      token: otpcode, 
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // 
+      },
+    }
+      );
+    return data;
+ }

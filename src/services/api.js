@@ -52,7 +52,7 @@ api.interceptors.response.use(
         const { data } = await axios.post(
           `${
             process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api"
-          }/auth/refresh-token`,
+          }/api/auth/refreshToken`,
           { refreshToken },
           { withCredentials: true }
         );
