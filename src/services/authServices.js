@@ -61,24 +61,24 @@ forgotPassword: async ({ email }) => {
   },
 };
 
- enable2fa=async(payload)=>{
-       const { data } = await api.post("/api/mfa/generate-secret", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    return data;
- }
-  verify2fa=async({otpcode,token})=>{
-       const { data } = await api.post("/api/mfa/generate-secret", 
-         {
-      token: otpcode, 
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`, // 
-      },
-    }
-      );
-    return data;
- }
+//  enable2fa=async(payload)=>{
+//        const { data } = await api.post("/api/mfa/generate-secret", {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+//     return data;
+//  }
+//   verify2fa=async({otpcode,token})=>{
+//        const { data } = await api.post("/api/mfa/generate-secret", 
+//          {
+//       token: otpcode, 
+//     },
+//     {
+//       headers: {
+//         Authorization: `Bearer ${token}`, // 
+//       },
+//     }
+//       );
+//     return data;
+//  }
