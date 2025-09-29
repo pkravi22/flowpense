@@ -59,6 +59,11 @@ forgotPassword: async ({ email }) => {
     const { data } = await api.post("/auth/resend-otp", payload);
     return data;
   },
+
+  editUserProfile: async (payload) => {
+    const { data } = await api.post("api/auth/update/userprofile", payload);
+    return data;
+  },
 };
 
 //  enable2fa=async(payload)=>{
