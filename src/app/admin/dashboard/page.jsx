@@ -6,7 +6,7 @@ import Piechart from "@/components/PieChart";
 import Card from "@/components/Card";
 import DateRangePicker from "@/components/DatePicker";
 import VerifyAccount from "@/components/verification_pages/VerificationFlow";
-
+import { companyServices } from "@/services/companyServices.js";
 import Slider from "react-slick";
 import {
   ArrowRight,
@@ -113,7 +113,7 @@ const settings = {
   dots: false,
   infinite: false,
   speed: 500,
-  slidesToShow: 1, // only 1 card on mobile
+  slidesToShow: 1,
   slidesToScroll: 1,
   arrows: true,
   responsive: [
@@ -135,6 +135,23 @@ const Page = () => {
     setVerified(true);
     setShowVerification(false);
   };
+
+  const getCompanyDetails = async () => {
+    try {
+      const data = companyServices.getCompanyInfo({ token: "token" });
+      console.log("data fo the company:", data);
+    } catch (e) {
+      console.log(
+        "Error occured during  Fetching info related to Comapny  ",
+        e
+      );
+    }
+  };
+
+  useEffect(() => {
+    getCompanyDetails();
+  }, []);
+
   return (
     <div className="p-0 md:p-4  overflow-auto  bg-gray-100">
       <div className="flex flex-col items-center justify-between">

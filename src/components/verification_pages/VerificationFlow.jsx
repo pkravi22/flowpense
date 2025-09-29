@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BusinessProfile from "./Step1";
 import PrimaryContact from "./step2";
 import ComplianceVerification from "./Step3";
 import BankingInfo from "./Step4";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
+import axios from "axios";
+import { authService } from "@/services/authServices";
+import { comapnyServices } from "@/services/comapnyServices";
 const VerifyAccount = ({ onComplete, onCancel }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -39,6 +41,15 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 4));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
+  const registerCompany = async () => {
+    try {
+      const data = await comapnyServices.registerCompany(formdata);
+    } catch (e) {
+      console.log("error:", e);
+    }
+  };
+
+  
   return (
     <div className="bg-white rounded-xl max-w-3xl max-h-[96vh] flex flex-col">
       <div className="border-b border-gray-200 p-4 flex flex-col md:flex-row justify-between">
@@ -70,7 +81,11 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
           />
         )}
         {step === 4 && (
-          <BankingInfo formData={formData} setFormData={setFormData} />
+          <BankingInfo
+            formData={formData}
+            setFormData={setFormData}
+            registerCompany={registerCompany}
+          />
         )}
       </div>
 

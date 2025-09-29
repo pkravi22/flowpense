@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 
-const BankingInfo = ({ formData, setFormData }) => {
+const BankingInfo = ({ formData, setFormData, registerCompany }) => {
   // Example validation logic: if account number length === 10 → auto-fill account name
   useEffect(() => {
     if (formData.accountNumber && formData.accountNumber.length === 10) {
