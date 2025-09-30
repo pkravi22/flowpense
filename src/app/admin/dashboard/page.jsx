@@ -182,7 +182,7 @@ const Page = () => {
           <div className="fixed inset-0 bg-black/50 bg-opacity-25 flex items-center justify-center z-50">
             <div className="bg-white  rounded-xl w-[90%] md:w-[600px] shadow-lg">
               <VerifyAccount
-                onComplete={handleVerificationComplete} // call when done
+                onComplete={handleVerificationComplete}
                 onCancel={() => setShowVerification(false)}
               />
             </div>

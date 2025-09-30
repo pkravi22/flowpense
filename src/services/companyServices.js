@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import api from "./api";
 
 export const authService = {
