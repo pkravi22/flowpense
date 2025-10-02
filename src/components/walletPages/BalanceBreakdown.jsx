@@ -4,9 +4,9 @@ const BalanceBreakdown = () => {
   return (
     <div className="flex flex-col p-2 min-h-[200px] shadow-md text-[24px]">
       BalanceBreakdown
-      <div className="flex text-sm w-full justify-between  gap-2 md:gap-6">
+      <div className="flex flex-col md:flex-row text-sm w-full justify-between  gap-2 md:gap-6">
         <div className="flex-1 flex flex-col gap-1 ">
-          <p className="text-md">Available Funds</p>
+          <p className="text-lg">Available Funds</p>
           <div className="flex justify-between items-center">
             <p>Total Balance</p>
             <p>$20000</p>
@@ -21,7 +21,7 @@ const BalanceBreakdown = () => {
           </div>
         </div>
         <div className="flex-1 flex flex-col gap-1">
-          <p className="text-md">Card Allocation</p>
+          <p className="text-lg">Card Allocation</p>
           <div className="flex justify-between items-center">
             <p>Active Cards (42)</p>
             <p>$2,00,000</p>
@@ -36,7 +36,7 @@ const BalanceBreakdown = () => {
           </div>
         </div>
         <div className="flex-1 flex flex-col gap-1">
-          <p className="text-md">Monthly Summary</p>
+          <p className="text-lg">Monthly Summary</p>
           <div className="flex justify-between items-center">
             <p>Fund This Month</p>
             <p>$2,00,000</p>

@@ -1,11 +1,11 @@
 import api from "./api";
-
-export const authService = {
+const token = localStorage.getItem("token");
+export const companyServices = {
   registerCompany: async (payload) => {
     console.log("payload", payload);
     const { data } = await api.post("api/companies/register", payload, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer 1233333333333333333333333333333333`,
       },
     });
     return data;
@@ -21,7 +21,7 @@ export const authService = {
     return data;
   },
 
-  walletTopup: async (payload) => {
+  walletTopup: async ({ payload, token }) => {
     console.log("payload", payload);
     const { data } = await api.post("wallet/topup", payload, {
       headers: {
@@ -30,9 +30,8 @@ export const authService = {
     });
     return data;
   },
-  getCompanyInfo: async ({ id }) => {
-    console.log("payload", payload);
-    const { data } = await api.get(`api/companies/${id}`, {
+  getCompanyInfo: async ({ token }) => {
+    const { data } = await api.get(`api/companies/1`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

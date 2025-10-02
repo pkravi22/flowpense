@@ -1,0 +1,86 @@
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { authService } from "@/services/authServices";
+import * as jwt_decode from "jwt-decode";
+
+export const login = createAsyncThunk(
+  "auth/login",
+  async (payload, thunkAPI) => {
+    try {
+      const response = await authService.signin(payload);
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("token", response.Token);
+      }
+
+      return response; // will be available in action.payload
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Login failed"
+      );
+    }
+  }
+);
+
+// Helper to decode token
+const getUserFromToken = (token) => {
+  try {
+    const ans = jwt_decode(token);
+    console.log("token", ans);
+    return ans;
+  } catch (error) {
+    return null;
+  }
+};
+
+// Initialize state from localStorage
+const tokenFromStorage =
+  typeof window !== "undefined" ? localStorage.getItem("token") : null;
+console.log("token", tokenFromStorage);
+const initialState = {
+  token: tokenFromStorage,
+  user: tokenFromStorage ? getUserFromToken(tokenFromStorage) : null,
+  isLoading: false,
+  isError: false,
+  isSuccess: false,
+  message: "",
+};
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    reset: (state) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = false;
+      state.message = "";
+    },
+    logout: (state) => {
+      state.user = null;
+      state.token = null;
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("token");
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.token = action.payload.Token;
+        state.user = getUserFromToken(action.payload.Token) || null;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      });
+  },
+});
+
+export const { reset, logout } = authSlice.actions;
+export default authSlice.reducer;

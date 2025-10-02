@@ -8,7 +8,8 @@ import BankingInfo from "./Step4";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
 import { authService } from "@/services/authServices";
-import { comapnyServices } from "@/services/comapnyServices";
+
+import { companyServices } from "@/services/companyServices";
 const VerifyAccount = ({ onComplete, onCancel }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -43,13 +44,12 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
 
   const registerCompany = async () => {
     try {
-      const data = await comapnyServices.registerCompany(formdata);
+      const data = await companyServices.registerCompany(formData);
     } catch (e) {
       console.log("error:", e);
     }
   };
 
-  
   return (
     <div className="bg-white rounded-xl max-w-3xl max-h-[96vh] flex flex-col">
       <div className="border-b border-gray-200 p-4 flex flex-col md:flex-row justify-between">
@@ -110,10 +110,10 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
         ) : (
           <button
             onClick={() => {
-              console.log(formData);
+              registerCompany();
               onComplete();
             }}
-            className="bg-background flex gap-2 items-center text-white px-4 py-1 rounded-full"
+            className="bg-background cursor-pointer flex gap-2 items-center text-white px-4 py-1 rounded-full"
           >
             Submit for Verification
             <ChevronRight size={16} />

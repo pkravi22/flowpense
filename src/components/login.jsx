@@ -5,8 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail, LockKeyhole } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { authService } from "@/services/authServices";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login, reset } from "../redux/slices/authSlice.js";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -27,37 +28,50 @@ export default function Login() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  const dispatch = useDispatch();
+  const { user, token, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    if (isSuccess && token) {
+      alert("Login successful! Redirecting...");
+      localStorage.setItem("token", token);
+      router.push("/admin/dashboard");
+      dispatch(reset());
+    }
+
+    if (isError && message) {
+      setError("email", {
+        type: "manual",
+        message: message || "Invalid credentials",
+      });
+      resetField("password");
+      dispatch(reset());
+    }
+  }, [
+    isSuccess,
+    isError,
+    token,
+    message,
+    router,
+    dispatch,
+    setError,
+    resetField,
+  ]);
+
   const handleForgetPassword = () => {
     router.push("/forget-password");
   };
 
   const onSubmit = async (data) => {
     setLoading(true);
-
     try {
       const payload = {
         email: data.email,
         password: data.password,
       };
-
-      console.log("Sending payload:", payload);
-      const res = await authService.signin(payload);
-
-      console.log("Signin successful:", res);
-      alert("Login successful! Redirecting...");
-      localStorage.setItem("token", res.Token);
-      router.push("/admin/dashboard"); // or wherever you want to redirect
-    } catch (err) {
-      console.error(err.response?.data?.message || "Login failed");
-
-      // Show backend error in a friendly way
-      setError("email", {
-        type: "manual",
-        message: err.response?.data?.message || "Invalid credentials",
-      });
-
-      // Clear password field
-      resetField("password");
+      await dispatch(login(payload));
     } finally {
       setLoading(false);
     }
@@ -66,12 +80,10 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full sm:max-w-md bg-white rounded-2xl shadow-md p-8">
-        {/* Logo */}
         <div className="flex justify-center mb-6">
           <img src="/logo 1.png" alt="Flowpense" className="h-16" />
         </div>
 
-        {/* Heading */}
         <h2 className="text-xl font-semibold text-gray-900 ">
           Login to your account
         </h2>
@@ -86,7 +98,6 @@ export default function Login() {
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
-          {/* Email */}
           <div className="flex items-center inputFeild rounded-lg px-3 py-2 border">
             <span className="text-gray-400 pr-2">
               <Mail size={20} />
@@ -96,12 +107,11 @@ export default function Login() {
               type="email"
               placeholder="namesurname@gmail.com"
               className="w-full text-sm outline-none"
-              disabled={loading}
+              disabled={loading || isLoading}
             />
           </div>
           <p className="text-xs text-red-500 mt-1">{errors.email?.message}</p>
 
-          {/* Password */}
           <div className="flex items-center inputFeild rounded-lg px-3 py-2 border">
             <span className="text-gray-400 pr-2">
               <LockKeyhole size={20} />
@@ -111,32 +121,30 @@ export default function Login() {
               type="password"
               placeholder="Enter password"
               className="w-full text-sm outline-none"
-              disabled={loading}
+              disabled={loading || isLoading}
             />
           </div>
           <p className="text-xs text-red-500 mt-1">
             {errors.password?.message}
           </p>
 
-          {/* Login button */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || isLoading}
             className={`w-full text-white cursor-pointer py-3 rounded-4xl mt-2 ${
-              loading
+              loading || isLoading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-green-800 hover:bg-green-900"
             }`}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading || isLoading ? "Logging in..." : "Login"}
           </button>
 
-          {/* Forget Password */}
           <button
             type="button"
             onClick={handleForgetPassword}
             className="w-full text-blue-600 cursor-pointer py-3 rounded-4xl mt-2 "
-            disabled={loading}
+            disabled={loading || isLoading}
           >
             Forgot your Password?
           </button>

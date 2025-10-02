@@ -16,14 +16,14 @@ export default function useAuth(requiredRole) {
     try {
       const decoded = jwt_decode(token);
 
-      // Check if token expired
+     
       if (decoded.exp * 1000 < Date.now()) {
         localStorage.removeItem("token");
         router.push("/login");
         return;
       }
 
-      // Role check
+     
       if (requiredRole && decoded.role !== requiredRole) {
         router.push("/login");
       }

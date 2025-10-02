@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Piechart from "@/components/PieChart";
 //import Example from "@/components/Barchart";
 import Card from "@/components/Card";
@@ -126,32 +126,52 @@ const settings = {
 const Page = () => {
   const [verified, setVerified] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
+    const [companyData, setCompanyData] = useState(null);
+    console.log("hello dash");
+    const handleVerifyClick = () => {
+      setShowVerification(true);
+    };
 
-  const handleVerifyClick = () => {
-    setShowVerification(true);
-  };
+    const handleVerificationComplete = () => {
+      setVerified(true);
+      setShowVerification(false);
 
-  const handleVerificationComplete = () => {
-    setVerified(true);
-    setShowVerification(false);
-  };
+      localStorage.setItem("verified", "true");
+    };
 
-  const getCompanyDetails = async () => {
-    try {
-      const data = companyServices.getCompanyInfo({ token: "token" });
-      console.log("data fo the company:", data);
-    } catch (e) {
-      console.log(
-        "Error occured during  Fetching info related to Comapny  ",
-        e
-      );
-    }
-  };
+    const getCompanyDetails = async () => {
+      try {
+        const storedCompany = localStorage.getItem("companyData");
+        const storedVerified = localStorage.getItem("verified");
 
-  useEffect(() => {
-    getCompanyDetails();
-  }, []);
+        if (storedCompany) {
+          const parsedCompany = JSON.parse(storedCompany);
+          setCompanyData(parsedCompany);
+          setVerified(storedVerified === "true");
+          return;
+        }
 
+        const data = await companyServices.getCompanyInfo({ token: "token" });
+        console.log("Fetched company data:", data);
+
+        if (data.success && data.company) {
+          setCompanyData(data.company);
+          const isVerified = data.company.kycStatus !== "pending";
+          setVerified(isVerified);
+
+          // Save to localStorage
+          localStorage.setItem("companyData", JSON.stringify(data.company));
+          localStorage.setItem("verified", isVerified.toString());
+        }
+      } catch (e) {
+        console.error("Error fetching company info:", e);
+        setVerified(false);
+      }
+    };
+
+    useEffect(() => {
+      getCompanyDetails();
+    }, []);
   return (
     <div className="p-0 md:p-4  overflow-auto  bg-gray-100">
       <div className="flex flex-col items-center justify-between">

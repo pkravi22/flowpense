@@ -53,9 +53,9 @@ const Page = () => {
     <div>
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="pageTitle">Dashboard</h1>
+          <h1 className="pageTitle">Approvals</h1>
           <p className="pageSubTitle mt-2">
-            Monitor your business expenses and card usage
+            Monitor your business expenses approvals
           </p>
         </div>
         <DateRangePicker />

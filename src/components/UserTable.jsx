@@ -48,7 +48,7 @@ const seed = [
 ];
 
 
-const transactions = Array.from({ length: 120 }, (_, i) => {
+const transactions = Array.from({ length: 30 }, (_, i) => {
   const row = seed[i % seed.length];
   return {
     ...row,

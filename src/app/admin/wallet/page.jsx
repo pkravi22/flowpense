@@ -9,13 +9,15 @@ import {
   Wallet,
   X,
 } from "lucide-react";
-//import { X, PlusIcon } from "lucide-react";
 import DateRangePicker from "../../../components/DatePicker";
 import React, { useState } from "react";
 import TransactionTable from "../../../components/UserTable";
 import BankDetails from "../../../components/walletPages/BankDetails";
 import RecentTransactions from "../../../components/walletPages/RecentTransactions";
 import BalanceBreakdown from "../../../components/walletPages/BalanceBreakdown";
+
+import { companyServices } from "@/services/companyServices";
+import { jwtDecode } from "jwt-decode";
 
 const cardDetails = [
   {
@@ -49,16 +51,58 @@ const cardDetails = [
 
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    bank: "",
+    amount: "",
+    method: "",
+  });
+  const token = localStorage.getItem("token");
+  const userDetail = jwtDecode(token);
+  console.log(userDetail);
+  const fundWallet = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
-  const fundWallet = () => {
-    setIsModalOpen(true);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-  const handleBackdropClick = () => {
-    setIsModalOpen(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.bank || !formData.amount || !formData.method) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Call API to add funds
+      const payload = {
+        companyId: userDetail.companyId,
+        email: userDetail.email,
+        amount: formData.amount,
+      };
+      const response = await companyServices.walletTopup({
+        payload,
+        token,
+      });
+
+      if (response.success) {
+        alert("Funds added successfully!");
+
+        closeModal();
+        setFormData({ bank: "", amount: "", method: "" });
+      } else {
+        alert("Failed to add funds: " + response.message);
+      }
+    } catch (error) {
+      console.error("Error adding funds:", error);
+      alert("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -130,11 +174,7 @@ const Page = () => {
       </div>
 
       {isModalOpen && (
-        <div
-          id="backdrop"
-          onClick={handleBackdropClick}
-          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
-        >
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-lg relative">
             <button
               onClick={closeModal}
@@ -152,12 +192,17 @@ const Page = () => {
               </p>
             </div>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Select Bank
                 </label>
-                <select className="w-full border border-gray-200 p-2 rounded">
+                <select
+                  name="bank"
+                  value={formData.bank}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-200 p-2 rounded"
+                >
                   <option value="">Select Bank Account</option>
                   <option value="bank1">Bank 1</option>
                   <option value="bank2">Bank 2</option>
@@ -168,6 +213,9 @@ const Page = () => {
                 <label className="block text-sm font-medium mb-1">Amount</label>
                 <input
                   type="number"
+                  name="amount"
+                  value={formData.amount}
+                  onChange={handleInputChange}
                   placeholder="Enter Amount"
                   className="w-full border border-gray-200 p-2 rounded"
                 />
@@ -179,25 +227,35 @@ const Page = () => {
                 </label>
                 <input
                   type="text"
+                  name="method"
+                  value={formData.method}
+                  onChange={handleInputChange}
                   placeholder="e.g. UPI / NetBanking / Card"
                   className="w-full border border-gray-200 p-2 rounded"
                 />
               </div>
 
-              <div className="flex  gap-2 mt-4">
+              <div className="flex gap-2 mt-4">
                 <button
                   type="button"
                   className="px-4 py-2 flex-1 rounded-full bg-gray-200"
                   onClick={closeModal}
+                  disabled={loading}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 flex flex-1 items-center gap-2 rounded-full bg-[#035638] text-white"
+                  disabled={loading}
                 >
-                  <PlusIcon size={16} />
-                  Add Funds
+                  {loading ? (
+                    "Adding Funds..."
+                  ) : (
+                    <>
+                      <PlusIcon size={16} /> Add Funds
+                    </>
+                  )}
                 </button>
               </div>
             </form>

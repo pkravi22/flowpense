@@ -3,31 +3,33 @@
 import { useState } from "react";
 import Sidebar from "../../layout/Appsidebar";
 import Topbar from "../../layout/TopNavbar";
+import { Provider, useSelector } from "react-redux";
+import store from "../../redux/store.js";
 
 export default function AdminLayout({ children }) {
-  const [isOpen, setIsOpen] = useState(false); // sidebar open on mobile
-  const [isCollapsed, setIsCollapsed] = useState(false); // collapse on desktop
+  const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <div className="">
-        <Sidebar
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          isCollapsed={isCollapsed}
-          setIsCollapsed={setIsCollapsed}
-        />
-      </div>
-      {/* Main Content Area - dynamically adjust based on sidebar state */}
-      <div className="flex  flex-col flex-8 bg-gray-50 transition-all duration-300 ">
-        <div className="sticky top-0 z-20">
-          <Topbar setIsOpen={setIsOpen} />
+    <Provider store={store}>
+      <div className="flex h-screen overflow-hidden">
+        <div className="">
+          <Sidebar
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            isCollapsed={isCollapsed}
+            setIsCollapsed={setIsCollapsed}
+          />
         </div>
 
-        {/* Page Content */}
-        <main className="flex-1  overflow-y-auto p-4 md:p-6">{children}</main>
+        <div className="flex  flex-col flex-8 bg-gray-50 transition-all duration-300 ">
+          <div className="sticky top-0 z-20">
+            <Topbar setIsOpen={setIsOpen} />
+          </div>
+
+          <main className="flex-1  overflow-y-auto p-4 md:p-6">{children}</main>
+        </div>
       </div>
-    </div>
+    </Provider>
   );
 }
