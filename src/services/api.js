@@ -27,6 +27,14 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
+// Function to redirect to login
+const redirectToLogin = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+ 
+  window.location.href = '/login'; 
+};
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -41,7 +49,9 @@ api.interceptors.response.use(
             originalRequest.headers.Authorization = "Bearer " + token;
             return api(originalRequest);
           })
-          .catch((err) => Promise.reject(err));
+          .catch((err) => {
+            return Promise.reject(err);
+          });
       }
 
       originalRequest._retry = true;
@@ -49,6 +59,13 @@ api.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
+        
+        // Check if refresh token exists
+        if (!refreshToken) {
+          redirectToLogin();
+          return Promise.reject(error);
+        }
+
         const { data } = await axios.post(
           `${
             process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api"
@@ -59,16 +76,13 @@ api.interceptors.response.use(
 
         const newToken = data.token;
         localStorage.setItem("token", newToken);
-
-        api.defaults.headers.Authorization = "Bearer " + newToken;
+        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
         processQueue(null, newToken);
 
-        return api(originalRequest); // retry failed request
+        return api(originalRequest);
       } catch (err) {
         processQueue(err, null);
-        localStorage.removeItem("token");
-        localStorage.removeItem("refreshToken");
-        // Optionally redirect to login
+        redirectToLogin(); // Redirect on refresh failure
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

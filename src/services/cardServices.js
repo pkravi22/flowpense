@@ -1,12 +1,10 @@
 import api from "./api";
 
 export const cardServices = {
-  createCard: async ({ payload, id }) => {
-    console.log("payload", payload);
-    const { data } = await api.post("api/cards/create-card", payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  createCard: async ({ apiData, token }) => {
+    console.log("payload", apiData);
+    const { data } = await api.post("api/cards/create-card", apiData, {
+      headers: { Authorization: `Bearer ${token}` },
     });
     return data;
   },
@@ -21,9 +19,8 @@ export const cardServices = {
     return data;
   },
 
-  getAllCards: async ({ payload, id }) => {
-    console.log("payload", payload);
-    const { data } = await api.post("api/cards/all-cards", payload, {
+  getAllCards: async ({ token }) => {
+    const { data } = await api.get("api/cards/all-cards", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -33,7 +30,7 @@ export const cardServices = {
 
   getSpecificCard: async ({ token, id }) => {
     console.log("payload", payload);
-    const { data } = await api.post(`api/cards/all-cards/${id}`, payload, {
+    const { data } = await api.get(`api/cards/all-cards/${id}`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

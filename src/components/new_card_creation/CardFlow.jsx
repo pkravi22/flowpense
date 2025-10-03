@@ -3,20 +3,28 @@ import { useState } from "react";
 import CardTypeStep from "./CardTypeStep";
 import CardDetailsStep from "./CardDetailstep";
 import ReviewStep from "./ReviewStep";
-
 import SuccessStep from "./SuccessStep";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ReviewSummaryStep from "./ReviewCard";
+import { cardServices } from "@/services/cardServices";
 
 export default function CardFlow() {
   const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState(null);
   const [formData, setFormData] = useState({
     cardType: "",
-    name: "",
-    approver: "",
-    currency: "",
-    limit: "",
-    blocked: "No",
+    cardName: "",
+    cardHolder: [], // Should contain user IDs like ["101", "102"]
+    approver: [], // Should contain user IDs like ["201"]
+    teamName: "",
+    dailySpendLimit: "",
+    weeklySpendLimit: "",
+    monthlyLimit: "",
+    perTransactionLimit: "",
+    cardFunding: 0,
+    blockedCategory: [], // Should contain strings like ["entertainment", "alcohol"]
+    allowTopUps: false,
   });
 
   const nextStep = () => setStep((prev) => prev + 1);
@@ -26,10 +34,50 @@ export default function CardFlow() {
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
+  const token = localStorage.getItem("token");
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    setApiError(null);
+
+    try {
+      // Prepare final data in exact API format
+      const apiData = {
+        cardType: formData.cardType.toLowerCase() + " card", // "virtual card"
+        cardName: formData.cardName,
+        cardHolder: formData.cardHolder, // Already array of IDs
+        approver: formData.approver, // Already array of IDs
+        teamName: formData.teamName,
+        dailySpendLimit: Number(formData.dailySpendLimit),
+        weeklySpendLimit: Number(formData.weeklySpendLimit),
+        monthlyLimit: Number(formData.monthlyLimit),
+        perTransactionLimit: Number(formData.perTransactionLimit),
+        cardFunding: formData.cardFunding,
+        blockedCategory: formData.blockedCategory, // Array of category strings
+      };
+
+      console.log("Sending to API:", apiData);
+
+      const result = await cardServices.createCard({ apiData, token });
+      console.log("result", result);
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to create card");
+      }
+
+      console.log("Card Created Successfully:", result);
+      nextStep(); // Only proceed on success
+    } catch (error) {
+      console.error("Error creating card:", error);
+      setApiError(error.message || "An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="max-h-screen flex flex-col  rounded-2xl  ">
+    <div className="max-h-screen flex flex-col rounded-2xl">
       {step < 5 && (
-        <div className="flex flex-col gap-0 px-4  py-4">
+        <div className="flex flex-col gap-0 px-4 py-4">
           <h1 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6">
             Create New Card
           </h1>
@@ -57,7 +105,12 @@ export default function CardFlow() {
           />
         )}
         {step === 3 && (
-          <ReviewStep nextStep={nextStep} prevStep={prevStep} data={formData} />
+          <ReviewStep
+            nextStep={nextStep}
+            prevStep={prevStep}
+            data={formData}
+            updateData={updateData}
+          />
         )}
         {step === 4 && (
           <ReviewSummaryStep
@@ -80,13 +133,13 @@ export default function CardFlow() {
               Previous
             </button>
           ) : (
-            <div /> // empty space for alignment
+            <div />
           )}
           <button
-            onClick={nextStep}
+            onClick={step === 4 ? handleSubmit : nextStep}
             className="px-12 py-[10px] bg-background cursor-pointer flex items-center gap-2 text-sm text-white rounded-full hover:bg-background"
           >
-            {step === 4 ? "Create Card" : "Next"} {/* ✅ Button changes */}
+            {step === 4 ? "Create Card" : "Next"}
             {step < 4 && <ChevronRight size={14} />}
           </button>
         </div>

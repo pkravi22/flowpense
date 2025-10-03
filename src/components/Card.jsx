@@ -10,6 +10,7 @@ import {
   BanknoteArrowUp,
 } from "lucide-react";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const Card = ({
   name,
@@ -33,6 +34,10 @@ const Card = ({
 
   const [cardDetailsOpen, setCardDetailsOpen] = useState(false);
 
+  const dispatch = useDispatch();
+  const { allCards, loading, error } = useSelector((state) => state.cards);
+
+  console.log("all cards", allCards);
   const handleThreeDots = () => {
     setCardDetailsOpen((prev) => !prev);
   };
@@ -40,6 +45,7 @@ const Card = ({
   const spentmoney = parseFloat(String(spent).replace(/[^0-9.-]+/g, "")) || 0;
   const percentage = total > 0 ? (spentmoney / total) * 100 : 0;
   console.log(percentage);
+
   return (
     <div className="m-4 w-[300px] h-[180px] relative">
       <div className="flex justify-between mb-2 px-4">

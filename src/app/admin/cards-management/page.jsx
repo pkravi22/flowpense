@@ -9,9 +9,13 @@ import {
   Wallet,
   X,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../../../components/Card";
 import CardModal from "@/components/modals/CardModal";
+import CardFlow from "@/components/new_card_creation/CardFlow";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllCards } from "@/redux/slices/cardSlice";
+import { useRouter } from "next/navigation";
 
 const cardDetails = [
   {
@@ -55,11 +59,23 @@ const cardDetails = [
 const Page = () => {
   const [showCardFlow, setShowCardFlow] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { allCards, loading, error } = useSelector((state) => state.cards);
 
   const handleCardClick = (card) => {
     setSelectedCard(card);
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(fetchAllCards({ token }));
+    } else {
+      console.error("No authentication token found - redirecting to login");
+      router.push("/login");
+    }
+  }, [dispatch, router]);
   return (
     <div>
       {/* Header */}

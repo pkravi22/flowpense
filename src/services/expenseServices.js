@@ -25,7 +25,7 @@ export const expenseServices = {
     return data;
   },
 
-  getAllExpense: async ({ id, token }) => {
+  getAllExpense: async ({ token }) => {
     const { data } = await api.get(
       "api/expenses/all-expenses",
 

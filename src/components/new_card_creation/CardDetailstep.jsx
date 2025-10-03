@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 
 export default function CardDetailsStep({
@@ -7,15 +7,10 @@ export default function CardDetailsStep({
   updateData,
   data,
 }) {
-  const [enabled, setEnabled] = useState(false);
-  const toggleSwitch = () => setEnabled(!enabled);
-
-
+  const [enabled, setEnabled] = useState(data.allowTopUps || false);
   const [holderOpen, setHolderOpen] = useState(false);
-  const [selectedHolders, setSelectedHolders] = useState([]);
-
   const [approverOpen, setApproverOpen] = useState(false);
-  const [selectedApprover, setSelectedApprover] = useState(null);
+  const [teamName, setTeamName] = useState(data.teamName || "");
 
   const holders = [
     { name: "John Doe", role: "Software Developer", department: "Engineering" },
@@ -29,29 +24,69 @@ export default function CardDetailsStep({
     { name: "Charlie Green", role: "CTO", department: "Engineering" },
   ];
 
-  // Toggle holder selection (multiple allowed)
+  const toggleSwitch = () => {
+    const newValue = !enabled;
+    setEnabled(newValue);
+    updateData({ allowTopUps: newValue });
+  };
+
   const toggleHolder = (holder) => {
-    const exists = selectedHolders.find((h) => h.name === holder.name);
+    const exists = data.cardHolder?.find((h) => h.name === holder.name);
+    let updatedHolders;
+
     if (exists) {
-      setSelectedHolders(selectedHolders.filter((h) => h.name !== holder.name));
+      updatedHolders =
+        data.cardHolder?.filter((h) => h.name !== holder.name) || [];
     } else {
-      setSelectedHolders([...selectedHolders, holder]);
+      updatedHolders = [...(data.cardHolder || []), holder];
     }
+
+    updateData({ cardHolder: updatedHolders });
   };
 
   const toggleApprover = (approver) => {
-    setSelectedApprover(approver);
+    updateData({ approver: [approver] });
     setApproverOpen(false);
+  };
+
+  const handleNext = () => {
+    if (!data.cardHolder || data.cardHolder.length === 0) {
+      alert("Please select at least one card holder");
+      return;
+    }
+    if (!data.approver || data.approver.length === 0) {
+      alert("Please select an approver");
+      return;
+    }
+    if (!teamName.trim()) {
+      alert("Please enter a team name");
+      return;
+    }
+    updateData({ teamName: teamName.trim() });
+    nextStep();
   };
 
   return (
     <div className="flex flex-col gap-2">
       <div className="border-b border-gray-200 flex gap-2 justify-between items-center px-4 py-4">
         <p>Assign Holder & Approver</p>
-        <p className="text-[#035638] text-[16px]">Step 1 Of 6</p>
+        <p className="text-[#035638] text-[16px]">Step 2 Of 4</p>
       </div>
 
       <div className="flex flex-col gap-4 p-8">
+        {/* Team Name */}
+        <div>
+          <label className="block text-sm font-medium mb-1">Team Name</label>
+          <input
+            type="text"
+            value={teamName}
+            onChange={(e) => setTeamName(e.target.value)}
+            placeholder="Enter team name"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#035638]"
+          />
+        </div>
+
+        {/* Card Holders */}
         <div className="relative">
           <label className="block text-sm font-medium mb-1">
             Card Holder(s)
@@ -59,30 +94,30 @@ export default function CardDetailsStep({
           <button
             type="button"
             onClick={() => setHolderOpen(!holderOpen)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 flex justify-between items-center bg-white"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 flex justify-between items-center bg-white focus:border-[#035638]"
           >
-            {selectedHolders.length > 0
-              ? selectedHolders.map((h) => h.name).join(", ")
+            {data.cardHolder && data.cardHolder.length > 0
+              ? data.cardHolder.map((h) => h.name).join(", ")
               : "Select Employee"}
             <ChevronDown className="w-4 h-4 text-gray-500" />
           </button>
           {holderOpen && (
             <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
               {holders.map((holder, idx) => {
-                const isChecked = selectedHolders.some(
+                const isChecked = data.cardHolder?.some(
                   (h) => h.name === holder.name
                 );
                 return (
                   <div
                     key={idx}
-                    className="cursor-pointer px-3 py-1 flex items-center hover:bg-gray-100"
+                    className="cursor-pointer px-3 py-3 flex items-center hover:bg-gray-100"
                     onClick={() => toggleHolder(holder)}
                   >
                     <input
                       type="checkbox"
                       checked={isChecked}
                       readOnly
-                      className="mr-2"
+                      className="mr-2 h-4 w-4 text-[#035638]"
                     />
                     <div>
                       <div className="font-medium">{holder.name}</div>
@@ -97,6 +132,7 @@ export default function CardDetailsStep({
           )}
         </div>
 
+        {/* Approver */}
         <div className="relative">
           <label className="block text-sm font-medium mb-1">
             Team Leader / Approver
@@ -104,26 +140,30 @@ export default function CardDetailsStep({
           <button
             type="button"
             onClick={() => setApproverOpen(!approverOpen)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 flex justify-between items-center bg-white"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 flex justify-between items-center bg-white focus:border-[#035638]"
           >
-            {selectedApprover ? selectedApprover.name : "Select Approver"}
+            {data.approver && data.approver.length > 0
+              ? data.approver[0].name
+              : "Select Approver"}
             <ChevronDown className="w-4 h-4 text-gray-500" />
           </button>
           {approverOpen && (
             <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
               {approvers.map((approver, idx) => {
-                const isChecked = selectedApprover?.name === approver.name;
+                const isChecked = data.approver?.some(
+                  (a) => a.name === approver.name
+                );
                 return (
                   <div
                     key={idx}
-                    className="cursor-pointer px-3 py-1 flex items-center hover:bg-gray-100"
+                    className="cursor-pointer px-3 py-3 flex items-center hover:bg-gray-100"
                     onClick={() => toggleApprover(approver)}
                   >
                     <input
                       type="checkbox"
                       checked={isChecked}
                       readOnly
-                      className="mr-2"
+                      className="mr-2 h-4 w-4 text-[#035638]"
                     />
                     <div>
                       <div className="font-medium">{approver.name}</div>
@@ -138,6 +178,7 @@ export default function CardDetailsStep({
           )}
         </div>
 
+        {/* Top-up Toggle */}
         <div className="flex items-center justify-between p-4 bg-[#FCFDF2] rounded-lg shadow-sm">
           <div>
             <p className="text-[color:var(--Foundation-Green-Normal,#035638)] text-base not-italic font-medium leading-[100%]">
@@ -155,12 +196,28 @@ export default function CardDetailsStep({
             }`}
           >
             <div
-              className={` w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
+              className={`w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
                 enabled
-                  ? "translate-x-6 bg-background"
+                  ? "translate-x-6 bg-[#035638]"
                   : "translate-x-0 bg-white"
               }`}
             />
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={prevStep}
+            className="px-6 py-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
+          >
+            Previous
+          </button>
+          <button
+            onClick={handleNext}
+            className="px-6 py-2 bg-[#035638] text-white rounded-full hover:bg-[#02452e]"
+          >
+            Next
           </button>
         </div>
       </div>

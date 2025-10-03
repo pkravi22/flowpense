@@ -16,7 +16,11 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import Example from "@/components/BarChart";
+import { fetchAllCards } from "@/redux/slices/cardSlice";
+import { fetchAllExpenses } from "@/redux/slices/expenseSlice";
+
 //import React, { useState } from "react";
 //import DateRangePicker from "@/components/DatePicker";
 //import VerifyAccount from "@/components/verification_pages/VerificationFlow";
@@ -126,52 +130,72 @@ const settings = {
 const Page = () => {
   const [verified, setVerified] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
-    const [companyData, setCompanyData] = useState(null);
-    console.log("hello dash");
-    const handleVerifyClick = () => {
-      setShowVerification(true);
-    };
+  const [companyData, setCompanyData] = useState(null);
 
-    const handleVerificationComplete = () => {
-      setVerified(true);
-      setShowVerification(false);
+  const dispatch = useDispatch();
+  const {
+    allCards,
+    loading: cardsLoading,
+    error: cardsError,
+  } = useSelector((state) => state.cards);
+  const {
+    allExpenses,
+    loading: expensesLoading,
+    error: expensesError,
+  } = useSelector((state) => state.expenses);
 
-      localStorage.setItem("verified", "true");
-    };
+  console.log("hello dash");
+  const handleVerifyClick = () => {
+    setShowVerification(true);
+  };
 
-    const getCompanyDetails = async () => {
-      try {
-        const storedCompany = localStorage.getItem("companyData");
-        const storedVerified = localStorage.getItem("verified");
+  const handleVerificationComplete = () => {
+    setVerified(true);
+    setShowVerification(false);
 
-        if (storedCompany) {
-          const parsedCompany = JSON.parse(storedCompany);
-          setCompanyData(parsedCompany);
-          setVerified(storedVerified === "true");
-          return;
-        }
+    localStorage.setItem("verified", "true");
+  };
 
-        const data = await companyServices.getCompanyInfo({ token: "token" });
-        console.log("Fetched company data:", data);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(fetchAllCards({ token }));
+      dispatch(fetchAllExpenses({ token }));
+    }
+  }, [dispatch]);
 
-        if (data.success && data.company) {
-          setCompanyData(data.company);
-          const isVerified = data.company.kycStatus !== "pending";
-          setVerified(isVerified);
+  const getCompanyDetails = async () => {
+    try {
+      const storedCompany = localStorage.getItem("companyData");
+      const storedVerified = localStorage.getItem("verified");
 
-          // Save to localStorage
-          localStorage.setItem("companyData", JSON.stringify(data.company));
-          localStorage.setItem("verified", isVerified.toString());
-        }
-      } catch (e) {
-        console.error("Error fetching company info:", e);
-        setVerified(false);
+      if (storedCompany) {
+        const parsedCompany = JSON.parse(storedCompany);
+        setCompanyData(parsedCompany);
+        setVerified(storedVerified === "true");
+        return;
       }
-    };
 
-    useEffect(() => {
-      getCompanyDetails();
-    }, []);
+      const data = await companyServices.getCompanyInfo({ token: "token" });
+      console.log("Fetched company data:", data);
+
+      if (data.success && data.company) {
+        setCompanyData(data.company);
+        const isVerified = data.company.kycStatus !== "pending";
+        setVerified(isVerified);
+
+        localStorage.setItem("companyData", JSON.stringify(data.company));
+        localStorage.setItem("verified", isVerified.toString());
+      }
+    } catch (e) {
+      console.error("Error fetching company info:", e);
+      setVerified(false);
+    }
+  };
+
+  useEffect(() => {
+    getCompanyDetails();
+  }, []);
   return (
     <div className="p-0 md:p-4  overflow-auto  bg-gray-100">
       <div className="flex flex-col items-center justify-between">
@@ -217,9 +241,9 @@ const Page = () => {
           </div>
           <div>
             {/* Date selection area */}
-            <div className="">
+            {/* <div className="">
               <DateRangePicker />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

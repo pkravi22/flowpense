@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 import DateRangePicker from "../../../components/DatePicker";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TransactionTable from "../../../components/UserTable";
 import BankDetails from "../../../components/walletPages/BankDetails";
 import RecentTransactions from "../../../components/walletPages/RecentTransactions";
@@ -104,6 +104,22 @@ const Page = () => {
       setLoading(false);
     }
   };
+
+  const fetchWalletLedger = async () => {
+    try {
+      const response = await companyServices.getWalletLedger({
+        companyId: userDetail.companyId,
+        token,
+      });
+      console.log("Wallet Ledger:", response);
+    } catch (error) {
+      console.error("Error fetching wallet ledger:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWalletLedger();
+  }, []);
 
   return (
     <div className="">

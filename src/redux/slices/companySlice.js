@@ -16,6 +16,24 @@ export const fetchCompany = createAsyncThunk(
   }
 );
 
+export const fetchWalletLedger = createAsyncThunk(
+  "company/fetchWalletLedger",
+  async (token, thunkAPI) => {
+    try {
+      const response = await companyServices.getWalletLedger({
+        companyId,
+        token,
+      });
+      return response.company;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.message || "Failed to fetch company"
+      );
+    }
+  }
+);
+
+
 const initialState = {
   company: null,
   isLoading: false,

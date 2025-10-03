@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authService } from "@/services/authServices";
-import * as jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -12,7 +12,7 @@ export const login = createAsyncThunk(
         localStorage.setItem("token", response.Token);
       }
 
-      return response; // will be available in action.payload
+      return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Login failed"
@@ -23,16 +23,17 @@ export const login = createAsyncThunk(
 
 // Helper to decode token
 const getUserFromToken = (token) => {
+  console.log("hello token", token);
   try {
-    const ans = jwt_decode(token);
-    console.log("token", ans);
+    const ans = jwtDecode(token);
+    console.log("Hello token bhai", ans);
     return ans;
   } catch (error) {
     return null;
   }
 };
 
-// Initialize state from localStorage
+
 const tokenFromStorage =
   typeof window !== "undefined" ? localStorage.getItem("token") : null;
 console.log("token", tokenFromStorage);

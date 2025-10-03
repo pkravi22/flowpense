@@ -1,7 +1,11 @@
+"use client";
 import { CreditCard, Users, Wallet } from "lucide-react";
 import DateRangePicker from "../../../components/DatePicker";
-import React from "react";
+import React, { useEffect } from "react";
 import TransactionTable from "../../../components/UserTable";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { fetchAllExpenses } from "@/redux/slices/expenseSlice";
 const cardDetails = [
   {
     id: 2,
@@ -32,6 +36,22 @@ const cardDetails = [
   },
 ];
 const page = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { allExpenses, loading, error } = useSelector(
+    (state) => state.expenses
+  );
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(fetchAllExpenses({ token }));
+    } else {
+      console.error("No authentication token found - redirecting to login");
+      router.push("/login");
+    }
+  }, [dispatch, router]);
+
   return (
     <div className="">
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
