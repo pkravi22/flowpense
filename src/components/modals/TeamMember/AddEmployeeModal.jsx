@@ -1,7 +1,27 @@
+"use client";
 import { CrossIcon, PlusIcon, X } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 
-const AddEmployeeModal = ({ setAddEmployeeModalOpen }) => {
+const AddEmployeeModal = ({ setAddEmployeeModalOpen, handleAddEmployee }) => {
+  const [employeeData, setEmployeeData] = useState({
+    employeeId: 6,
+    fullName: "",
+    email: "",
+    departement: "",
+    jobTitle: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEmployeeData({ ...employeeData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(employeeData);
+    handleAddEmployee({ employeeData });
+    setAddEmployeeModalOpen(false);
+  };
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-lg relative ">
@@ -22,42 +42,67 @@ const AddEmployeeModal = ({ setAddEmployeeModalOpen }) => {
           </p>
         </div>
 
-        <form className="space-y-4 px-8 py-4">
+        <form onSubmit={handleSubmit} className="space-y-4 px-8 py-4">
           <div>
             <label className="text-sm font-medium">Name</label>
             <input
               type="text"
+              name="fullName"
+              value={employeeData.fullName}
+              onChange={handleChange}
               className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
               placeholder="Enter employee name"
+              required
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Name</label>
+            <input
+              type="text"
+              name="jobTitle"
+              value={employeeData.jobTitle}
+              onChange={handleChange}
+              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
+              placeholder="Enter Job title"
+              required
             />
           </div>
           <div>
             <label className="text-sm font-medium">Email</label>
             <input
               type="email"
+              name="email"
+              value={employeeData.email}
+              onChange={handleChange}
               className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
               placeholder="Enter email"
+              required
             />
           </div>
           <div>
             <label className="text-sm font-medium">Department</label>
             <input
               type="text"
+              name="departement"
+              value={employeeData.departement}
+              onChange={handleChange}
               className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
               placeholder="Enter department"
+              required
             />
           </div>
+
           <div className="flex w-full justify-between gap-2">
             <button
               type="button"
               onClick={() => setAddEmployeeModalOpen(false)}
-              className="px-4 py-1  flex-1 border w-[1/2] border-background text-sm rounded-full"
+              className="px-4 py-1 flex-1 border border-background text-sm rounded-full"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-[10px] flex gap-2 items-center justify-center  flex-1 bg-background text-sm rounded-full text-white "
+              className="px-4 py-[10px] flex gap-2 items-center justify-center flex-1 bg-background text-sm rounded-full text-white cursor-pointer"
             >
               <PlusIcon />
               Add Employee

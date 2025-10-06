@@ -34,6 +34,9 @@ const BankDetails = () => {
           <p>Pending</p>
         </div>
       </div>
+      <div className="text-sm text-black border border-black rounded-sm text-center py-1 cursor-pointer">
+        + Add New Bank Account
+      </div>
     </div>
   );
 };

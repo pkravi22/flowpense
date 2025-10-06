@@ -1,7 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DateRangePicker from "../../../components/DatePicker";
 import { CircleCheckBig, CircleCheckBigIcon } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllExpenses } from "@/redux/slices/expenseSlice";
+import { fetchPendingApprovals } from "@/redux/slices/approvalSlice";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("pending");
@@ -48,6 +51,46 @@ const Page = () => {
       status: "Rejected",
     },
   ];
+
+  const dispatch = useDispatch();
+  const {
+    allExpenses,
+    pendingExpenses,
+    loadingAll,
+    loadingPending,
+    errorAll,
+    errorPending,
+  } = useSelector((state) => state.approvals);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(fetchAllExpenses(token));
+      dispatch(fetchPendingApprovals(token));
+    }
+  }, [dispatch]);
+
+  const handleApprove = (expenseId) => {
+    const token = localStorage.getItem("token");
+    const approvalData = {
+      approvedBy: "manager_id",
+      notes: "Approved via system",
+      approvedAt: new Date().toISOString(),
+    };
+
+    dispatch(approveExpense({ expenseId, token, approvalData }));
+  };
+
+  const handleReject = (expenseId) => {
+    const token = localStorage.getItem("token");
+    const rejectionData = {
+      rejectedBy: "manager_id",
+      reason: "Needs more documentation",
+      rejectedAt: new Date().toISOString(),
+    };
+
+    dispatch(rejectExpense({ expenseId, token, rejectionData }));
+  };
 
   return (
     <div>
@@ -106,11 +149,17 @@ const Page = () => {
                     <p className="font-bold">{item.amount}</p>
                   </div>
                   <div className="flex gap-2">
-                    <button className=" flex gap-2 items-center bg-blue-500 text-white px-4 py-1 rounded-md">
+                    <button
+                      className=" flex gap-2 items-center bg-blue-500 text-white px-4 py-1 rounded-md"
+                      onClick={() => handleApprove(id)}
+                    >
                       <CircleCheckBig size={16} />
                       Approve
                     </button>
-                    <button className=" flex gap-2 items-center border border-red-500 text-red-500 px-4 py-1 rounded-md">
+                    <button
+                      className=" flex gap-2 items-center border border-red-500 text-red-500 px-4 py-1 rounded-md"
+                      onClick={() => handleReject(id)}
+                    >
                       <CircleCheckBig size={16} />
                       Reject
                     </button>

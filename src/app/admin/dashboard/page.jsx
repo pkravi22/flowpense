@@ -241,9 +241,9 @@ const Page = () => {
           </div>
           <div>
             {/* Date selection area */}
-            {/* <div className="">
+            <div className="">
               <DateRangePicker />
-            </div> */}
+            </div>
           </div>
         </div>
       </div>

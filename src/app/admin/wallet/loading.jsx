@@ -7,7 +7,7 @@ export default function Loading() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
       {/* Spinner */}
       <div className="relative w-16 h-16 mb-6">
-        <div className="absolute inset-0 border-4 border-[#035638] rounded-full opacity-25"></div>
+        <div className="absolute inset-0 border-4 border-green-400 rounded-full opacity-25"></div>
         <div className="absolute inset-0 border-4 border-[#035638] border-t-transparent rounded-full animate-spin"></div>
       </div>
 

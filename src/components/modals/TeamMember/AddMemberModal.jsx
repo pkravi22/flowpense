@@ -1,6 +1,6 @@
 import { CrossIcon, PlusIcon, X } from "lucide-react";
 import React from "react";
-const AddMemberModal = ({ setAddMemberModal }) => {
+const AddMemberModal = ({ setAddMemberModal, handleAddMember }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
       <div className="relative bg-white rounded-xl shadow-lg w-full max-w-lg p-4">

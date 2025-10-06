@@ -65,4 +65,23 @@ export const cardServices = {
     );
     return data;
   },
+
+  deleteCard: async ({ token, id }) => {
+    const { data } = await api.delete(`api/cards/delete-card/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  },
+
+  transactionHistoryByCard: async ({ token, id }) => {
+    const { data } = await api.get(`api/cards/transaction-history/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  },
 };
+

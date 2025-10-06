@@ -16,6 +16,7 @@ import CardFlow from "@/components/new_card_creation/CardFlow";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllCards } from "@/redux/slices/cardSlice";
 import { useRouter } from "next/navigation";
+import DateRangePicker from "@/components/DatePicker";
 
 const cardDetails = [
   {
@@ -88,9 +89,9 @@ const Page = () => {
         </div>
         <div>
           <div className="border border-gray-300 rounded-2xl p-2 flex items-center gap-2">
-            <span className="text-[#2E2E2E] font-medium">
-              Compare To : 4 Jan - 4 Jun, 2025
-            </span>
+            <div className="">
+              <DateRangePicker />
+            </div>
             <span>
               <ChevronDown />
             </span>
@@ -164,59 +165,65 @@ const Page = () => {
         </div>
 
         {/* Cards */}
-        <div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
-            {[
-              {
-                name: "Engineering",
-                person: "Pramendra Singh",
-                number: "3432 **** **** 1234",
-                bgColor: "#4e4f2eff",
-                textColor: "white",
-                monthlyLimit: "$5000",
-                spent: "$2000",
-                balance: "$30000",
-                status: "Active",
-              },
-              {
-                name: "Engineering ",
-                person: "Pramendra Singh",
-                number: "7865 **** **** 1234",
-                bgColor: "#1d2c91ff",
-                textColor: "white",
-                monthlyLimit: "$10000",
-                spent: "$2000",
-                balance: "$30000",
-                status: "Active",
-              },
-              {
-                name: "Engineering Team Card",
-                person: "Pramendra Singh",
-                number: "7865 **** **** 1234",
-                bgColor: "#13aa64ff",
-                textColor: "white",
-                monthlyLimit: "$3000",
-                spent: "$2000",
-                balance: "$30000",
-                status: "Frozen",
-              },
-              {
-                name: "Sales Team Card",
-                person: "Adebayo  ",
-                number: "7865 **** **** 1234",
-                bgColor: "red",
-                textColor: "white",
-                monthlyLimit: "$6000",
-                spent: "$2000",
-                balance: "$30000",
-                status: "Inactive",
-              },
-            ].map((card, idx) => (
-              <div key={idx} onClick={() => handleCardClick(card)}>
-                <Card {...card} />
-              </div>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
+          {[
+            {
+              name: "Engineering",
+              person: "Pramendra Singh",
+              number: "3432 **** **** 1234",
+              bgColor: "#4e4f2eff",
+              textColor: "white",
+              monthlyLimit: "$5000",
+              spent: "$2000",
+              balance: "$30000",
+              status: "Active",
+            },
+            {
+              name: "Engineering ",
+              person: "Pramendra Singh",
+              number: "7865 **** **** 1234",
+              bgColor: "#1d2c91ff",
+              textColor: "white",
+              monthlyLimit: "$10000",
+              spent: "$2000",
+              balance: "$30000",
+              status: "Active",
+            },
+            {
+              name: "Engineering Team Card",
+              person: "Pramendra Singh",
+              number: "7865 **** **** 1234",
+              bgColor: "#13aa64ff",
+              textColor: "white",
+              monthlyLimit: "$3000",
+              spent: "$2000",
+              balance: "$30000",
+              status: "Frozen",
+            },
+            {
+              name: "Sales Team Card",
+              person: "Adebayo",
+              number: "7865 **** **** 1234",
+              bgColor: "red",
+              textColor: "white",
+              monthlyLimit: "$6000",
+              spent: "$2000",
+              balance: "$30000",
+              status: "Inactive",
+            },
+          ].map((card, idx) => (
+            <div key={idx} onClick={() => handleCardClick(card)}>
+              <Card
+                {...card}
+                onMenuClick={(e) => {
+                  e.stopPropagation(); // ✅ Prevent opening card modal
+                  setSelectedCard(null); // Ensure card detail modal doesn’t open
+                  setFunctionModalCard(card); // Your function modal state
+                  setShowFunctionModal(true); // open function modal
+                }}
+              />
+            </div>
+          ))}
         </div>
       </div>
 
