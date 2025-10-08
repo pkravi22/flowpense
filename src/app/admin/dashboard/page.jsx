@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Piechart from "@/components/PieChart";
+//import Example from "@/components/Barchart";
 import Card from "@/components/Card";
 import DateRangePicker from "@/components/DatePicker";
 import VerifyAccount from "@/components/verification_pages/VerificationFlow";
-import { companyServices } from "@/services/companyServices.js";
+
 import Slider from "react-slick";
 import {
   ArrowRight,
@@ -15,45 +16,12 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
 import Example from "@/components/BarChart";
-import { fetchAllCards } from "@/redux/slices/cardSlice";
-import { fetchAllExpenses } from "@/redux/slices/expenseSlice";
+//import React, { useState } from "react";
+//import DateRangePicker from "@/components/DatePicker";
+//import VerifyAccount from "@/components/verification_pages/VerificationFlow";
 
-// Custom hook for safe localStorage access
-// function useLocalStorage(key, initialValue) {
-//   const [storedValue, setStoredValue] = useState(initialValue);
-//   const [isClient, setIsClient] = useState(false);
-
-//   useEffect(() => {
-//     setIsClient(true);
-//     if (typeof window !== "undefined") {
-//       try {
-//         const item = window.localStorage.getItem(key);
-//         if (item) {
-//           setStoredValue(JSON.parse(item));
-//         }
-//       } catch (error) {
-//         console.log(`Error reading localStorage key "${key}":`, error);
-//       }
-//     }
-//   }, [key]);
-
-//   const setValue = (value) => {
-//     try {
-//       const valueToStore =
-//         value instanceof Function ? value(storedValue) : value;
-//       setStoredValue(valueToStore);
-//       if (typeof window !== "undefined") {
-//         window.localStorage.setItem(key, JSON.stringify(valueToStore));
-//       }
-//     } catch (error) {
-//       console.log(`Error setting localStorage key "${key}":`, error);
-//     }
-//   };
-
-//   return [storedValue, setValue, isClient];
-// }
+//import VerificationFlow from "../../../components/verification_pages/VerificationFlow";
 
 const cardDetails = [
   {
@@ -81,7 +49,7 @@ const cardDetails = [
     icon: <Users />,
     iconBg: "#E0E7FF",
     iconColor: "#1E40AF",
-    sub: "8 new members added this month",
+    sub: " 8 new members added this month",
   },
   {
     id: 4,
@@ -93,19 +61,8 @@ const cardDetails = [
     sub: "4 % increase from last month",
   },
 ];
-
+//const verified = false;
 const cards = [
-  {
-    name: "Engineering",
-    person: "Pramendra Singh",
-    number: "3242 **** **** 1234",
-    bgColor: "#2e4f38ff",
-    textColor: "white",
-    monthlyLimit: "$5000",
-    spent: "$2000",
-    balance: "$30000",
-    status: "Active",
-  },
   {
     name: "Engineering",
     person: "Pramendra Singh",
@@ -156,7 +113,7 @@ const settings = {
   dots: false,
   infinite: false,
   speed: 500,
-  slidesToShow: 1,
+  slidesToShow: 1, // only 1 card on mobile
   slidesToScroll: 1,
   arrows: true,
   responsive: [
@@ -166,36 +123,9 @@ const settings = {
     },
   ],
 };
-
 const Page = () => {
   const [verified, setVerified] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
-  const [companyData, setCompanyData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Use custom hook for localStorage values
-  // const [storedCompany, setStoredCompany] = useLocalStorage(
-  //   "companyData",
-  //   null
-  // );
-  // const [storedVerified, setStoredVerified] = useLocalStorage(
-  //   "verified",
-  //   "false"
-  // );
-
-  const dispatch = useDispatch();
-  const {
-    allCards,
-    loading: cardsLoading,
-    error: cardsError,
-  } = useSelector((state) => state.cards);
-  const {
-    allExpenses,
-    loading: expensesLoading,
-    error: expensesError,
-  } = useSelector((state) => state.expenses);
-
-  console.log("hello dash");
 
   const handleVerifyClick = () => {
     setShowVerification(true);
@@ -204,72 +134,9 @@ const Page = () => {
   const handleVerificationComplete = () => {
     setVerified(true);
     setShowVerification(false);
-    setStoredVerified("true");
   };
-
-  // Fetch cards and expenses - runs only on client
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     const token = localStorage.getItem("token");
-  //     if (token) {
-  //       dispatch(fetchAllCards({ token }));
-  //       dispatch(fetchAllExpenses({ token }));
-  //     }
-  //   }
-  // }, [dispatch]);
-
-  // Get company details - runs only on client
-  // const getCompanyDetails = async () => {
-  //   try {
-  //     setIsLoading(true);
-
-  //     // If we already have stored company data, use it
-  //     if (storedCompany) {
-  //       setCompanyData(storedCompany);
-  //       setVerified(storedVerified === "true");
-  //       setIsLoading(false);
-  //       return;
-  //     }
-
-  //     // Fetch fresh company data
-  //     const data = await companyServices.getCompanyInfo({ token: "token" });
-  //     console.log("Fetched company data:", data);
-
-  //     if (data.success && data.company) {
-  //       setCompanyData(data.company);
-  //       const isVerified = data.company.kycStatus !== "pending";
-  //       setVerified(isVerified);
-
-  //       // Update localStorage via custom hook
-  //       setStoredCompany(data.company);
-  //       setStoredVerified(isVerified.toString());
-  //     }
-  //   } catch (e) {
-  //     console.error("Error fetching company info:", e);
-  //     setVerified(false);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // Load company data on component mount (client-side only)
-  // useEffect(() => {
-  //   getCompanyDetails();
-  // }, []);
-
-  // Show loading state while checking authentication
-  // if (isLoading) {
-  //   return (
-  //     <div className="p-0 md:p-4 overflow-visible bg-gray-100 min-h-screen flex items-center justify-center">
-  //       <div className="text-center">
-  //         <p className="text-lg">Loading...</p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   return (
-    <div className="p-0 md:p-4 overflow-visible bg-gray-100">
+    <div className="p-0 md:p-4  overflow-auto  bg-gray-100">
       <div className="flex flex-col items-center justify-between">
         {!verified && (
           <div className="border-l-4 bg-[#035638] rounded-xl flex flex-col md:flex-row gap-2 w-full justify-between items-center p-4 mb-4">
@@ -296,16 +163,15 @@ const Page = () => {
 
         {showVerification && (
           <div className="fixed inset-0 bg-black/50 bg-opacity-25 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl w-[90%] md:w-[600px] shadow-lg">
+            <div className="bg-white  rounded-xl w-[90%] md:w-[600px] shadow-lg">
               <VerifyAccount
-                onComplete={handleVerificationComplete}
+                onComplete={handleVerificationComplete} // call when done
                 onCancel={() => setShowVerification(false)}
               />
             </div>
           </div>
         )}
-
-        <div className="w-full flex flex-col md:flex-row items-start md:items-center md:justify-between gap-4">
+        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <h1 className="pageTitle">Dashboard</h1>
             <p className="pageSubTitle mt-2">
@@ -313,7 +179,10 @@ const Page = () => {
             </p>
           </div>
           <div>
-            <DateRangePicker />
+            {/* Date selection area */}
+            <div className="">
+              <DateRangePicker />
+            </div>
           </div>
         </div>
       </div>
@@ -340,14 +209,14 @@ const Page = () => {
           )
         )}
       </div>
-
-      {/* charts */}
-      <div className="flex flex-col md:flex-row gap-6 mt-6 p-2 rounded-2xl">
-        {/* Bar charts */}
-        <div className="flex flex-col flex-3 gap-6 bg-white shadow-md p-4 md:min-h-[400px] rounded-2xl">
+      {/*  charts */}
+      <div className="flex flex-col  md:flex-row gap-6 mt-6  p-2 rounded-2xl ">
+        {/*  Bar charts */}
+        <div className="flex flex-col flex-3 gap-6 bg-white shadow-md p-4  md:min-h-[400px] rounded-2xl">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex flex-col gap-2 shadow-md rounded-2xl p-1">
-              <p className="statcardTitle">Total Revenue</p>
+            {/* Header */}
+            <div className="flex flex-col gap-2 shadow-md rounded-2xl p-1  ">
+              <p className="statcardTitle">Totoal Revenue</p>
               <p className="statcardNumber">$ 0</p>
               <p className="text-red-500">-52% Decline in Revenue</p>
             </div>
@@ -359,8 +228,8 @@ const Page = () => {
                 </div>
               </div>
               <div>
-                <div className="border border-gray-400 flex gap-4 items-center rounded-2xl px-2 py-1">
-                  <p>This Month</p>
+                <div className="border border-gray-400 flex gap-4 items-center rounded-2xl px-2 py-1 ">
+                  <p>This Month </p>
                   <span>
                     <ChevronDown />
                   </span>
@@ -368,14 +237,14 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className="w-full h-full min-w-[300px] min-h-[300px]">
-            <div className="w-full h-[250px]">
+          <div className="w-full h-full min-w-[300px] min-h-[300px] ">
+            {/* Chart area */}
+            <div className="w-full h-[250px] ">
               <Example />
             </div>
           </div>
         </div>
-
-        {/* Pie charts */}
+        {/*  Pie charts */}
         <div className="flex-2 bg-white flex gap-3 flex-col items-center md:min-h-[400px] rounded-2xl justify-center">
           <div className="flex justify-between w-full px-6 py-4">
             <p className="font-semibold text-gray-800">Spend Category</p>
@@ -404,7 +273,7 @@ const Page = () => {
             <Piechart />
           </div>
           <div className="w-full px-6 my-2">
-            <button className="text-text-primary cursor-pointer flex items-center justify-center gap-2 rounded w-full py-2 text-center border border-borderColor">
+            <button className="text-text-primary  cursor-pointer flex items-center justify-center gap-2  rounded w-full py-2 text-center border border-borderColor">
               View Details
               <span>
                 <ArrowRight size={18} />
@@ -413,10 +282,9 @@ const Page = () => {
           </div>
         </div>
       </div>
-
       {/* Active Cards */}
-      <div className="bg-white p-2 rounded-2xl shadow-md">
-        <div className="flex items-center justify-between">
+      <div className="mt-6 bg-white p-2 rounded-2xl shadow-md">
+        <div className="flex items-center justify-between ">
           <div>
             <p className="pageTitle">Active Cards</p>
             <p className="pageSubTitle mt-2">
@@ -430,10 +298,18 @@ const Page = () => {
             </div>
           </div>
         </div>
-
         {/* Cards */}
-        <div className="">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 py-4">
+        <div className="mt-6">
+          <div className="block lg:hidden ">
+            <Slider {...settings}>
+              {cards.map((card, index) => (
+                <Card key={index} {...card} />
+              ))}
+            </Slider>
+          </div>
+
+          {/* Desktop: grid */}
+          <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
             {cards.map((card, index) => (
               <Card key={index} {...card} />
             ))}
