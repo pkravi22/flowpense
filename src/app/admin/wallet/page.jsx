@@ -79,7 +79,6 @@ const Page = () => {
     setLoading(true);
 
     try {
-      // Call API to add funds
       const payload = {
         companyId: userDetail.companyId,
         email: userDetail.email,
