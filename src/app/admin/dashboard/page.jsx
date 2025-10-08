@@ -182,9 +182,10 @@ useEffect(() => {
 
 const getCompanyDetails = async () => {
   try {
-    storedCompany = localStorage.getItem("companyData");
-    storedVerified = localStorage.getItem("verified");
-
+    if (typeof window !== "undefined") {
+      storedCompany = localStorage.getItem("companyData");
+      storedVerified = localStorage.getItem("verified");
+    }
     if (storedCompany) {
       const parsedCompany = JSON.parse(storedCompany);
       setCompanyData(parsedCompany);
@@ -209,9 +210,11 @@ const getCompanyDetails = async () => {
   }
 };
 
-  useEffect(() => {
+useEffect(() => {
+  if (typeof window !== "undefined") {
     getCompanyDetails();
-  }, []);
+  }
+}, []);
   return (
     <div className="p-0 md:p-4 overflow-visible bg-gray-100">
       <div className="flex flex-col  items-center justify-between">
