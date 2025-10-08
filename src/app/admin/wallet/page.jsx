@@ -53,14 +53,28 @@ const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [token, setToken] = useState(null);
+  const [userDetail, setUserDetail] = useState(null);
   const [formData, setFormData] = useState({
     bank: "",
     amount: "",
     method: "",
   });
-  const token = localStorage.getItem("token");
-  const userDetail = jwtDecode(token);
-  console.log(userDetail);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+        try {
+          const decoded = jwtDecode(storedToken);
+          setUserDetail(decoded);
+        } catch (err) {
+          console.error("Invalid token:", err);
+        }
+      }
+    }
+  }, []);
   const fundWallet = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -76,6 +90,11 @@ const Page = () => {
       return;
     }
 
+    if (!userDetail || !token) {
+      alert("User not authenticated");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -84,10 +103,7 @@ const Page = () => {
         email: userDetail.email,
         amount: formData.amount,
       };
-      const response = await companyServices.walletTopup({
-        payload,
-        token,
-      });
+      const response = await companyServices.walletTopup({ payload, token });
 
       if (response.success) {
         closeModal();
@@ -105,6 +121,7 @@ const Page = () => {
   };
 
   const fetchWalletLedger = async () => {
+    if (!userDetail || !token) return; // guard
     try {
       const response = await companyServices.getWalletLedger({
         companyId: userDetail.companyId,
@@ -118,7 +135,8 @@ const Page = () => {
 
   useEffect(() => {
     fetchWalletLedger();
-  }, []);
+  }, [userDetail, token]);
+
 
   return (
     <div className="">

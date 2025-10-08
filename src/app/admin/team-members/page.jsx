@@ -181,8 +181,17 @@ const Page = () => {
     },
   ];
 
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+    }
+  }, []);
+
   const getALLTeams = async () => {
-    const token = localStorage.getItem("token");
+    if (!token) return; // guard
     try {
       const data = await teamServices.getAllTeams({ token });
       console.log("team data", data);
@@ -190,9 +199,8 @@ const Page = () => {
       console.log("error during fetching teams data");
     }
   };
-
   const handleAddEmployee = async ({ employeeData }) => {
-    const token = localStorage.getItem("token");
+    // const token = localStorage.getItem("token");
     try {
       const data = await teamServices.addEmployee({
         token,
@@ -208,12 +216,11 @@ const Page = () => {
     }
   };
 
-
-  const handleCreateTeam = ({ teamData }) => {
+  const handleCreateTeam = async ({ teamData }) => {
     console.log("teamdata in page", teamData);
     try {
-      const token = localStorage.getItem("token");
-      const data = teamServices.teamCreation({
+      //  const token = localStorage.getItem("token");
+      const data = await teamServices.teamCreation({
         teamData,
         token,
       });
@@ -238,7 +245,7 @@ const Page = () => {
     getALLTeams();
   };
   const getAllEmployees = async () => {
-    const token = localStorage.getItem("token");
+    //const token = localStorage.getItem("token");
     try {
       const data = await teamServices.getAllEmployees({ token });
       console.log("team data", data);
@@ -247,9 +254,11 @@ const Page = () => {
     }
   };
   useEffect(() => {
-    getALLTeams();
-    getAllEmployees();
-  }, []);
+    if (token) {
+      getALLTeams();
+      getAllEmployees();
+    }
+  }, [token]);
 
   return (
     <div>
