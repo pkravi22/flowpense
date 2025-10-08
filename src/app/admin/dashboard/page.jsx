@@ -170,45 +170,46 @@ const Page = () => {
     // }
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (token) {
-        dispatch(fetchAllCards({ token }));
-        dispatch(fetchAllExpenses({ token }));
-      }
-    }
-  }, [dispatch]);
+ useEffect(() => {
+   // Runs only in browser
+   const token =
+     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  const getCompanyDetails = async () => {
-    try {
-      // if (typeof window !== "undefined") {
-      //   storedCompany = localStorage.getItem("companyData");
-      //   storedVerified = localStorage.getItem("verified");
-      // }
-      // if (storedCompany) {
-      //   const parsedCompany = JSON.parse(storedCompany);
-      //   setCompanyData(parsedCompany);
-      //   setVerified(storedVerified === "true");
-      //   return;
-      // }
+   if (token) {
+     dispatch(fetchAllCards({ token }));
+     dispatch(fetchAllExpenses({ token }));
+   }
+ }, [dispatch]);
 
-      const data = await companyServices.getCompanyInfo({ token: "token" });
-      console.log("Fetched company data:", data);
+ const getCompanyDetails = async () => {
+   try {
+     // if (typeof window !== "undefined") {
+     //   storedCompany = localStorage.getItem("companyData");
+     //   storedVerified = localStorage.getItem("verified");
+     // }
+     // if (storedCompany) {
+     //   const parsedCompany = JSON.parse(storedCompany);
+     //   setCompanyData(parsedCompany);
+     //   setVerified(storedVerified === "true");
+     //   return;
+     // }
 
-      if (data.success && data.company) {
-        setCompanyData(data.company);
-        const isVerified = data.company.kycStatus !== "pending";
-        setVerified(isVerified);
+     const data = await companyServices.getCompanyInfo({ token });
+     console.log("Fetched company data:", data);
 
-        // localStorage.setItem("companyData", JSON.stringify(data.company));
-        // localStorage.setItem("verified", isVerified.toString());
-      }
-    } catch (e) {
-      console.error("Error fetching company info:", e);
-      setVerified(false);
-    }
-  };
+     if (data.success && data.company) {
+       setCompanyData(data.company);
+       const isVerified = data.company.kycStatus !== "pending";
+       setVerified(isVerified);
+
+       // localStorage.setItem("companyData", JSON.stringify(data.company));
+       // localStorage.setItem("verified", isVerified.toString());
+     }
+   } catch (e) {
+     console.error("Error fetching company info:", e);
+     setVerified(false);
+   }
+ };
 
   useEffect(() => {
     if (typeof window !== "undefined") {

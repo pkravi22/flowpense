@@ -1,11 +1,11 @@
 import api from "./api";
-const token = localStorage.getItem("token");
+
 export const companyServices = {
   registerCompany: async (payload) => {
     console.log("payload", payload);
     const { data } = await api.post("api/companies/register", payload, {
       headers: {
-        Authorization: `Bearer 1233333333333333333333333333333333`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return data;
