@@ -208,6 +208,7 @@ const Page = () => {
     }
   };
 
+
   const handleCreateTeam = ({ teamData }) => {
     console.log("teamdata in page", teamData);
     try {
@@ -236,9 +237,18 @@ const Page = () => {
 
     getALLTeams();
   };
-
+  const getAllEmployees = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const data = await teamServices.getAllEmployees({ token });
+      console.log("team data", data);
+    } catch (e) {
+      console.log("error during fetching teams data");
+    }
+  };
   useEffect(() => {
     getALLTeams();
+    getAllEmployees();
   }, []);
 
   return (

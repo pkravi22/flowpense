@@ -14,7 +14,7 @@ export const approvalServices = {
     return data;
   },
   getPendingApprovals: async ({ token }) => {
-    const data = api.post(
+    const data = api.get(
       "api/approvals/pending-approvals",
 
       {

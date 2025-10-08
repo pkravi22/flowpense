@@ -32,7 +32,7 @@ const EmployeeTable = ({ employees }) => {
   const totalPages = Math.ceil(filteredEmployees.length / rowsPerPage);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
+    <div className="bg-white p-4 rounded-lg shadow-md w-full">
       {/* Top controls */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-4">
         <input
@@ -45,19 +45,22 @@ const EmployeeTable = ({ employees }) => {
         <CSVLink
           data={filteredEmployees}
           filename={"employees.csv"}
-          className="bg-green-500 text-white px-4 py-1 rounded-md text-sm"
+          className="bg-green-500 text-white px-4 py-1 rounded-md text-sm whitespace-nowrap"
         >
           Export CSV
         </CSVLink>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full table-auto border-collapse">
+      <div className="mt-3 h-[500px]  w-[360px] sm:w-[500px] md:w-[600px] lg:w-[1000px] overflow-auto">
+        <table className="w-full  border-collapse">
           <thead className="bg-gray-100 text-left">
             <tr>
               {columns.map((col, idx) => (
-                <th key={idx} className="p-3 border-b border-gray-200">
+                <th
+                  key={idx}
+                  className="p-3 border-b border-gray-200 whitespace-nowrap"
+                >
                   {col}
                 </th>
               ))}
@@ -66,13 +69,19 @@ const EmployeeTable = ({ employees }) => {
           <tbody>
             {currentRows.map((emp) => (
               <tr key={emp.id} className="border-t hover:bg-gray-50">
-                <td className="p-3">{emp.id}</td>
-                <td className="p-3">{emp.name}</td>
-                <td className="p-3">{emp.email}</td>
-                <td className="p-3">{emp.role}</td>
-                <td className="p-3">{emp.department || emp.role}</td>
-                <td className="p-3">{emp.status || "Active"}</td>
-                <td className="p-3">{emp.dateJoined || "01 Jan, 2025"}</td>
+                <td className="p-3 whitespace-nowrap">{emp.id}</td>
+                <td className="p-3 whitespace-nowrap">{emp.name}</td>
+                <td className="p-3 whitespace-nowrap">{emp.email}</td>
+                <td className="p-3 whitespace-nowrap">{emp.role}</td>
+                <td className="p-3 whitespace-nowrap">
+                  {emp.department || emp.role}
+                </td>
+                <td className="p-3 whitespace-nowrap">
+                  {emp.status || "Active"}
+                </td>
+                <td className="p-3 whitespace-nowrap">
+                  {emp.dateJoined || "01 Jan, 2025"}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -80,7 +89,7 @@ const EmployeeTable = ({ employees }) => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-3">
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-3 gap-2 sm:gap-0">
         <p>
           Showing {indexOfFirstRow + 1} to{" "}
           {Math.min(indexOfLastRow, filteredEmployees.length)} of{" "}
@@ -88,7 +97,7 @@ const EmployeeTable = ({ employees }) => {
         </p>
         <div className="flex gap-2">
           <button
-            className="px-3 py-1 border rounded-md"
+            className="px-3 py-1 border rounded-md disabled:opacity-50"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((prev) => prev - 1)}
           >
@@ -96,7 +105,7 @@ const EmployeeTable = ({ employees }) => {
           </button>
           <span className="px-2 py-1">{currentPage}</span>
           <button
-            className="px-3 py-1 border rounded-md"
+            className="px-3 py-1 border rounded-md disabled:opacity-50"
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((prev) => prev + 1)}
           >

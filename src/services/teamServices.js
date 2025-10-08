@@ -11,14 +11,43 @@ export const teamServices = {
     });
     return data;
   },
+  addteamMember: async ({ token, memberData }) => {
+    console.log(memberData);
+
+    const data = api.post(
+      `api/teams/add-member/1`,
+      {
+        employeeId: 3,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  },
   addEmployee: async ({ token, employeeData }) => {
     console.log(employeeData);
     const payload = {};
-    const data = api.post(`api/teams/add-employee/1`, employeeData, {
+    const data = api.post(`api/teams/add-employee`, employeeData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    return data;
+  },
+  getAllEmployees: async ({ token }) => {
+    console.log("token in service", token);
+    const data = api.get(
+      "api/teams/get-employee",
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return data;
   },
   getAllTeams: async ({ token }) => {

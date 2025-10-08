@@ -39,8 +39,8 @@ export const companyServices = {
     return data;
   },
 
-  getWalletLedger: async ({ companyId, token }) => {
-    console.log("payload", companyId, token);
+  getWalletLedger: async ({ token, companyId }) => {
+    console.log(token);
     const { data } = await api.get(`wallet/ledger?companyId=${companyId}`, {
       headers: {
         Authorization: `Bearer ${token}`,

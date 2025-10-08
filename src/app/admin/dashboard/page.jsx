@@ -80,6 +80,17 @@ const cards = [
   },
   {
     name: "Engineering",
+    person: "Pramendra Singh",
+    number: "3242 **** **** 1234",
+    bgColor: "#2e4f38ff",
+    textColor: "white",
+    monthlyLimit: "$5000",
+    spent: "$2000",
+    balance: "$30000",
+    status: "Active",
+  },
+  {
+    name: "Engineering",
     person: "Adebayo Okafor",
     number: "4563 **** **** 1234",
     bgColor: "#b83a96ff",
@@ -197,8 +208,8 @@ const Page = () => {
     getCompanyDetails();
   }, []);
   return (
-    <div className="p-0 md:p-4  overflow-auto  bg-gray-100">
-      <div className="flex flex-col items-center justify-between">
+    <div className="p-0 md:p-4 overflow-visible bg-gray-100">
+      <div className="flex flex-col  items-center justify-between">
         {!verified && (
           <div className="border-l-4 bg-[#035638] rounded-xl flex flex-col md:flex-row gap-2 w-full justify-between items-center p-4 mb-4">
             <div className="flex flex-col gap-2">
@@ -232,7 +243,7 @@ const Page = () => {
             </div>
           </div>
         )}
-        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="w-full flex flex-col md:flex-row  items-start md:items-center   md:justify-between gap-4">
           <div>
             <h1 className="pageTitle">Dashboard</h1>
             <p className="pageSubTitle mt-2">
@@ -344,7 +355,7 @@ const Page = () => {
         </div>
       </div>
       {/* Active Cards */}
-      <div className="mt-6 bg-white p-2 rounded-2xl shadow-md">
+      <div className=" bg-white p-2 rounded-2xl shadow-md">
         <div className="flex items-center justify-between ">
           <div>
             <p className="pageTitle">Active Cards</p>
@@ -360,17 +371,9 @@ const Page = () => {
           </div>
         </div>
         {/* Cards */}
-        <div className="mt-6">
-          <div className="block lg:hidden ">
-            <Slider {...settings}>
-              {cards.map((card, index) => (
-                <Card key={index} {...card} />
-              ))}
-            </Slider>
-          </div>
-
+        <div className="">
           {/* Desktop: grid */}
-          <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 py-4">
             {cards.map((card, index) => (
               <Card key={index} {...card} />
             ))}

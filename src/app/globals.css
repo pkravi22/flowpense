@@ -10,7 +10,7 @@
 
 }
 @theme {
-  --font-sans: "Host Grotesk", sans-serif; /* Replaces the default sans-serif stack */
+  --font-sans: "Host Grotesk"; /* Replaces the default sans-serif stack */
 }
 
 @theme inline {
@@ -55,7 +55,7 @@
   @apply font-['Bagel_Fat_One'] font-normal text-[24px] leading-[100%] tracking-[0%];
 }
 .pageSubTitle{
-  @apply  font-medium text-[16px] leading-[100%] tracking-[0] text-[#838794];
+  @apply  text-[color:var(--Neutral-Neutral400,#838794)] font-sans text-base not-italic font-medium leading-[normal]
 }
 .statcardTitle{
   @apply  font-semibold text-[16px] leading-[100%] tracking-[0%] text-[#838794];
@@ -73,6 +73,7 @@
 }
 
 
+/* Fix for autofill background color in WebKit browsers */
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

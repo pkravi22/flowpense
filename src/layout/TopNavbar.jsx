@@ -50,7 +50,6 @@ export default function Topbar({ setIsOpen }) {
          >
            <Menu className="w-6 h-6" />
          </button>
-         <h1 className="font-bold text-lg hidden sm:block">Admin Dashboard</h1>
        </div>
 
        <div className="flex items-center gap-4 flex-shrink-0 ">

@@ -47,7 +47,7 @@ const Card = ({
   console.log(percentage);
 
   return (
-    <div className="m-4 w-[300px] h-[180px] relative">
+    <div className="  w-full sm:w-[300px] h-[180px] ">
       <div className="flex justify-between mb-2 px-4">
         <p className="text-sm">{name}</p>
         <div className="flex items-center gap-2 relative">

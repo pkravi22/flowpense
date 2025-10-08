@@ -7,10 +7,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      ?.split("=")[1];
+    const token = localStorage.getItem("token");
 
     if (token) {
       // decode token to get role (optional)

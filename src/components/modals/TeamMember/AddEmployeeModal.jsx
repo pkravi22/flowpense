@@ -4,10 +4,9 @@ import React, { useState } from "react";
 
 const AddEmployeeModal = ({ setAddEmployeeModalOpen, handleAddEmployee }) => {
   const [employeeData, setEmployeeData] = useState({
-    employeeId: 6,
     fullName: "",
     email: "",
-    departement: "",
+    department: "",
     jobTitle: "",
   });
 
@@ -56,7 +55,7 @@ const AddEmployeeModal = ({ setAddEmployeeModalOpen, handleAddEmployee }) => {
             />
           </div>
           <div>
-            <label className="text-sm font-medium">Name</label>
+            <label className="text-sm font-medium">Job Title</label>
             <input
               type="text"
               name="jobTitle"
@@ -83,8 +82,8 @@ const AddEmployeeModal = ({ setAddEmployeeModalOpen, handleAddEmployee }) => {
             <label className="text-sm font-medium">Department</label>
             <input
               type="text"
-              name="departement"
-              value={employeeData.departement}
+              name="department"
+              value={employeeData.department}
               onChange={handleChange}
               className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
               placeholder="Enter department"

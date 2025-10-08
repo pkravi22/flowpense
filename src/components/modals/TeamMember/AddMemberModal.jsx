@@ -18,7 +18,7 @@ const AddMemberModal = ({ setAddMemberModal, handleAddMember }) => {
           Add an existing employee to Product Development.
         </p>
 
-        <form className="space-y-4 px-8 py-4">
+        <form className="space-y-4 px-8 py-4" onSubmit={handleAddMember}>
           <div>
             <label className="labelText">Member Name</label>
             <input
