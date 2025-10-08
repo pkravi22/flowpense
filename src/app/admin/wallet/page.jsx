@@ -18,7 +18,7 @@ import BalanceBreakdown from "../../../components/walletPages/BalanceBreakdown";
 
 import { companyServices } from "@/services/companyServices";
 import { jwtDecode } from "jwt-decode";
-
+import { useRouter } from "next/navigation";
 const cardDetails = [
   {
     id: 2,
@@ -52,6 +52,7 @@ const cardDetails = [
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [formData, setFormData] = useState({
     bank: "",
     amount: "",
@@ -90,10 +91,9 @@ const Page = () => {
       });
 
       if (response.success) {
-        alert("Funds added successfully!");
-
         closeModal();
         setFormData({ bank: "", amount: "", method: "" });
+        router.push(response.authorization_url);
       } else {
         alert("Failed to add funds: " + response.message);
       }
