@@ -142,67 +142,72 @@ const Page = () => {
   const [verified, setVerified] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
   const [companyData, setCompanyData] = useState(null);
+let storedCompany = null;
+let storedVerified = null;
+const dispatch = useDispatch();
+const {
+  allCards,
+  loading: cardsLoading,
+  error: cardsError,
+} = useSelector((state) => state.cards);
+const {
+  allExpenses,
+  loading: expensesLoading,
+  error: expensesError,
+} = useSelector((state) => state.expenses);
 
-  const dispatch = useDispatch();
-  const {
-    allCards,
-    loading: cardsLoading,
-    error: cardsError,
-  } = useSelector((state) => state.cards);
-  const {
-    allExpenses,
-    loading: expensesLoading,
-    error: expensesError,
-  } = useSelector((state) => state.expenses);
+console.log("hello dash");
+const handleVerifyClick = () => {
+  setShowVerification(true);
+};
 
-  console.log("hello dash");
-  const handleVerifyClick = () => {
-    setShowVerification(true);
-  };
+const handleVerificationComplete = () => {
+  setVerified(true);
+  setShowVerification(false);
 
-  const handleVerificationComplete = () => {
-    setVerified(true);
-    setShowVerification(false);
-
+  if (typeof window !== "undefined") {
     localStorage.setItem("verified", "true");
-  };
+  }
+};
 
-  useEffect(() => {
+useEffect(() => {
+  if (typeof window !== "undefined") {
     const token = localStorage.getItem("token");
     if (token) {
       dispatch(fetchAllCards({ token }));
       dispatch(fetchAllExpenses({ token }));
     }
-  }, [dispatch]);
+  }
+}, [dispatch]);
 
-  const getCompanyDetails = async () => {
-    try {
-      const storedCompany = localStorage.getItem("companyData");
-      const storedVerified = localStorage.getItem("verified");
+const getCompanyDetails = async () => {
+  try {
+    storedCompany = localStorage.getItem("companyData");
+    storedVerified = localStorage.getItem("verified");
 
-      if (storedCompany) {
-        const parsedCompany = JSON.parse(storedCompany);
-        setCompanyData(parsedCompany);
-        setVerified(storedVerified === "true");
-        return;
-      }
-
-      const data = await companyServices.getCompanyInfo({ token: "token" });
-      console.log("Fetched company data:", data);
-
-      if (data.success && data.company) {
-        setCompanyData(data.company);
-        const isVerified = data.company.kycStatus !== "pending";
-        setVerified(isVerified);
-
-        localStorage.setItem("companyData", JSON.stringify(data.company));
-        localStorage.setItem("verified", isVerified.toString());
-      }
-    } catch (e) {
-      console.error("Error fetching company info:", e);
-      setVerified(false);
+    if (storedCompany) {
+      const parsedCompany = JSON.parse(storedCompany);
+      setCompanyData(parsedCompany);
+      setVerified(storedVerified === "true");
+      return;
     }
-  };
+
+    const data = await companyServices.getCompanyInfo({ token: "token" });
+    console.log("Fetched company data:", data);
+
+    if (data.success && data.company) {
+      setCompanyData(data.company);
+      const isVerified = data.company.kycStatus !== "pending";
+      setVerified(isVerified);
+
+      localStorage.setItem("companyData", JSON.stringify(data.company));
+      localStorage.setItem("verified", isVerified.toString());
+    }
+  } catch (e) {
+    console.error("Error fetching company info:", e);
+    setVerified(false);
+  }
+};
 
   useEffect(() => {
     getCompanyDetails();
