@@ -208,65 +208,65 @@ const Page = () => {
   };
 
   // Fetch cards and expenses - runs only on client
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (token) {
-        dispatch(fetchAllCards({ token }));
-        dispatch(fetchAllExpenses({ token }));
-      }
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const token = localStorage.getItem("token");
+  //     if (token) {
+  //       dispatch(fetchAllCards({ token }));
+  //       dispatch(fetchAllExpenses({ token }));
+  //     }
+  //   }
+  // }, [dispatch]);
 
   // Get company details - runs only on client
-  const getCompanyDetails = async () => {
-    try {
-      setIsLoading(true);
+  // const getCompanyDetails = async () => {
+  //   try {
+  //     setIsLoading(true);
 
-      // If we already have stored company data, use it
-      if (storedCompany) {
-        setCompanyData(storedCompany);
-        setVerified(storedVerified === "true");
-        setIsLoading(false);
-        return;
-      }
+  //     // If we already have stored company data, use it
+  //     if (storedCompany) {
+  //       setCompanyData(storedCompany);
+  //       setVerified(storedVerified === "true");
+  //       setIsLoading(false);
+  //       return;
+  //     }
 
-      // Fetch fresh company data
-      const data = await companyServices.getCompanyInfo({ token: "token" });
-      console.log("Fetched company data:", data);
+  //     // Fetch fresh company data
+  //     const data = await companyServices.getCompanyInfo({ token: "token" });
+  //     console.log("Fetched company data:", data);
 
-      if (data.success && data.company) {
-        setCompanyData(data.company);
-        const isVerified = data.company.kycStatus !== "pending";
-        setVerified(isVerified);
+  //     if (data.success && data.company) {
+  //       setCompanyData(data.company);
+  //       const isVerified = data.company.kycStatus !== "pending";
+  //       setVerified(isVerified);
 
-        // Update localStorage via custom hook
-        setStoredCompany(data.company);
-        setStoredVerified(isVerified.toString());
-      }
-    } catch (e) {
-      console.error("Error fetching company info:", e);
-      setVerified(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //       // Update localStorage via custom hook
+  //       setStoredCompany(data.company);
+  //       setStoredVerified(isVerified.toString());
+  //     }
+  //   } catch (e) {
+  //     console.error("Error fetching company info:", e);
+  //     setVerified(false);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   // Load company data on component mount (client-side only)
-  useEffect(() => {
-    getCompanyDetails();
-  }, []);
+  // useEffect(() => {
+  //   getCompanyDetails();
+  // }, []);
 
   // Show loading state while checking authentication
-  if (isLoading) {
-    return (
-      <div className="p-0 md:p-4 overflow-visible bg-gray-100 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="p-0 md:p-4 overflow-visible bg-gray-100 min-h-screen flex items-center justify-center">
+  //       <div className="text-center">
+  //         <p className="text-lg">Loading...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="p-0 md:p-4 overflow-visible bg-gray-100">
