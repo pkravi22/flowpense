@@ -174,14 +174,14 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Use custom hook for localStorage values
-  const [storedCompany, setStoredCompany] = useLocalStorage(
-    "companyData",
-    null
-  );
-  const [storedVerified, setStoredVerified] = useLocalStorage(
-    "verified",
-    "false"
-  );
+  // const [storedCompany, setStoredCompany] = useLocalStorage(
+  //   "companyData",
+  //   null
+  // );
+  // const [storedVerified, setStoredVerified] = useLocalStorage(
+  //   "verified",
+  //   "false"
+  // );
 
   const dispatch = useDispatch();
   const {
@@ -209,10 +209,12 @@ const Page = () => {
 
   // Fetch cards and expenses - runs only on client
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      dispatch(fetchAllCards({ token }));
-      dispatch(fetchAllExpenses({ token }));
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        dispatch(fetchAllCards({ token }));
+        dispatch(fetchAllExpenses({ token }));
+      }
     }
   }, [dispatch]);
 
