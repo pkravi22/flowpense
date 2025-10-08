@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Piechart from "@/components/PieChart";
 //import Example from "@/components/Barchart";
 import Card from "@/components/Card";
 import DateRangePicker from "@/components/DatePicker";
 import VerifyAccount from "@/components/verification_pages/VerificationFlow";
-
+import { companyServices } from "@/services/companyServices.js";
 import Slider from "react-slick";
 import {
   ArrowRight,
@@ -16,7 +16,11 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import Example from "@/components/BarChart";
+import { fetchAllCards } from "@/redux/slices/cardSlice";
+import { fetchAllExpenses } from "@/redux/slices/expenseSlice";
+
 //import React, { useState } from "react";
 //import DateRangePicker from "@/components/DatePicker";
 //import VerifyAccount from "@/components/verification_pages/VerificationFlow";
@@ -76,6 +80,17 @@ const cards = [
   },
   {
     name: "Engineering",
+    person: "Pramendra Singh",
+    number: "3242 **** **** 1234",
+    bgColor: "#2e4f38ff",
+    textColor: "white",
+    monthlyLimit: "$5000",
+    spent: "$2000",
+    balance: "$30000",
+    status: "Active",
+  },
+  {
+    name: "Engineering",
     person: "Adebayo Okafor",
     number: "4563 **** **** 1234",
     bgColor: "#b83a96ff",
@@ -113,7 +128,7 @@ const settings = {
   dots: false,
   infinite: false,
   speed: 500,
-  slidesToShow: 1, // only 1 card on mobile
+  slidesToShow: 1,
   slidesToScroll: 1,
   arrows: true,
   responsive: [
@@ -126,7 +141,22 @@ const settings = {
 const Page = () => {
   const [verified, setVerified] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
+  const [companyData, setCompanyData] = useState(null);
+  let storedCompany = null;
+  let storedVerified = null;
+  const dispatch = useDispatch();
+  const {
+    allCards,
+    loading: cardsLoading,
+    error: cardsError,
+  } = useSelector((state) => state.cards);
+  const {
+    allExpenses,
+    loading: expensesLoading,
+    error: expensesError,
+  } = useSelector((state) => state.expenses);
 
+  console.log("hello dash");
   const handleVerifyClick = () => {
     setShowVerification(true);
   };
@@ -134,10 +164,60 @@ const Page = () => {
   const handleVerificationComplete = () => {
     setVerified(true);
     setShowVerification(false);
+
+    // if (typeof window !== "undefined") {
+    //   localStorage.setItem("verified", "true");
+    // }
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        dispatch(fetchAllCards({ token }));
+        dispatch(fetchAllExpenses({ token }));
+      }
+    }
+  }, [dispatch]);
+
+  const getCompanyDetails = async () => {
+    try {
+      // if (typeof window !== "undefined") {
+      //   storedCompany = localStorage.getItem("companyData");
+      //   storedVerified = localStorage.getItem("verified");
+      // }
+      // if (storedCompany) {
+      //   const parsedCompany = JSON.parse(storedCompany);
+      //   setCompanyData(parsedCompany);
+      //   setVerified(storedVerified === "true");
+      //   return;
+      // }
+
+      const data = await companyServices.getCompanyInfo({ token: "token" });
+      console.log("Fetched company data:", data);
+
+      if (data.success && data.company) {
+        setCompanyData(data.company);
+        const isVerified = data.company.kycStatus !== "pending";
+        setVerified(isVerified);
+
+        // localStorage.setItem("companyData", JSON.stringify(data.company));
+        // localStorage.setItem("verified", isVerified.toString());
+      }
+    } catch (e) {
+      console.error("Error fetching company info:", e);
+      setVerified(false);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      getCompanyDetails();
+    }
+  }, []);
   return (
-    <div className="p-0 md:p-4  overflow-auto  bg-gray-100">
-      <div className="flex flex-col items-center justify-between">
+    <div className="p-0 md:p-4 overflow-visible bg-gray-100">
+      <div className="flex flex-col  items-center justify-between">
         {!verified && (
           <div className="border-l-4 bg-[#035638] rounded-xl flex flex-col md:flex-row gap-2 w-full justify-between items-center p-4 mb-4">
             <div className="flex flex-col gap-2">
@@ -165,13 +245,13 @@ const Page = () => {
           <div className="fixed inset-0 bg-black/50 bg-opacity-25 flex items-center justify-center z-50">
             <div className="bg-white  rounded-xl w-[90%] md:w-[600px] shadow-lg">
               <VerifyAccount
-                onComplete={handleVerificationComplete} // call when done
+                onComplete={handleVerificationComplete}
                 onCancel={() => setShowVerification(false)}
               />
             </div>
           </div>
         )}
-        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="w-full flex flex-col md:flex-row  items-start md:items-center   md:justify-between gap-4">
           <div>
             <h1 className="pageTitle">Dashboard</h1>
             <p className="pageSubTitle mt-2">
@@ -283,7 +363,7 @@ const Page = () => {
         </div>
       </div>
       {/* Active Cards */}
-      <div className="mt-6 bg-white p-2 rounded-2xl shadow-md">
+      <div className=" bg-white p-2 rounded-2xl shadow-md">
         <div className="flex items-center justify-between ">
           <div>
             <p className="pageTitle">Active Cards</p>
@@ -299,17 +379,9 @@ const Page = () => {
           </div>
         </div>
         {/* Cards */}
-        <div className="mt-6">
-          <div className="block lg:hidden ">
-            <Slider {...settings}>
-              {cards.map((card, index) => (
-                <Card key={index} {...card} />
-              ))}
-            </Slider>
-          </div>
-
+        <div className="">
           {/* Desktop: grid */}
-          <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 py-4">
             {cards.map((card, index) => (
               <Card key={index} {...card} />
             ))}
