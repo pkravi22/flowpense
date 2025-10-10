@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Example from "@/components/BarChart";
 import { fetchAllCards } from "@/redux/slices/cardSlice";
 import { fetchAllExpenses } from "@/redux/slices/expenseSlice";
-
+import { useRouter } from "next/navigation";
 //import React, { useState } from "react";
 //import DateRangePicker from "@/components/DatePicker";
 //import VerifyAccount from "@/components/verification_pages/VerificationFlow";
@@ -142,6 +142,7 @@ const Page = () => {
   const [verified, setVerified] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
   const [companyData, setCompanyData] = useState(null);
+  const router = useRouter();
   let storedCompany = null;
   let storedVerified = null;
   const dispatch = useDispatch();
@@ -215,6 +216,10 @@ const Page = () => {
  useEffect(() => {
    if (typeof window !== "undefined") {
      const token = localStorage.getItem("token");
+     if(
+      !token
+     )
+     router.replace("/login");
      getCompanyDetails(token);
    }
  }, []);

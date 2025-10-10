@@ -9,8 +9,9 @@ import store from "../../redux/store.js";
 export default function AdminLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
- const { user, token } = useSelector((state) => state.auth);
- console.log("user in Top", user);
+  const { user, token } = useSelector((state) => state.auth);
+  //  console.log("user in Top", user);
+  //  console.log("token in Top", token);
   return (
     <Provider store={store}>
       <div className="flex h-screen overflow-hidden">
