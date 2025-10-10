@@ -21,6 +21,7 @@ import Example from "@/components/BarChart";
 import { fetchAllCards } from "@/redux/slices/cardSlice";
 import { fetchAllExpenses } from "@/redux/slices/expenseSlice";
 import { useRouter } from "next/navigation";
+
 //import React, { useState } from "react";
 //import DateRangePicker from "@/components/DatePicker";
 //import VerifyAccount from "@/components/verification_pages/VerificationFlow";
@@ -143,6 +144,8 @@ const Page = () => {
   const [showVerification, setShowVerification] = useState(false);
   const [companyData, setCompanyData] = useState(null);
   const router = useRouter();
+  const { user, token } = useSelector((state) => state.auth);
+  console.log("token from store", token);
   let storedCompany = null;
   let storedVerified = null;
   const dispatch = useDispatch();
@@ -171,58 +174,51 @@ const Page = () => {
     // }
   };
 
- useEffect(() => {
-   // Runs only in browser
-   const token =
-     typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  useEffect(() => {
+    // Runs only in browser
+    //  const token =
+    //    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-   if (token) {
-     dispatch(fetchAllCards({ token }));
-     dispatch(fetchAllExpenses({ token }));
-   }
- }, [dispatch]);
+    if (token) {
+      dispatch(fetchAllCards({ token }));
+      dispatch(fetchAllExpenses({ token }));
+    }
+  }, [dispatch]);
 
- const getCompanyDetails = async ({ token }) => {
-   console.log("Fetching company details with token:", token);
-   try {
-     // if (typeof window !== "undefined") {
-     //   storedCompany = localStorage.getItem("companyData");
-     //   storedVerified = localStorage.getItem("verified");
-     // }
-     // if (storedCompany) {
-     //   const parsedCompany = JSON.parse(storedCompany);
-     //   setCompanyData(parsedCompany);
-     //   setVerified(storedVerified === "true");
-     //   return;
-     // }
+  const getCompanyDetails = async () => {
+    // console.log("Fetching company details with token:", token);
+    try {
+      // if (typeof window !== "undefined") {
+      //   storedCompany = localStorage.getItem("companyData");
+      //   storedVerified = localStorage.getItem("verified");
+      // }
+      // if (storedCompany) {
+      //   const parsedCompany = JSON.parse(storedCompany);
+      //   setCompanyData(parsedCompany);
+      //   setVerified(storedVerified === "true");
+      //   return;
+      // }
 
-     const data = await companyServices.getCompanyInfo({ token });
-     console.log("Fetched company data:", data);
+      const data = await companyServices.getCompanyInfo({ token });
+      console.log("Fetched company data:", data);
 
-     if (data.success && data.company) {
-       setCompanyData(data.company);
-       const isVerified = data.company.kycStatus !== "pending";
-       setVerified(isVerified);
+      if (data.success && data.company) {
+        setCompanyData(data.company);
+        const isVerified = data.company.kycStatus !== "pending";
+        setVerified(isVerified);
 
-       // localStorage.setItem("companyData", JSON.stringify(data.company));
-       // localStorage.setItem("verified", isVerified.toString());
-     }
-   } catch (e) {
-     console.error("Error fetching company info:", e);
-     setVerified(false);
-   }
- };
+        // localStorage.setItem("companyData", JSON.stringify(data.company));
+        // localStorage.setItem("verified", isVerified.toString());
+      }
+    } catch (e) {
+      console.error("Error fetching company info:", e);
+      setVerified(false);
+    }
+  };
 
- useEffect(() => {
-   if (typeof window !== "undefined") {
-     const token = localStorage.getItem("token");
-     if(
-      !token
-     )
-     router.replace("/login");
-     getCompanyDetails(token);
-   }
- }, []);
+  useEffect(() => {
+    getCompanyDetails(token);
+  }, []);
   return (
     <div className="p-0 md:p-4 overflow-visible bg-gray-100">
       <div className="flex flex-col  items-center justify-between">
