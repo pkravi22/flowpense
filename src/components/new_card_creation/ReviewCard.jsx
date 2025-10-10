@@ -2,13 +2,13 @@ import React from "react";
 
 export default function ReviewSummaryStep({ data, nextStep, prevStep }) {
   const formatCurrency = (amount) => {
-    if (!amount) return "Not set";
+    if (!amount && amount !== 0) return "Not set";
     return `NGN ${amount.toLocaleString()}`;
   };
 
-  const formatArray = (array, field = "name") => {
+  const formatArray = (array) => {
     if (!array || array.length === 0) return "Not set";
-    return array.map((item) => item[field]).join(", ");
+    return array.join(", "); // plain strings now
   };
 
   const details = [
@@ -28,33 +28,24 @@ export default function ReviewSummaryStep({ data, nextStep, prevStep }) {
       label: "Per Transaction Limit",
       value: formatCurrency(data.perTransactionLimit),
     },
-    {
-      label: "Blocked Categories",
-      value:
-        data.blockedCategory?.length > 0
-          ? data.blockedCategory.join(", ")
-          : "None",
-    },
+    { label: "Blocked Categories", value: formatArray(data.blockedCategory) },
   ];
 
   return (
-    <div className="">
+    <div className="max-h-[600px] overflow-auto">
       <div className="border-b border-gray-200 flex justify-between items-center p-4">
         <p>Review and Create Card</p>
         <p className="text-[#035638] text-[16px]">Step 4 Of 4</p>
       </div>
 
-      {/* Grid with 3 items per row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-2">
+      <div className="grid grid-cols-2  sm:grid-cols-2 md:grid-cols-3 sm:gap-2 md:gap-4 p-1">
         {details.map((item, index) => (
           <div
             key={index}
             className="flex flex-col gap-1 bg-gray-50 p-1 rounded-lg border border-gray-200"
           >
-            <p className="text-[color:var(--Neutral-Neutral400,#838794)] text-sm not-italic font-normal leading-4">
-              {item.label}:
-            </p>
-            <p className="text-[color:var(--Foundation-Green-Normal,#035638)] text-base not-italic font-medium leading-6 break-words">
+            <p className="text-gray-500 text-sm">{item.label}:</p>
+            <p className="text-[#035638] text-base font-medium break-words">
               {item.value}
             </p>
           </div>

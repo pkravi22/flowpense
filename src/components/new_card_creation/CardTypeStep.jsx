@@ -108,7 +108,7 @@ export default function CardTypeStep({ nextStep, updateData, data }) {
             disabled={!data.cardType || !cardName.trim()}
             className="px-6 py-2 bg-[#035638] text-white rounded-full hover:bg-[#02452e] disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            Continue
+            Next
           </button>
         </div>
       </div>

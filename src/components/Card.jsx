@@ -10,7 +10,6 @@ import {
   BanknoteArrowUp,
 } from "lucide-react";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 const Card = ({
   name,
@@ -22,6 +21,7 @@ const Card = ({
   spent,
   balance,
   status,
+  onViewDetails,
 }) => {
   const statusColor =
     status === "Active"
@@ -32,23 +32,20 @@ const Card = ({
       ? "text-red-400"
       : "text-gray-400";
 
-  const [cardDetailsOpen, setCardDetailsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const dispatch = useDispatch();
-  const { allCards, loading, error } = useSelector((state) => state.cards);
-
-  console.log("all cards", allCards);
-  const handleThreeDots = () => {
-    setCardDetailsOpen((prev) => !prev);
+  const handleThreeDots = (e) => {
+    e.stopPropagation(); // ✅ Prevent card modal from opening
+    setDropdownOpen((prev) => !prev);
   };
+
   const total = parseFloat(String(monthlyLimit).replace(/[^0-9.-]+/g, "")) || 0;
-  const spentmoney = parseFloat(String(spent).replace(/[^0-9.-]+/g, "")) || 0;
-  const percentage = total > 0 ? (spentmoney / total) * 100 : 0;
-  console.log(percentage);
+  const spentMoney = parseFloat(String(spent).replace(/[^0-9.-]+/g, "")) || 0;
+  const percentage = total > 0 ? (spentMoney / total) * 100 : 0;
 
   return (
-    <div className="  w-full sm:w-[300px] h-[180px] ">
-      <div className="flex justify-between mb-2 px-4">
+    <div className="w-full sm:w-[300px] h-[180px] cursor-pointer">
+      <div className="flex justify-between mb-2 px-4 items-center">
         <p className="text-sm">{name}</p>
         <div className="flex items-center gap-2 relative">
           <p className={statusColor}>{status}</p>
@@ -56,23 +53,21 @@ const Card = ({
             className="bg-gray-200 px-1 py-[.2rem] rounded-3xl cursor-pointer hover:bg-gray-300"
             onClick={handleThreeDots}
           />
-
           {/* Dropdown Menu */}
-          {cardDetailsOpen && (
-            <div
-              className="absolute right-0 top-6 w-48 bg-white shadow-lg rounded-lg border p-2 z-50"
-              id="closeModal"
-              onClick={() => {
-                setCardDetailsOpen(false);
-              }}
-            >
-              <button className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md">
+          {dropdownOpen && (
+            <div className="absolute right-0 top-6 w-48 bg-white shadow-lg rounded-lg border p-2 z-50">
+              <button
+                className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md"
+                onClick={() => {
+                  onViewDetails(); // ✅ Trigger modal only here
+                  setDropdownOpen(false);
+                }}
+              >
                 <Eye size={16} /> View Details
               </button>
               <button className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md">
                 <BanknoteArrowUp size={16} /> Fund Card
               </button>
-
               <button className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md">
                 <Snowflake size={16} /> Freeze Card
               </button>
@@ -91,11 +86,11 @@ const Card = ({
       </div>
 
       <div
-        className="w-full h-[160px] rounded-2xl p-3 fle flex-col gap-2"
+        className="w-full h-[160px] rounded-2xl p-3 flex flex-col gap-2"
         style={{ backgroundColor: bgColor, color: textColor }}
       >
         <div className="flex flex-col justify-between gap-0">
-          <div className="flex text-[#B1CBC1] justify-between text-[12px">
+          <div className="flex text-[#B1CBC1] justify-between text-[12px]">
             <p>Team Lead</p>
             <p>Balance</p>
           </div>
@@ -126,8 +121,6 @@ const Card = ({
             <p>{spent}</p>
           </div>
         </div>
-        <div></div>
-        <div></div>
       </div>
     </div>
   );

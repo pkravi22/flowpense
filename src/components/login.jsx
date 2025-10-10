@@ -37,7 +37,9 @@ export default function Login() {
     if (isSuccess && token) {
       alert("Login successful! Redirecting...");
       localStorage.setItem("token", token);
-      router.push("/admin/dashboard");
+
+      //router.push("/login/verifyOtp");
+      router.replace("admin/dashboard");
       dispatch(reset());
     }
 

@@ -273,7 +273,7 @@ export default function TransactionTable() {
         </div>
       </div>
 
-      <div className="mt-3 min-h-[300px]  w-[360px] sm:w-[500px] md:w-[600px] lg:w-[1000px] overflow-auto">
+      <div className="mt-3 min-h-[300px]  w-[360px] sm:w-[540px] md:w-[600px] lg:w-[1000px] overflow-x-auto">
         <table className=" w-full  border-collapse">
           <thead>
             <tr className="bg-gray-100 text-left text-sm font-medium text-gray-600">

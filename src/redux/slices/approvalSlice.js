@@ -47,12 +47,11 @@ export const fetchAllExpenses = createAsyncThunk(
 
 export const approveExpense = createAsyncThunk(
   "approvals/approve",
-  async ({ expenseId, token, approvalData }, { rejectWithValue }) => {
+  async ({ payload, token }, { rejectWithValue }) => {
     try {
-      const response = await approvalServices.approveRequest({
-        id: expenseId,
+      const response = await approvalServices.approveExpense({
+        payload,
         token,
-        payload: approvalData,
       });
       return { expenseId, approvedExpense: response.data };
     } catch (err) {
@@ -63,14 +62,13 @@ export const approveExpense = createAsyncThunk(
 
 export const rejectExpense = createAsyncThunk(
   "approvals/reject",
-  async ({ expenseId, token, rejectionData }, { rejectWithValue }) => {
+  async ({ payload, token }, { rejectWithValue }) => {
     try {
-      const response = await approvalServices.rejectRequest({
-        id: expenseId,
+      const response = await approvalServices.approveExpense({
+        payload,
         token,
-        payload: rejectionData,
       });
-      return { expenseId, rejectedExpense: response.data };
+      return { expenseId, approvedExpense: response.data };
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
     }

@@ -3,13 +3,13 @@ import api from "./api";
 
 export const authService = {
   signin: async (payload) => {
-    console.log("payload",payload)
+    console.log("payload", payload);
     const { data } = await api.post("api/auth/login", payload);
     return data;
   },
 
   signup: async (payload) => {
-    console.log("payload :",payload)
+    console.log("payload :", payload);
     const { data } = await api.post("api/auth/register", payload);
     return data;
   },
@@ -27,33 +27,33 @@ export const authService = {
     return data;
   },
 
-
-forgotPassword: async ({ email }) => {
-  console.log("email:", email)
-  const { data } = await api.post("api/auth/forgot-password", { email });
-  return data;
-},
-  verifyForgetPasswordOtp:async ({otpCode,token}) => {
-    console.log(otpCode,token)
-    const { data } = await api.post("api/auth/verify/forgot-pass-otp",
+  forgotPassword: async ({ email }) => {
+    console.log("email:", email);
+    const { data } = await api.post("api/auth/forgot-password", { email });
+    return data;
+  },
+  verifyForgetPasswordOtp: async ({ otpCode, token }) => {
+    console.log(otpCode, token);
+    const { data } = await api.post(
+      "api/auth/verify/forgot-pass-otp",
       { otpCode },
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
+      }
+    );
     return data;
   },
 
   resetPassword: async (payload) => {
     const { data } = await api.post("api/auth/reset-password", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });;
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return data;
   },
-
 
   resendOtp: async (paylo) => {
     const { data } = await api.post("/auth/resend-otp", payload);
@@ -64,7 +64,36 @@ forgotPassword: async ({ email }) => {
     const { data } = await api.post("api/auth/update/userprofile", payload);
     return data;
   },
+  verifyOtpAfterLogin: async ({ otpCode, token }) => {
+    console.log(otpCode, token);
+    const { data } = await api.post(
+      "api/auth/login-otp",
+      {
+        otpCode,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, //
+        },
+      }
+    );
+    return data;
+  },
+  resendOtpAfterLogin: async ({ token }) => {
+    const { data } = await api.post(
+      "api/auth/resend/otp",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, //
+        },
+      }
+    );
+    return data;
+  },
 };
+
+
 
 //  enable2fa=async(payload)=>{
 //        const { data } = await api.post("/api/mfa/generate-secret", {

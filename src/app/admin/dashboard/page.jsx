@@ -181,7 +181,8 @@ const Page = () => {
    }
  }, [dispatch]);
 
- const getCompanyDetails = async () => {
+ const getCompanyDetails = async ({ token }) => {
+   console.log("Fetching company details with token:", token);
    try {
      // if (typeof window !== "undefined") {
      //   storedCompany = localStorage.getItem("companyData");
@@ -211,11 +212,12 @@ const Page = () => {
    }
  };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      getCompanyDetails();
-    }
-  }, []);
+ useEffect(() => {
+   if (typeof window !== "undefined") {
+     const token = localStorage.getItem("token");
+     getCompanyDetails(token);
+   }
+ }, []);
   return (
     <div className="p-0 md:p-4 overflow-visible bg-gray-100">
       <div className="flex flex-col  items-center justify-between">

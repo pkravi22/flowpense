@@ -140,27 +140,27 @@ const Page = () => {
 
   return (
     <div className="">
-      <div className="w-full flex flex-col md:flex-row items-center justify-start md:justify-between gap-4">
-        <div className="flex flex-col justify-start -ml-8 sm:ml-0">
+      <div className="w-full flex flex-col md:flex-row items-start md:items-center justify-start md:justify-between gap-4">
+        <div className="flex flex-col justify-start  sm:ml-0">
           <h1 className="pageTitle">Wallet</h1>
           <p className="pageSubTitle mt-2">
             Manage organization funds and transfer to cards
           </p>
         </div>
-        <div className="overflow-scroll">
+        <div className="">
           <div className="flex flex-wrap gap-2">
-            <button className="flex items-center px-2 rounded-[10px] border p-1">
+            <button className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1">
               <Download className="inline md:mr-2" size={16} />
               <span className="text-sm">Export Statement</span>
             </button>
 
-            <button className="flex items-center px-2 rounded-[10px] border p-1">
+            <button className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1">
               <ArrowUpRight className="inline md:mr-2" size={16} />
               <span className="text-sm">Transfer Funds</span>
             </button>
 
             <button
-              className="flex items-center px-2 rounded-[10px] border p-1 bg-[#035638] text-white"
+              className="flex items-center px-2 rounded-[10px] cursor-pointer border p-1 bg-[#035638] text-white"
               onClick={fundWallet}
             >
               <Plus className="inline md:mr-2" size={16} />

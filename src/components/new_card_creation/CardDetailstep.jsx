@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 export default function CardDetailsStep({
@@ -12,43 +14,49 @@ export default function CardDetailsStep({
   const [approverOpen, setApproverOpen] = useState(false);
   const [teamName, setTeamName] = useState(data.teamName || "");
 
+  // ✅ Sample data
   const holders = [
-    { name: "John Doe", role: "Software Developer", department: "Engineering" },
-    { name: "Jane Smith", role: "Designer", department: "Marketing" },
-    { name: "Michael Johnson", role: "Team Lead", department: "Sales" },
+    { name: "101", role: "Software Developer", department: "Engineering" },
+    { name: "102", role: "Designer", department: "Marketing" },
+    { name: "103", role: "Team Lead", department: "Sales" },
   ];
 
   const approvers = [
-    { name: "Alice Brown", role: "Project Manager", department: "Engineering" },
-    { name: "Bob White", role: "QA Engineer", department: "Engineering" },
-    { name: "Charlie Green", role: "CTO", department: "Engineering" },
+    { name: "201", role: "Project Manager", department: "Engineering" },
+    { name: "202", role: "QA Engineer", department: "Engineering" },
+    { name: "203", role: "CTO", department: "Engineering" },
   ];
 
+  // ✅ Toggle top-up switch
   const toggleSwitch = () => {
     const newValue = !enabled;
     setEnabled(newValue);
     updateData({ allowTopUps: newValue });
   };
 
+  // ✅ Toggle Card Holder (Multi-select)
   const toggleHolder = (holder) => {
-    const exists = data.cardHolder?.find((h) => h.name === holder.name);
+    const exists = data.cardHolder?.includes(holder.name);
     let updatedHolders;
 
     if (exists) {
-      updatedHolders =
-        data.cardHolder?.filter((h) => h.name !== holder.name) || [];
+      updatedHolders = data.cardHolder.filter((h) => h !== holder.name);
     } else {
-      updatedHolders = [...(data.cardHolder || []), holder];
+      updatedHolders = [...(data.cardHolder || []), holder.name];
     }
 
+    console.log("Updated Holders:", updatedHolders);
     updateData({ cardHolder: updatedHolders });
   };
 
+  // ✅ Toggle Approver (Single-select)
   const toggleApprover = (approver) => {
-    updateData({ approver: [approver] });
+    console.log("Selected Approver:", approver.name);
+    updateData({ approver: [approver.name] });
     setApproverOpen(false);
   };
 
+  // ✅ Step validation
   const handleNext = () => {
     if (!data.cardHolder || data.cardHolder.length === 0) {
       alert("Please select at least one card holder");
@@ -62,6 +70,7 @@ export default function CardDetailsStep({
       alert("Please enter a team name");
       return;
     }
+
     updateData({ teamName: teamName.trim() });
     nextStep();
   };
@@ -74,7 +83,7 @@ export default function CardDetailsStep({
       </div>
 
       <div className="flex flex-col gap-4 p-8">
-        {/* Team Name */}
+        {/* ✅ Team Name */}
         <div>
           <label className="block text-sm font-medium mb-1">Team Name</label>
           <input
@@ -86,7 +95,7 @@ export default function CardDetailsStep({
           />
         </div>
 
-        {/* Card Holders */}
+        {/* ✅ Card Holders */}
         <div className="relative">
           <label className="block text-sm font-medium mb-1">
             Card Holder(s)
@@ -97,16 +106,15 @@ export default function CardDetailsStep({
             className="w-full border border-gray-300 rounded-lg px-3 py-2 flex justify-between items-center bg-white focus:border-[#035638]"
           >
             {data.cardHolder && data.cardHolder.length > 0
-              ? data.cardHolder.map((h) => h.name).join(", ")
+              ? data.cardHolder.join(", ")
               : "Select Employee"}
             <ChevronDown className="w-4 h-4 text-gray-500" />
           </button>
+
           {holderOpen && (
             <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
               {holders.map((holder, idx) => {
-                const isChecked = data.cardHolder?.some(
-                  (h) => h.name === holder.name
-                );
+                const isChecked = data.cardHolder?.includes(holder.name);
                 return (
                   <div
                     key={idx}
@@ -132,7 +140,7 @@ export default function CardDetailsStep({
           )}
         </div>
 
-        {/* Approver */}
+        {/* ✅ Approver */}
         <div className="relative">
           <label className="block text-sm font-medium mb-1">
             Team Leader / Approver
@@ -143,16 +151,15 @@ export default function CardDetailsStep({
             className="w-full border border-gray-300 rounded-lg px-3 py-2 flex justify-between items-center bg-white focus:border-[#035638]"
           >
             {data.approver && data.approver.length > 0
-              ? data.approver[0].name
+              ? data.approver[0]
               : "Select Approver"}
             <ChevronDown className="w-4 h-4 text-gray-500" />
           </button>
+
           {approverOpen && (
             <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
               {approvers.map((approver, idx) => {
-                const isChecked = data.approver?.some(
-                  (a) => a.name === approver.name
-                );
+                const isChecked = data.approver?.includes(approver.name);
                 return (
                   <div
                     key={idx}
@@ -160,7 +167,7 @@ export default function CardDetailsStep({
                     onClick={() => toggleApprover(approver)}
                   >
                     <input
-                      type="checkbox"
+                      type="radio"
                       checked={isChecked}
                       readOnly
                       className="mr-2 h-4 w-4 text-[#035638]"
@@ -178,13 +185,13 @@ export default function CardDetailsStep({
           )}
         </div>
 
-        {/* Top-up Toggle */}
+        {/* ✅ Top-up Toggle */}
         <div className="flex items-center justify-between p-4 bg-[#FCFDF2] rounded-lg shadow-sm">
           <div>
-            <p className="text-[color:var(--Foundation-Green-Normal,#035638)] text-base not-italic font-medium leading-[100%]">
+            <p className="text-[#035638] text-base font-medium">
               Allow card holder to request top-ups
             </p>
-            <p className="text-[color:var(--Neutral-Neutral400,#838794)] mt-1 text-base not-italic font-normal leading-4">
+            <p className="text-[#838794] mt-1 text-base font-normal leading-4">
               Card Holder can request additional funding
             </p>
           </div>
@@ -205,7 +212,7 @@ export default function CardDetailsStep({
           </button>
         </div>
 
-        {/* Navigation */}
+        {/* ✅ Navigation */}
         <div className="flex justify-between mt-6">
           <button
             onClick={prevStep}

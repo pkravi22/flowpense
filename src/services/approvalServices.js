@@ -1,7 +1,7 @@
 import api from "./api";
 
 export const approvalServices = {
-  approvalExpense: async ({ payload, token }) => {
+  approveExpense: async ({ payload, token }) => {
     const data = api.post(
       "api/approvals/approve-expense",
       { payload },

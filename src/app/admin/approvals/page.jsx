@@ -4,7 +4,11 @@ import DateRangePicker from "../../../components/DatePicker";
 import { CircleCheckBig, CircleCheckBigIcon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllExpenses } from "@/redux/slices/expenseSlice";
-import { fetchPendingApprovals } from "@/redux/slices/approvalSlice";
+import {
+  approveExpense,
+  fetchPendingApprovals,
+  rejectExpense,
+} from "@/redux/slices/approvalSlice";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("pending");
@@ -61,9 +65,10 @@ const Page = () => {
     errorAll,
     errorPending,
   } = useSelector((state) => state.approvals);
-
+  const [token, setToken] = useState(null);
   useEffect(() => {
     const token = localStorage.getItem("token");
+    setToken(token);
     if (token) {
       dispatch(fetchAllExpenses(token));
       dispatch(fetchPendingApprovals(token));
@@ -71,30 +76,22 @@ const Page = () => {
   }, [dispatch]);
 
   const handleApprove = (expenseId) => {
-    const token = localStorage.getItem("token");
-    const approvalData = {
-      approvedBy: "manager_id",
-      notes: "Approved via system",
-      approvedAt: new Date().toISOString(),
-    };
-
-    dispatch(approveExpense({ expenseId, token, approvalData }));
+    //const token = localStorage.getItem("token");
+    const payload = { expenseId, action: "APPROVE" };
+    alert("Your transaction is being processed");
+    dispatch(approveExpense({ payload, token }));
   };
 
   const handleReject = (expenseId) => {
-    const token = localStorage.getItem("token");
-    const rejectionData = {
-      rejectedBy: "manager_id",
-      reason: "Needs more documentation",
-      rejectedAt: new Date().toISOString(),
-    };
-
-    dispatch(rejectExpense({ expenseId, token, rejectionData }));
+    //const token = localStorage.getItem("token");
+    const payload = { expenseId, action: "REJECT" };
+    alert("Your transaction is being processed");
+    dispatch(approveExpense({ payload, token }));
   };
 
   return (
     <div>
-      <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="w-full flex flex-col md:flex-row items-start  sm:items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Approvals</h1>
           <p className="pageSubTitle mt-2">
@@ -150,15 +147,15 @@ const Page = () => {
                   </div>
                   <div className="flex gap-2">
                     <button
-                      className=" flex gap-2 items-center bg-blue-500 text-white px-4 py-1 rounded-md"
-                      onClick={() => handleApprove(id)}
+                      className=" flex gap-2 cursor-pointer items-center bg-blue-500 text-white px-4 py-1 rounded-md"
+                      onClick={() => handleApprove(item.id)}
                     >
                       <CircleCheckBig size={16} />
                       Approve
                     </button>
                     <button
-                      className=" flex gap-2 items-center border border-red-500 text-red-500 px-4 py-1 rounded-md"
-                      onClick={() => handleReject(id)}
+                      className=" flex gap-2 cursor-pointer items-center border border-red-500 text-red-500 px-4 py-1 rounded-md"
+                      onClick={() => handleReject(item.id)}
                     >
                       <CircleCheckBig size={16} />
                       Reject

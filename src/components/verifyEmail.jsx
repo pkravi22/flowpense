@@ -29,7 +29,6 @@ export default function VerifyAccount({ type, email: propEmail }) {
   const [token, setToken] = useState(null);
   const [email, setEmail] = useState(propEmail);
 
-  // ✅ Run only on client
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedToken = localStorage.getItem("token");

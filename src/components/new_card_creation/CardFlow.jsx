@@ -122,7 +122,7 @@ export default function CardFlow() {
         {step === 5 && <SuccessStep />}
       </div>
 
-      {step < 5 && (
+      {step === 4 && (
         <div className="flex justify-between w-full px-4 my-4">
           {step > 1 ? (
             <button
