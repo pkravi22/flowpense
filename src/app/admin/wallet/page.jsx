@@ -55,6 +55,7 @@ const Page = () => {
   const router = useRouter();
   const [token, setToken] = useState(null);
   const [userDetail, setUserDetail] = useState(null);
+  const [recentTransactions, setReecentTransactions] = useState([]);
   const [formData, setFormData] = useState({
     bank: "",
     amount: "",
@@ -127,6 +128,7 @@ const Page = () => {
         companyId: userDetail.companyId,
         token,
       });
+      setReecentTransactions(response.ledger || []);
       console.log("Wallet Ledger:", response);
     } catch (error) {
       console.error("Error fetching wallet ledger:", error);
@@ -137,6 +139,53 @@ const Page = () => {
     fetchWalletLedger();
   }, [userDetail, token]);
 
+  const exportToCSV = () => {
+    if (!recentTransactions || recentTransactions.length === 0) {
+      alert("No transactions available to export!");
+      return;
+    }
+
+    // Define CSV header
+    const headers = [
+      "ID",
+      "Transaction Type",
+      "Amount",
+      "Currency",
+      "Balance After",
+      "Status",
+      "Receipt URL",
+      "Created At",
+    ];
+
+    // Format rows
+    const rows = recentTransactions.map((tx) => [
+      tx.id,
+      tx.txType,
+      tx.amount,
+      tx.currency,
+      tx.balanceAfter,
+      tx.status,
+      tx.receipt_url || "N/A",
+      new Date(tx.createdAt).toLocaleString(),
+    ]);
+
+    // Combine into CSV string
+    const csvContent = [
+      headers.join(","), // header row
+      ...rows.map((r) => r.join(",")), // data rows
+    ].join("\n");
+
+    // Create Blob and download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `wallet_transactions_${Date.now()}.csv`;
+    link.click();
+
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="">
@@ -149,7 +198,10 @@ const Page = () => {
         </div>
         <div className="">
           <div className="flex flex-wrap gap-2">
-            <button className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1">
+            <button
+              className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1"
+              onClick={exportToCSV}
+            >
               <Download className="inline md:mr-2" size={16} />
               <span className="text-sm">Export Statement</span>
             </button>
@@ -198,7 +250,10 @@ const Page = () => {
             <BankDetails />
           </div>
           <div className="flex-2">
-            <RecentTransactions />
+            <RecentTransactions
+              recentTransactions={recentTransactions}
+              onExport={exportToCSV}
+            />
           </div>
         </div>
         <div>

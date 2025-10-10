@@ -38,10 +38,7 @@ export default function Topbar({ setIsOpen }) {
     <header className="h-[64px] w-full relative   flex items-center justify-between px-4 shadow">
       {/* Left Section */}
       {userModal && (
-        <div className="absolute top-12 text-black flex flex-col gap-2 p-4 right-12 w-[200px] font-semibold h-[100px] border bg-white rounded-2xl ">
-          <div className="cursor-pointer border rounded-md p-1">
-            <p>Profile</p>
-          </div>
+        <div className="absolute top-12 text-black flex flex-col gap-2 p-4 right-12 w-[200px] font-semibold h-[60px]  border bg-white rounded-2xl ">
           <div className="flex gap-2 cursor-pointer border rounded-md p-1">
             <button onClick={handleLogout}>Logout</button>
             <span>
