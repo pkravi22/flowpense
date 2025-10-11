@@ -194,7 +194,7 @@ const Page = () => {
     if (!token) return; // guard
     try {
       const data = await teamServices.getAllTeams({ token });
-      console.log("team data", data);
+      console.log("team data", data.data);
     } catch (e) {
       console.log("error during fetching teams data");
     }
@@ -234,9 +234,16 @@ const Page = () => {
     }
   };
 
-  const handleAddMember = (memberId) => {
+  const handleAddMember = async (employeeId) => {
     try {
+      const data = await teamServices.addteamMember({
+        token,
+      });
+
+      console.log("create team response", data.data);
+      setCreateTeamModal(false);
     } catch (e) {
+      alert("Failed to add member. Please try again.");
       console.log("error during adding member to team", e);
     }
 
@@ -250,7 +257,7 @@ const Page = () => {
       const data = await teamServices.getAllEmployees({ token });
       console.log("team data", data);
     } catch (e) {
-      console.log("error during fetching teams data");
+      console.log("error during fetching employees  data", e);
     }
   };
   useEffect(() => {
@@ -283,7 +290,7 @@ const Page = () => {
       )}
 
       {/* Header */}
-      <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="w-full flex flex-col md:flex-row  items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Team Management</h1>
           <p className="pageSubTitle mt-2">
@@ -376,7 +383,7 @@ const Page = () => {
                   </div>
 
                   {/* Row 2 */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-sm text-gray-700">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm text-gray-700">
                     <div className="flex flex-col gap-1">
                       <p className="font-semibold">Budget Usage</p>
                       <div className="flex items-center justify-between gap-2">

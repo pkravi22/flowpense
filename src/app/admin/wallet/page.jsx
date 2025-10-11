@@ -56,6 +56,7 @@ const Page = () => {
   const [token, setToken] = useState(null);
   const [userDetail, setUserDetail] = useState(null);
   const [recentTransactions, setReecentTransactions] = useState([]);
+ 
   const [formData, setFormData] = useState({
     bank: "",
     amount: "",
@@ -122,16 +123,20 @@ const Page = () => {
   };
 
   const fetchWalletLedger = async () => {
-    if (!userDetail || !token) return; // guard
+    if (!userDetail || !token) return;
+    setLoading(true);
     try {
       const response = await companyServices.getWalletLedger({
         companyId: userDetail.companyId,
         token,
       });
       setReecentTransactions(response.ledger || []);
+
       console.log("Wallet Ledger:", response);
     } catch (error) {
       console.error("Error fetching wallet ledger:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -206,7 +211,10 @@ const Page = () => {
               <span className="text-sm">Export Statement</span>
             </button>
 
-            <button className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1">
+            <button
+              className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1"
+              onClick={() => alert("Feature coming soon!")}
+            >
               <ArrowUpRight className="inline md:mr-2" size={16} />
               <span className="text-sm">Transfer Funds</span>
             </button>
@@ -253,6 +261,7 @@ const Page = () => {
             <RecentTransactions
               recentTransactions={recentTransactions}
               onExport={exportToCSV}
+              loading={loading}
             />
           </div>
         </div>

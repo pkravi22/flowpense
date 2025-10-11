@@ -124,6 +124,14 @@ const cards = [
     status: "Active",
   },
 ];
+const cardColors = [
+  { bgColor: "#4e4f2eff", textColor: "white" },
+  { bgColor: "#1d2c91ff", textColor: "white" },
+  { bgColor: "#13aa64ff", textColor: "white" },
+  { bgColor: "#8B4513", textColor: "white" },
+  { bgColor: "#2F4F4F", textColor: "white" },
+  { bgColor: "#800020", textColor: "white" },
+];
 
 const settings = {
   dots: false,
@@ -219,6 +227,9 @@ const Page = () => {
   useEffect(() => {
     getCompanyDetails(token);
   }, []);
+
+  console.log("all cards", allCards.cards);
+  console.log("all expenses", allExpenses.expenses);
   return (
     <div className="p-0 md:p-4 overflow-visible bg-gray-100">
       <div className="flex flex-col  items-center justify-between">
@@ -385,10 +396,22 @@ const Page = () => {
         {/* Cards */}
         <div className="">
           {/* Desktop: grid */}
-          <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 py-4">
-            {cards.map((card, index) => (
-              <Card key={index} {...card} />
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 py-4">
+            {allCards?.cards?.length > 0 ? (
+              allCards.cards.map((card, index) => {
+                const color = cardColors[index % cardColors.length]; // cycle through colors
+                return (
+                  <Card
+                    key={index}
+                    rawData={card}
+                    bgColor={color.bgColor}
+                    textColor={color.textColor}
+                  />
+                );
+              })
+            ) : (
+              <p className="text-gray-500">No active cards available.</p>
+            )}
           </div>
         </div>
       </div>

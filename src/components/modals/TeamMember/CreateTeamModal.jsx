@@ -5,12 +5,16 @@ const CreateTeamModal = ({ setCreateTeamModal, handleCreateTeam }) => {
   const [teamData, setTeamData] = React.useState({
     TeamName: "",
     Description: "",
-    MonthlyBudget: 0,
+    MonthlyBudget: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTeamData({ ...teamData, [name]: value });
+
+    setTeamData({
+      ...teamData,
+      [name]: name === "MonthlyBudget" ? Number(value) : value,
+    });
   };
 
   const handleSubmit = (e) => {

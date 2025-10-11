@@ -5,7 +5,9 @@ export const fetchPendingApprovals = createAsyncThunk(
   "approvals/fetchPending",
   async (token, { rejectWithValue }) => {
     try {
-      return await approvalServices.getPendingApprovals({ token });
+      const response = await approvalServices.getPendingApprovals({ token });
+      console.log("peding approvals response", response.data);
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
     }
@@ -16,7 +18,8 @@ export const fetchApprovedRequests = createAsyncThunk(
   "approvals/fetchApproved",
   async (token, { rejectWithValue }) => {
     try {
-      return await approvalServices.getApprovedRequests({ token });
+      const response = await approvalServices.getApprovedRequests({ token });
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
     }
@@ -27,7 +30,8 @@ export const fetchRejectedRequests = createAsyncThunk(
   "approvals/fetchRejected",
   async (token, { rejectWithValue }) => {
     try {
-      return await approvalServices.getRejectedRequests({ token });
+      const response = await approvalServices.getRejectedRequests({ token });
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
     }
@@ -38,7 +42,8 @@ export const fetchAllExpenses = createAsyncThunk(
   "approvals/fetchAllExpenses",
   async (token, { rejectWithValue }) => {
     try {
-      return await approvalServices.getAllExpenses({ token });
+      const response = await approvalServices.getAllExpenses({ token });
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
     }

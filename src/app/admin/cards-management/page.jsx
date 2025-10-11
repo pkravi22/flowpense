@@ -9,11 +9,13 @@ import {
   Wallet,
   X,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../../../components/Card";
 import CardModal from "@/components/modals/CardModal";
 import CardFlow from "@/components/new_card_creation/CardFlow";
 import DateRangePicker from "@/components/DatePicker";
+import { cardServices } from "@/services/cardServices";
+import { useSelector } from "react-redux";
 
 // Stats card data
 const cardDetails = [
@@ -51,52 +53,14 @@ const cardDetails = [
   },
 ];
 
-// Hardcoded cards array
-const cards = [
-  {
-    name: "Engineering",
-    person: "Pramendra Singh",
-    number: "3432 **** **** 1234",
-    bgColor: "#4e4f2eff",
-    textColor: "white",
-    monthlyLimit: "$5000",
-    spent: "$2000",
-    balance: "$30000",
-    status: "Active",
-  },
-  {
-    name: "Engineering Team",
-    person: "Pramendra Singh",
-    number: "7865 **** **** 1234",
-    bgColor: "#1d2c91ff",
-    textColor: "white",
-    monthlyLimit: "$10000",
-    spent: "$2000",
-    balance: "$30000",
-    status: "Active",
-  },
-  {
-    name: "Engineering Team Card",
-    person: "Pramendra Singh",
-    number: "7865 **** **** 1234",
-    bgColor: "#13aa64ff",
-    textColor: "white",
-    monthlyLimit: "$3000",
-    spent: "$2000",
-    balance: "$30000",
-    status: "Frozen",
-  },
-  {
-    name: "Sales Team Card",
-    person: "Adebayo",
-    number: "7865 **** **** 1234",
-    bgColor: "red",
-    textColor: "white",
-    monthlyLimit: "$6000",
-    spent: "$2000",
-    balance: "$30000",
-    status: "Inactive",
-  },
+// Color palette for cards
+const cardColors = [
+  { bgColor: "#4e4f2eff", textColor: "white" },
+  { bgColor: "#1d2c91ff", textColor: "white" },
+  { bgColor: "#13aa64ff", textColor: "white" },
+  { bgColor: "#8B4513", textColor: "white" },
+  { bgColor: "#2F4F4F", textColor: "white" },
+  { bgColor: "#800020", textColor: "white" },
 ];
 
 const Page = () => {
@@ -104,14 +68,160 @@ const Page = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [cards, setCards] = useState([]);
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  console.log(user);
+  // Get token from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+    }
+  }, []);
 
-  // Filter cards based on search & status
+  // Format card data from API response
+  const formatCardData = (apiCards) => {
+    if (!apiCards || !Array.isArray(apiCards)) return [];
+
+    return apiCards.map((card, index) => {
+      const colorIndex = index % cardColors.length;
+      return {
+        id: card.id || card.cardId || index,
+        name: card.cardName || card.name || `Card ${index + 1}`,
+        number:
+          card.cardNumber ||
+          card.number ||
+          `**** **** **** ${String(index + 1).padStart(4, "0")}`,
+        person:
+          card.cardHolder || card.holderName || card.person || "Team Lead",
+        monthlyLimit: card.monthlyLimit || card.limit || "$5000",
+        spent: card.spent || card.amountSpent || "$2000",
+        balance: card.balance || card.currentBalance || "$3000",
+        status: card.status || "Active",
+        bgColor: card.bgColor || cardColors[colorIndex].bgColor,
+        textColor: card.textColor || cardColors[colorIndex].textColor,
+        // Include raw API data for modal
+        rawData: card,
+      };
+    });
+  };
+
+  // Fetch all cards
+  const fetchAllCards = async () => {
+    if (!token) return;
+    setLoading(true);
+    try {
+      const response = await cardServices.getAllCards({ token });
+      console.log("API Response:", response);
+
+      // Handle different response structures
+
+      let cardsData = response.cards;
+      const formattedCards = formatCardData(cardsData);
+      console.log("Formatted cards:", formattedCards);
+      setCards(formattedCards);
+    } catch (error) {
+      console.error("Error fetching cards:", error);
+      // Fallback to sample data if API fails
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchAllCards();
+    }
+  }, [token]);
+
+  const handleFundCard = async (cardId, amount) => {
+    console.log("token", token);
+    if (!token) return;
+    try {
+      await cardServices.fundCard({
+        token,
+
+        payload: { amount: amount, cardId: cardId, companyId: user?.companyId },
+      });
+      fetchAllCards(); // Refresh cards
+    } catch (error) {
+      alert(error?.response?.data?.message || "Error funding card");
+      console.error("Error funding card:", error);
+    }
+  };
+
+  const handleFreezeCard = async (cardId, currentStatus) => {
+    if (!token) return;
+    try {
+      const action = currentStatus === "Active" ? "block" : "unblock";
+      await cardServices.blockUnlockCard({
+        token,
+        id: cardId,
+        action,
+      });
+      fetchAllCards(); // Refresh cards
+    } catch (error) {
+      console.error("Error updating card status:", error);
+    }
+  };
+
+  const handleEditLimit = async (cardId, newLimits) => {
+    if (!token) return;
+    try {
+      await cardServices.editCardLimit({
+        token,
+        id: cardId,
+        payload: newLimits,
+      });
+      fetchAllCards(); // Refresh cards
+    } catch (error) {
+      console.error("Error editing card limits:", error);
+    }
+  };
+
+  const handleDeleteCard = async (cardId) => {
+    if (!token) return;
+    try {
+      await cardServices.deleteCard({
+        token,
+        id: cardId,
+      });
+      fetchAllCards(); // Refresh cards
+    } catch (error) {
+      console.error("Error deleting card:", error);
+    }
+  };
+
+  const handleViewTransactionHistory = async (cardId) => {
+    if (!token) return;
+    try {
+      const response = await cardServices.transactionHistoryByCard({
+        token,
+        id: cardId,
+      });
+      console.log("Transaction history:", response.data);
+      // You can display this in a modal or separate page
+    } catch (error) {
+      console.error("Error fetching transaction history:", error);
+    }
+  };
+
+  // Handle card creation
+  const handleCardCreated = () => {
+    setShowCardFlow(false);
+    fetchAllCards(); // Refresh the cards list
+  };
+
+  // Filter cards based on search & status - FIXED
   const filteredCards = cards.filter((card) => {
     const matchesSearch = card.name
-      .toLowerCase()
+      ?.toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesStatus =
-      statusFilter === "all" || card.status === statusFilter;
+      statusFilter === "all" ||
+      card.status?.toLowerCase() === statusFilter.toLowerCase();
     return matchesSearch && matchesStatus;
   });
 
@@ -125,7 +235,7 @@ const Page = () => {
             Monitor your business expenses and card usage
           </p>
         </div>
-        <div className=" rounded-2xl p-2 flex items-center gap-2">
+        <div className="rounded-2xl p-2 flex items-center gap-2">
           <DateRangePicker />
         </div>
       </div>
@@ -196,21 +306,51 @@ const Page = () => {
           </div>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
-          {filteredCards.map((card, idx) => (
-            <Card
-              key={idx}
-              {...card}
-              onViewDetails={() => setSelectedCard(card)}
-            />
-          ))}
-        </div>
+        {/* Cards Grid - FIXED: using filteredCards instead of cards */}
+        {loading ? (
+          <div className="flex justify-center items-center py-8">
+            <p>Loading cards...</p>
+          </div>
+        ) : filteredCards.length === 0 ? (
+          <div className="flex justify-center items-center py-8">
+            <p className="text-gray-500">
+              {cards.length === 0
+                ? "No cards found"
+                : "No cards match your search criteria"}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
+            {filteredCards.map(
+              (card, idx) => (
+                console.log("Rendering card:", card),
+                (
+                  <Card
+                    key={card.id || idx}
+                    {...card}
+                    onViewDetails={() => setSelectedCard(card)}
+                    onFundCard={handleFundCard}
+                    onFreezeCard={handleFreezeCard}
+                    onEditLimit={handleEditLimit}
+                    onDeleteCard={handleDeleteCard}
+                    onViewTransactions={handleViewTransactionHistory}
+                  />
+                )
+              )
+            )}
+          </div>
+        )}
       </div>
 
       {/* Card Modal */}
       {selectedCard && (
-        <CardModal card={selectedCard} onClose={() => setSelectedCard(null)} />
+        <CardModal
+          card={selectedCard}
+          onClose={() => setSelectedCard(null)}
+          onFundCard={handleFundCard}
+          onFreezeCard={handleFreezeCard}
+          onEditLimit={handleEditLimit}
+        />
       )}
 
       {/* Card Flow Modal */}
@@ -223,7 +363,7 @@ const Page = () => {
             >
               <X size={14} />
             </button>
-            <CardFlow />
+            <CardFlow onCardCreated={handleCardCreated} token={token} />
           </div>
         </div>
       )}

@@ -9,7 +9,7 @@ export const cardServices = {
     return data;
   },
 
-  fundCard: async ({ payload, id }) => {
+  fundCard: async ({ token, payload }) => {
     console.log("payload", payload);
     const { data } = await api.post("api/funds/card", payload, {
       headers: {
@@ -38,11 +38,11 @@ export const cardServices = {
     return data;
   },
 
-  blockUnlockCard: async ({ token, id }) => {
-    console.log("payload", payload);
-    const { data } = await api.post(
+  blockUnlockCard: async ({ token, id, action }) => {
+    console.log("payload", id, action);
+    const { data } = await api.patch(
       "api/cards/block-unblock-card/${id}",
-      payload,
+      { action },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -52,9 +52,9 @@ export const cardServices = {
     return data;
   },
 
-  editCardLimit: async ({ payload, id }) => {
+  editCardLimit: async ({ payload, token, id }) => {
     console.log("payload", payload);
-    const { data } = await api.post(
+    const { data } = await api.patch(
       `api/cards/edit-card-limits/${id}`,
       payload,
       {

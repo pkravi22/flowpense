@@ -91,7 +91,7 @@ const Page = () => {
 
   return (
     <div>
-      <div className="w-full flex flex-col md:flex-row items-start  sm:items-center justify-between gap-4">
+      <div className="w-full flex flex-col md:flex-row items-start  md:items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Approvals</h1>
           <p className="pageSubTitle mt-2">

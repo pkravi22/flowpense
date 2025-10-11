@@ -2,7 +2,7 @@ import React from "react";
 
 const BankDetails = () => {
   return (
-    <div className="flex flex-col p-3 min-h-[300px] shadow-md gap-2">
+    <div className="flex flex-col p-3 min-h-[430px] rounded-2xl shadow-md gap-2">
       <div className="text-2xl font-[600]"> Bank Details</div>
       <div className="flex items-center justify-between p-2">
         {" "}
@@ -34,7 +34,10 @@ const BankDetails = () => {
           <p>Pending</p>
         </div>
       </div>
-      <div className="text-sm text-black border border-black rounded-sm text-center py-1 cursor-pointer">
+      <div
+        className="text-sm text-black border mt-4 border-black rounded-sm text-center py-1 cursor-pointer"
+        onClick={() => alert("Add New Bank Account")}
+      >
         + Add New Bank Account
       </div>
     </div>

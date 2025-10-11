@@ -11,13 +11,13 @@ export const teamServices = {
     });
     return data;
   },
-  addteamMember: async ({ token, memberData }) => {
-    console.log(memberData);
+  addteamMember: async ({ token, employeeId = 3 }) => {
+    console.log("lets add team member", token, employeeId);
 
     const data = api.post(
       `api/teams/add-member/1`,
       {
-        employeeId: 3,
+        employeeId: 3, // This is hardcoded, so it will always send 3
       },
       {
         headers: {
@@ -38,7 +38,7 @@ export const teamServices = {
     return data;
   },
   getAllEmployees: async ({ token }) => {
-    console.log("token in service", token);
+    console.log("token in service for employees", token);
     const data = api.get(
       "api/teams/get-employee",
 
