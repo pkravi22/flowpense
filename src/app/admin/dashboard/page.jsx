@@ -7,7 +7,8 @@ import Card from "@/components/Card";
 import DateRangePicker from "@/components/DatePicker";
 import VerifyAccount from "@/components/verification_pages/VerificationFlow";
 import { companyServices } from "@/services/companyServices.js";
-import Slider from "react-slick";
+//import Slider from "react-slick";
+
 import {
   ArrowRight,
   BoxSelect,
