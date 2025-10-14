@@ -18,18 +18,16 @@ const StatusBadge = ({ status }) => {
   return <span className={`${base} ${map[status] || ""}`}>{status}</span>;
 };
 
-export default function TransactionTable({ allExpenses = { expenses: [] } }) {
-  const transactions = allExpenses?.expenses || [];
-
+export default function TransactionTable({ expenseData: transactions }) {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All");
   const [category, setCategory] = useState("All");
   const [showFilter, setShowFilter] = useState(false);
-
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(1);
 
   // Categories
+  console.log(transactions);
   const categories = useMemo(() => {
     const set = new Set(transactions.map((t) => t.category || ""));
     return ["All", ...Array.from(set)];
@@ -69,7 +67,6 @@ export default function TransactionTable({ allExpenses = { expenses: [] } }) {
       maximumFractionDigits: 0,
     }).format(n);
 
-  // CSV export
   const exportCSV = () => {
     const cols = [
       "Date",
@@ -212,10 +209,10 @@ export default function TransactionTable({ allExpenses = { expenses: [] } }) {
       </div>
 
       {/* Table */}
-      <div className="mt-3 min-h-[300px] overflow-x-auto w-full">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-100 text-left text-sm font-medium text-gray-600">
+      <div className="mt-3 min-h-[300px] w-full overflow-x-auto">
+        <table className="w-full min-w-[700px] border-collapse">
+          <thead className="sticky top-0 bg-gray-100 z-10">
+            <tr className="text-left text-sm font-medium text-gray-600">
               <th className="p-3">Date</th>
               <th className="p-3">Merchant</th>
               <th className="p-3">Category</th>
@@ -262,7 +259,7 @@ export default function TransactionTable({ allExpenses = { expenses: [] } }) {
         </table>
       </div>
 
-      {/* Pagination & Rows */}
+      {/* Pagination */}
       <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3 text-sm text-gray-600">
           <div className="flex items-center gap-2">
@@ -284,7 +281,7 @@ export default function TransactionTable({ allExpenses = { expenses: [] } }) {
             {total.toLocaleString()}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => goTo(safePage - 1)}
             disabled={safePage === 1}
