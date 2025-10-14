@@ -68,7 +68,8 @@ const StatusBadge = ({ status }) => {
   return <span className={`${base} ${map[status] || ""}`}>{status}</span>;
 };
 
-export default function TransactionTable() {
+export default function TransactionTable({ allExpenses = [] }) {
+  const transactions = allExpenses.expenses;
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All");
   const [category, setCategory] = useState("All");
@@ -202,7 +203,6 @@ export default function TransactionTable() {
     return items;
   };
 
-  
   React.useEffect(() => setPage(1), [query, status, category, rowsPerPage]);
 
   return (

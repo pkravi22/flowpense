@@ -55,6 +55,45 @@ const page = () => {
     }
   }, [dispatch, router]);
 
+  const totalExpenses = expenseData.reduce((sum, exp) => sum + exp.Amount, 0);
+  const approvedExpenses = expenseData
+    .filter((exp) => exp.status === "Approved")
+    .reduce((sum, exp) => sum + exp.Amount, 0);
+  const pendingExpenses = expenseData
+    .filter((exp) => exp.status === "Pending")
+    .reduce((sum, exp) => sum + exp.Amount, 0);
+
+  // === Dynamic Stat Cards ===
+  const cardDetails = [
+    {
+      id: 1,
+      title: "Total Expenses",
+      value: `₦${totalExpenses.toLocaleString()}`,
+      icon: <Wallet />,
+      iconBg: "#D1FAE5",
+      iconColor: "#065F46",
+      sub: "Overall total spent",
+    },
+    {
+      id: 2,
+      title: "Approved Expenses",
+      value: `₦${approvedExpenses.toLocaleString()}`,
+      icon: <CreditCard />,
+      iconBg: "#FFD6D6",
+      iconColor: "#B91C1C",
+      sub: "Approved transactions",
+    },
+    {
+      id: 3,
+      title: "Pending Expenses",
+      value: `₦${pendingExpenses.toLocaleString()}`,
+      icon: <Users />,
+      iconBg: "#E0E7FF",
+      iconColor: "#1E40AF",
+      sub: "Awaiting approval",
+    },
+  ];
+
   return (
     <div className="">
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
@@ -93,7 +132,7 @@ const page = () => {
         )}
       </div>
       <div>
-        <TransactionTable />
+        <TransactionTable allExpenses={allExpenses} />
       </div>
     </div>
   );

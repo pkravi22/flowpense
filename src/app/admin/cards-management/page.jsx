@@ -18,40 +18,40 @@ import { cardServices } from "@/services/cardServices";
 import { useSelector } from "react-redux";
 
 // Stats card data
-const cardDetails = [
-  {
-    id: 1,
-    title: "Total cards created",
-    value: "20",
-    icon: <BoxSelect />,
-    iconColor: "#035638",
-    sub: "10 % increase from last month",
-  },
-  {
-    id: 2,
-    title: "Active Cards",
-    value: "15",
-    icon: <CreditCard />,
-    iconColor: "#B91C1C",
-    sub: "15 % increase from last month",
-  },
-  {
-    id: 3,
-    title: "Frozen cards",
-    value: "10",
-    icon: <Users />,
-    iconColor: "#1E40AF",
-    sub: "8 new members added this month",
-  },
-  {
-    id: 4,
-    title: "Wallet Balance",
-    value: "$8,250.00",
-    icon: <Wallet />,
-    iconColor: "#065F46",
-    sub: "4 % increase from last month",
-  },
-];
+// const cardDetails = [
+//   {
+//     id: 1,
+//     title: "Total cards created",
+//     value: "20",
+//     icon: <BoxSelect />,
+//     iconColor: "#035638",
+//     sub: "10 % increase from last month",
+//   },
+//   {
+//     id: 2,
+//     title: "Active Cards",
+//     value: "15",
+//     icon: <CreditCard />,
+//     iconColor: "#B91C1C",
+//     sub: "15 % increase from last month",
+//   },
+//   {
+//     id: 3,
+//     title: "Frozen cards",
+//     value: "10",
+//     icon: <Users />,
+//     iconColor: "#1E40AF",
+//     sub: "8 new members added this month",
+//   },
+//   {
+//     id: 4,
+//     title: "Wallet Balance",
+//     value: "$8,250.00",
+//     icon: <Wallet />,
+//     iconColor: "#065F46",
+//     sub: "4 % increase from last month",
+//   },
+// ];
 
 // Color palette for cards
 const cardColors = [
@@ -137,6 +137,60 @@ const Page = () => {
       fetchAllCards();
     }
   }, [token]);
+
+
+  // Inside Page component, after fetching all cards and companyData
+
+// Compute dynamic stats
+// Compute dynamic stats from cards array
+const totalCardsCreated = cards.length;
+const activeCardsCount = cards.filter(card => card.status === "Active").length;
+const frozenCardsCount = cards.filter(
+  card => card.status === "Frozen" || card.status === "Inactive"
+).length;
+
+// Calculate total wallet balance from card funding
+const walletBalance = cards.reduce((sum, card) => {
+  const funding = card.rawData?.CardFunding || 0;
+  return sum + funding;
+}, 0);
+
+// Prepare stat card data dynamically
+const cardDetails = [
+  {
+    id: 1,
+    title: "Total cards created",
+    value: totalCardsCreated.toString(),
+    icon: <BoxSelect />,
+    iconColor: "#035638",
+    sub: "Total cards in the system",
+  },
+  {
+    id: 2,
+    title: "Active Cards",
+    value: activeCardsCount.toString(),
+    icon: <CreditCard />,
+    iconColor: "#B91C1C",
+    sub: "Currently active cards",
+  },
+  {
+    id: 3,
+    title: "Frozen Cards",
+    value: frozenCardsCount.toString(),
+    icon: <Users />,
+    iconColor: "#1E40AF",
+    sub: "Cards blocked or inactive",
+  },
+  {
+    id: 4,
+    title: "Wallet Balance",
+    value: `₦${walletBalance.toLocaleString()}`,
+    icon: <Wallet />,
+    iconColor: "#065F46",
+    sub: "Sum of all card funding",
+  },
+];
+
 
   const handleFundCard = async (cardId, amount) => {
     console.log("token", token);

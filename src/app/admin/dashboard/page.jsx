@@ -29,44 +29,44 @@ import { useRouter } from "next/navigation";
 
 //import VerificationFlow from "../../../components/verification_pages/VerificationFlow";
 
-const cardDetails = [
-  {
-    id: 1,
-    title: "Total Spent",
-    value: "$12,345.67",
-    icon: <BoxSelect />,
-    iconBg: "#E5EE7D",
-    iconColor: "#035638",
-    sub: "10 % increase from last month",
-  },
-  {
-    id: 2,
-    title: "Total Cards",
-    value: "15",
-    icon: <CreditCard />,
-    iconBg: "#FFD6D6",
-    iconColor: "#B91C1C",
-    sub: "15 % increase from last month",
-  },
-  {
-    id: 3,
-    title: "Team Members",
-    value: "48",
-    icon: <Users />,
-    iconBg: "#E0E7FF",
-    iconColor: "#1E40AF",
-    sub: " 8 new members added this month",
-  },
-  {
-    id: 4,
-    title: "Wallet Balance",
-    value: "$8,250.00",
-    icon: <Wallet />,
-    iconBg: "#D1FAE5",
-    iconColor: "#065F46",
-    sub: "4 % increase from last month",
-  },
-];
+// const cardDetails = [
+//   {
+//     id: 1,
+//     title: "Total Spent",
+//     value: "$12,345.67",
+//     icon: <BoxSelect />,
+//     iconBg: "#E5EE7D",
+//     iconColor: "#035638",
+//     sub: "10 % increase from last month",
+//   },
+//   {
+//     id: 2,
+//     title: "Total Cards",
+//     value: "15",
+//     icon: <CreditCard />,
+//     iconBg: "#FFD6D6",
+//     iconColor: "#B91C1C",
+//     sub: "15 % increase from last month",
+//   },
+//   {
+//     id: 3,
+//     title: "Team Members",
+//     value: "48",
+//     icon: <Users />,
+//     iconBg: "#E0E7FF",
+//     iconColor: "#1E40AF",
+//     sub: " 8 new members added this month",
+//   },
+//   {
+//     id: 4,
+//     title: "Wallet Balance",
+//     value: "$8,250.00",
+//     icon: <Wallet />,
+//     iconBg: "#D1FAE5",
+//     iconColor: "#065F46",
+//     sub: "4 % increase from last month",
+//   },
+// ];
 //const verified = false;
 const cards = [
   {
@@ -232,6 +232,56 @@ const Page = () => {
 
   console.log("all cards", allCards.cards);
   console.log("all expenses", allExpenses.expenses);
+
+  // Inside Page component, after fetching allExpenses, allCards, and companyData
+const totalSpent = allExpenses?.expenses
+  ?.filter((exp) => exp.status === "Approved")
+  .reduce((sum, exp) => sum + exp.Amount, 0) || 0;
+
+const totalCards = allCards?.cards?.length || 0;
+const totalUsers = companyData?.users?.length || 0;
+const walletBalance = companyData?.walletBalance || 0;
+
+// Dynamic stat card data
+const cardDetails = [
+  {
+    id: 1,
+    title: "Total Spent",
+    value: `₦${totalSpent.toLocaleString()}`,
+    icon: <BoxSelect />,
+    iconBg: "#E5EE7D",
+    iconColor: "#035638",
+    sub: "10% increase from last month",
+  },
+  {
+    id: 2,
+    title: "Total Cards",
+    value: totalCards.toString(),
+    icon: <CreditCard />,
+    iconBg: "#FFD6D6",
+    iconColor: "#B91C1C",
+    sub: "15% increase from last month",
+  },
+  {
+    id: 3,
+    title: "Team Members",
+    value: totalUsers.toString(),
+    icon: <Users />,
+    iconBg: "#E0E7FF",
+    iconColor: "#1E40AF",
+    sub: "New members added this month",
+  },
+  {
+    id: 4,
+    title: "Wallet Balance",
+    value: `₦${walletBalance.toLocaleString()}`,
+    icon: <Wallet />,
+    iconBg: "#D1FAE5",
+    iconColor: "#065F46",
+    sub: "Current wallet balance",
+  },
+];
+
   return (
     <div className="p-0 md:p-4 overflow-visible bg-gray-100">
       <div className="flex flex-col  items-center justify-between">
@@ -315,7 +365,7 @@ const Page = () => {
             <div className="flex flex-col gap-2 shadow-md rounded-2xl p-1  ">
               <p className="statcardTitle">Totoal Revenue</p>
               <p className="statcardNumber">$ 0</p>
-              <p className="text-red-500">-52% Decline in Revenue</p>
+              {/* <p className="text-red-500">-52% Decline in Revenue</p> */}
             </div>
             <div className="flex flex-col md:flex-row gap-4 items-center">
               <div>
@@ -324,14 +374,14 @@ const Page = () => {
                   Expenses
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <div className="border border-gray-400 flex gap-4 items-center rounded-2xl px-2 py-1 ">
                   <p>This Month </p>
                   <span>
                     <ChevronDown />
                   </span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="w-full h-full min-w-[300px] min-h-[300px] ">
