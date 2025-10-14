@@ -5,19 +5,25 @@ const AddMemberModal = ({
   setAddMemberModal,
   handleAddMember,
   employeeSmallData,
+  teamId,
 }) => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
   const [role, setRole] = useState("");
   console.log(employeeSmallData);
+  console.log("teamId", teamId);
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!selectedEmployeeId) {
       alert("Please select an employee before adding.");
       return;
     }
+    const employeeId = Number(selectedEmployeeId);
 
+    console.log("Selected Employee ID:", employeeId);
+    console.log("Selected Role:", role);
     // 🔹 Pass selected employee ID and role to parent
-    handleAddMember(selectedEmployeeId, role);
+    handleAddMember(employeeId, role, teamId);
     setAddMemberModal(false);
   };
 

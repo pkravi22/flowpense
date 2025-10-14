@@ -19,6 +19,8 @@ const Page = () => {
   const [loadingEmployees, setLoadingEmployees] = useState(false);
   const [token, setToken] = useState(null);
   const [employeeSmallData, setEmployeeSmallData] = useState([]);
+  const [selectedTeamId, setSelectedTeamId] = useState(null);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedToken = localStorage.getItem("token");
@@ -82,13 +84,21 @@ const Page = () => {
     }
   };
 
-  const handleAddMember = async ({ employeeId }) => {
-    console.log("employeeId", employeeId);
+  const handleAddMember = async (employeeId, role, teamId) => {
+    console.log("employeeId", employeeId, "role", role, "teamId", teamId);
+
     try {
-      const data = await teamServices.addteamMember({ token });
+      const data = await teamServices.addteamMember({
+        token,
+        teamId,
+        employeeId,
+        role,
+      });
       console.log("add member response", data.data);
+
       setAddMemberModal(false);
       getAllEmployees();
+      getALLTeams(); // refresh teams after adding member
     } catch (e) {
       alert("Failed to add member. Please try again.");
       console.log("error during adding member", e);
@@ -122,6 +132,7 @@ const Page = () => {
           handleAddMember={handleAddMember}
           setAddMemberModal={setAddMemberModal}
           employeeSmallData={employeeSmallData}
+          teamId={selectedTeamId}
         />
       )}
 
@@ -218,7 +229,10 @@ const Page = () => {
                         </div>
                         <div className="flex gap-2">
                           <button
-                            onClick={() => setAddMemberModal(true)}
+                            onClick={() => {
+                              setSelectedTeamId(team.id);
+                              setAddMemberModal(true);
+                            }}
                             className="flex gap-2 rounded-md text-black border px-4 py-1"
                           >
                             <User />
