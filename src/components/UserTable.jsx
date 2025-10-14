@@ -209,8 +209,8 @@ export default function TransactionTable({ expenseData: transactions }) {
       </div>
 
       {/* Table */}
-      <div className="mt-3 min-h-[300px] w-full overflow-x-auto">
-        <table className="w-full min-w-[700px] border-collapse">
+      <div className="mt-3 h-[500px] w-[360px] sm:w-[500px] md:w-[600px] lg:w-[1000px] overflow-auto">
+        <table className="min-w-full text-sm border-1 border-l-gray-300 ">
           <thead className="sticky top-0 bg-gray-100 z-10">
             <tr className="text-left text-sm font-medium text-gray-600">
               <th className="p-3">Date</th>
