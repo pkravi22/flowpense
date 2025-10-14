@@ -13,14 +13,19 @@ import { useSelector } from "react-redux";
 import { fetchAllCards } from "@/redux/slices/cardSlice";
 import CardModal from "@/components/modals/CardModal";
 
-const Card = ({ rawData, bgColor, textColor }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+const Card = ({
+  rawData,
+  bgColor,
+  textColor,
+  activeDropdown,
+  setActiveDropdown,
+}) => {
   const [showFundModal, setShowFundModal] = useState(false);
   const [showEditLimitModal, setShowEditLimitModal] = useState(false);
-  const [transactions, setTransactions] = useState([]);
-
   const [showCardModal, setShowCardModal] = useState(false);
+  const [transactions, setTransactions] = useState([]);
   const [fundAmount, setFundAmount] = useState("");
+  const [loading, setLoading] = useState(false); // 🔹 Global loading state
   const [newLimits, setNewLimits] = useState({
     dailySpendLimit: "",
     weeklySpendLimit: "",
@@ -30,7 +35,7 @@ const Card = ({ rawData, bgColor, textColor }) => {
 
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
-  console.log("token in card", token);
+
   const {
     id,
     Approver,
@@ -44,19 +49,22 @@ const Card = ({ rawData, bgColor, textColor }) => {
   const statusColor =
     status === "Active"
       ? "text-green-400"
-      : status === "Frozen"
+      : status === "frozen"
       ? "text-yellow-400"
       : status === "Expired"
       ? "text-red-400"
       : "text-gray-400";
 
+  // 🔹 Dropdown toggle
   const handleThreeDots = (e) => {
     e.stopPropagation();
-    setDropdownOpen((prev) => !prev);
+    setActiveDropdown(activeDropdown === id ? null : id);
   };
 
+  // 🔹 Fund Card
   const handleFundCard = async () => {
     if (!fundAmount || !id) return alert("Enter a valid amount");
+    setLoading(true);
     try {
       await cardServices.fundCard({
         token,
@@ -69,15 +77,19 @@ const Card = ({ rawData, bgColor, textColor }) => {
       alert("Card funded successfully!");
       fetchAllCards && fetchAllCards();
       setShowFundModal(false);
+      dispatch(fetchAllCards());
       setFundAmount("");
     } catch (error) {
       alert(error?.response?.data?.message || "Error funding card");
-      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // 🔹 Edit Card Limits
   const handleEditLimits = async () => {
     if (!id) return;
+    setLoading(true);
     try {
       await cardServices.editCardLimit({
         token,
@@ -87,51 +99,70 @@ const Card = ({ rawData, bgColor, textColor }) => {
       alert("Card limits updated successfully!");
       fetchAllCards && fetchAllCards();
       setShowEditLimitModal(false);
+      dispatch(fetchAllCards());
       setNewLimits({
-        dailyLimit: "",
+        dailySpendLimit: "",
+        weeklySpendLimit: "",
         monthlyLimit: "",
         perTransactionLimit: "",
       });
     } catch (error) {
       console.error("Error editing limits:", error);
+      alert("Failed to update limits");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // 🔹 Freeze / Unfreeze Card
   const handleFreezeToggle = async () => {
-    console.log("freeze toggle called", token, "id", id);
     if (!token) return;
-    const action = status === "Active" ? "frozen" : "activate";
+    const action = status === "Active" ? "frozen" : "Active";
+    setLoading(true);
     try {
-      alert("lets freeze");
       await cardServices.blockUnlockCard({ token, id, action });
-      alert(`Card ${action === "block" ? "frozen" : "unfrozen"} successfully!`);
-      fetchAllCards && fetchAllCards();
+      alert(
+        `Card ${action === "frozen" ? "frozen" : "unfrozen"} successfully!`
+      );
+      fetchAllCards && dispatch(fetchAllCards());
     } catch (error) {
       console.error("Error toggling card status:", error);
+      alert("Failed to update card status");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // 🔹 Delete Card
   const handleDeleteCard = async () => {
     if (!window.confirm("Are you sure you want to delete this card?")) return;
+    setLoading(true);
     try {
       await cardServices.deleteCard({ token, id });
       alert("Card deleted successfully!");
-      fetchAllCards && fetchAllCards();
+      fetchAllCards && dispatch(fetchAllCards());
     } catch (error) {
       console.error("Error deleting card:", error);
+      alert("Failed to delete card");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // 🔹 View Transactions
   const handleViewTransactions = async () => {
+    setLoading(true);
     try {
       const response = await cardServices.transactionHistoryByCard({
         token,
         id,
       });
-      console.log("Transaction History:", response.data);
       setTransactions(response.data || []);
     } catch (error) {
       console.error("Error fetching transactions:", error);
+      alert("Failed to fetch transactions");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -141,10 +172,10 @@ const Card = ({ rawData, bgColor, textColor }) => {
 
   return (
     <>
-      {/* Card Modal - Fixed to use showCardModal state */}
+      {/* Card Modal */}
       {showCardModal && (
         <CardModal
-          card={rawData} // Changed from cardData to card to match typical prop name
+          card={rawData}
           onClose={() => setShowCardModal(false)}
           onFundCard={handleFundCard}
           onFreezeCard={handleFreezeToggle}
@@ -152,11 +183,22 @@ const Card = ({ rawData, bgColor, textColor }) => {
           onDeleteCard={handleDeleteCard}
           onViewTransactions={handleViewTransactions}
           transactions={transactions}
+          loading={loading} // optional if modal also shows loader
         />
       )}
 
+      {/* 🔹 Global Loader Overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white px-6 py-4 rounded-lg shadow-md text-[#035638] font-semibold">
+            Processing...
+          </div>
+        </div>
+      )}
+
+      {/* Card UI */}
       <div className="w-full sm:w-[300px] h-[180px] cursor-pointer">
-        {/* --- Fund Modal --- */}
+        {/* Fund Modal */}
         {showFundModal && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg w-96">
@@ -167,94 +209,69 @@ const Card = ({ rawData, bgColor, textColor }) => {
                 onChange={(e) => setFundAmount(e.target.value)}
                 placeholder="Enter amount"
                 className="w-full border p-2 rounded mb-4"
+                disabled={loading}
               />
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowFundModal(false)}
                   className="flex-1 border border-gray-300 py-2 rounded"
+                  disabled={loading}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleFundCard}
-                  className="flex-1 bg-[#035638] text-white py-2 rounded"
+                  className="flex-1 bg-[#035638] text-white py-2 rounded disabled:opacity-60"
+                  disabled={loading}
                 >
-                  Fund Card
+                  {loading ? "Processing..." : "Fund Card"}
                 </button>
               </div>
             </div>
           </div>
         )}
 
+        {/* Edit Limit Modal */}
         {showEditLimitModal && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg w-96">
               <h3 className="text-lg font-semibold mb-4">Edit Card Limits</h3>
-
-              <input
-                type="number"
-                value={newLimits.dailySpendLimit}
-                onChange={(e) =>
-                  setNewLimits((prev) => ({
-                    ...prev,
-                    dailySpendLimit: e.target.value,
-                  }))
-                }
-                placeholder="Daily Spend Limit"
-                className="w-full border p-2 rounded mb-2"
-              />
-
-              <input
-                type="number"
-                value={newLimits.weeklySpendLimit}
-                onChange={(e) =>
-                  setNewLimits((prev) => ({
-                    ...prev,
-                    weeklySpendLimit: e.target.value,
-                  }))
-                }
-                placeholder="Weekly Spend Limit"
-                className="w-full border p-2 rounded mb-2"
-              />
-
-              <input
-                type="number"
-                value={newLimits.monthlyLimit}
-                onChange={(e) =>
-                  setNewLimits((prev) => ({
-                    ...prev,
-                    monthlyLimit: e.target.value,
-                  }))
-                }
-                placeholder="Monthly Limit"
-                className="w-full border p-2 rounded mb-2"
-              />
-
-              <input
-                type="number"
-                value={newLimits.perTransactionLimit}
-                onChange={(e) =>
-                  setNewLimits((prev) => ({
-                    ...prev,
-                    perTransactionLimit: e.target.value,
-                  }))
-                }
-                placeholder="Per Transaction Limit"
-                className="w-full border p-2 rounded mb-4"
-              />
-
+              {[
+                "dailySpendLimit",
+                "weeklySpendLimit",
+                "monthlyLimit",
+                "perTransactionLimit",
+              ].map((key) => (
+                <input
+                  key={key}
+                  type="number"
+                  value={newLimits[key]}
+                  onChange={(e) =>
+                    setNewLimits((prev) => ({ ...prev, [key]: e.target.value }))
+                  }
+                  placeholder={
+                    key
+                      .replace(/([A-Z])/g, " $1")
+                      .replace(/^./, (s) => s.toUpperCase()) + " (₹)"
+                  }
+                  className="w-full border p-2 rounded mb-2"
+                  disabled={loading}
+                />
+              ))}
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowEditLimitModal(false)}
                   className="flex-1 border border-gray-300 py-2 rounded"
+                  disabled={loading}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleEditLimits}
-                  className="flex-1 bg-[#035638] text-white py-2 rounded"
+                  className="flex-1 bg-[#035638] text-white py-2 rounded disabled:opacity-60"
+                  disabled={loading}
                 >
-                  Update Limits
+                  {loading ? "Updating..." : "Update Limits"}
                 </button>
               </div>
             </div>
@@ -270,66 +287,61 @@ const Card = ({ rawData, bgColor, textColor }) => {
               className="bg-gray-200 px-1 py-[.2rem] rounded-3xl cursor-pointer hover:bg-gray-300"
               onClick={handleThreeDots}
             />
-            {dropdownOpen && (
+            {activeDropdown === id && (
               <div className="absolute right-0 top-6 w-48 bg-white shadow-lg rounded-lg border p-2 z-50">
-                <button
-                  className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md"
-                  onClick={() => {
-                    setShowCardModal(true);
-                    setDropdownOpen(false);
-                  }}
-                >
-                  <Eye size={16} /> View Details
-                </button>
+                {/* Dropdown Options */}
+                {[
+                  {
+                    label: "View Details",
+                    icon: Eye,
+                    action: () => setShowCardModal(true),
+                  },
+                  {
+                    label: "Fund Card",
+                    icon: BanknoteArrowUp,
+                    action: () => setShowFundModal(true),
+                  },
+                  {
+                    label: `${
+                      status === "Active" ? "Freeze" : "Unfreeze"
+                    } Card`,
+                    icon: Snowflake,
+                    action: handleFreezeToggle,
+                  },
+                  {
+                    label: "Edit Limit",
+                    icon: Settings,
+                    action: () => setShowEditLimitModal(true),
+                  },
+                  {
+                    label: "Transaction History",
+                    icon: History,
+                    action: async () => {
+                      await handleViewTransactions();
+                      setShowCardModal(true);
+                    },
+                  },
+                ].map(({ label, icon: Icon, action }) => (
+                  <button
+                    key={label}
+                    onClick={() => {
+                      setActiveDropdown(null);
+                      action();
+                    }}
+                    className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md disabled:opacity-60"
+                    disabled={loading}
+                  >
+                    <Icon size={16} /> {label}
+                  </button>
+                ))}
 
                 <button
-                  className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md"
                   onClick={() => {
-                    setShowFundModal(true);
-                    setDropdownOpen(false);
-                  }}
-                >
-                  <BanknoteArrowUp size={16} /> Fund Card
-                </button>
-
-                <button
-                  className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md"
-                  onClick={() => {
-                    handleFreezeToggle();
-                    setDropdownOpen(false);
-                  }}
-                >
-                  <Snowflake size={16} />
-                  {status === "Active" ? "Freeze" : "Unfreeze"} Card
-                </button>
-
-                <button
-                  className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md"
-                  onClick={() => {
-                    setShowEditLimitModal(true);
-                    setDropdownOpen(false);
-                  }}
-                >
-                  <Settings size={16} /> Edit Limit
-                </button>
-
-                <button
-                  className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-sm rounded-md"
-                  onClick={() => {
-                    handleViewTransactions();
-                    setShowCardModal(true);
-                    setDropdownOpen(false);
-                  }}
-                >
-                  <History size={16} /> Transaction History
-                </button>
-
-                <button
-                  className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-red-600 text-sm rounded-md"
-                  onClick={() => {
+                    setActiveDropdown(null);
                     handleDeleteCard();
-                    setDropdownOpen(false);
                   }}
+                  className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100 text-red-600 text-sm rounded-md disabled:opacity-60"
+                  disabled={loading}
                 >
                   <Trash2 size={16} /> Delete Card
                 </button>
@@ -340,7 +352,7 @@ const Card = ({ rawData, bgColor, textColor }) => {
 
         {/* --- Card Body --- */}
         <div
-          className="w-full h-[160px] rounded-2xl p-3 flex flex-col gap-2"
+          className="w-full h-[170px] rounded-2xl p-4 flex flex-col gap-2"
           style={{ backgroundColor: bgColor, color: textColor }}
         >
           <div className="flex justify-between text-sm text-[#B1CBC1]">

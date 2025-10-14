@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=League+Spartan:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=League+Spartan:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
 @import "react-phone-input-2/lib/style.css";
 
 @import "tailwindcss";
@@ -10,7 +10,7 @@
 
 }
 @theme {
-  --font-sans: "Host Grotesk"; /* Replaces the default sans-serif stack */
+  --font-sans: "Host Grotesk sans-serif"; /* Replaces default sans-serif stack */
 }
 
 @theme inline {
@@ -22,6 +22,13 @@
   --color-foreground: var(--foreground);
   
   --color-borderColor:#035638;
+}
+.host-grotesk {
+  font-family: "Host Grotesk", sans-serif;
+}
+
+*{
+  font-family: "Host Grotesk", sans-serif;
 }
 
 .heading{
@@ -40,6 +47,8 @@
   @apply text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6;
   
 }
+
+
 .labelText{
 @apply text-[color:var(--Neutral-900,#101828)] text-sm not-italic font-medium leading-[160%];
  
@@ -71,6 +80,7 @@
    @apply text-black text-2xl not-italic font-normal leading-[100%];
   font-family: "Bagel Fat One";
 }
+
 
 
 /* Fix for autofill background color in WebKit browsers */

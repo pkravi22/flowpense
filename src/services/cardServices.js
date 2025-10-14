@@ -40,8 +40,9 @@ export const cardServices = {
 
   blockUnlockCard: async ({ token, id, action }) => {
     console.log("payload", id, action);
+    console.log(typeof id);
     const { data } = await api.patch(
-      "api/cards/block-unblock-card/${id}",
+      `api/cards/block-unblock-card/${id}`,
       { action },
       {
         headers: {

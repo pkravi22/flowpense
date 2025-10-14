@@ -41,10 +41,10 @@ export default function ForgetPassword() {
           <img src="/logo 1.png" alt="Flowpense" className="h-16" />
         </div>
 
-        <h2 className="text-xl font-semibold text-gray-900 ">
+        <h2 className="text-xl font-semibold host-grotesk text-gray-900 ">
           Forgot Password
         </h2>
-        <p className="text-sm text-[#696E7E]  mt-1">
+        <p className="text-sm text-[#696E7E] host-grotesk  mt-1">
           Enter your email to receive a verification link
         </p>
 
@@ -57,14 +57,16 @@ export default function ForgetPassword() {
               {...register("email")}
               type="email"
               placeholder="namesurname@gmail.com"
-              className="w-full text-sm outline-none"
+              className="w-full text-sm outline-none host-grotesk"
             />
           </div>
-          <p className="text-xs text-red-500 mt-1">{errors.email?.message}</p>
+          <p className="text-xs host-grotesk text-red-500 mt-1">
+            {errors.email?.message}
+          </p>
 
           <button
             type="submit"
-            className="w-full bg-green-800 hover:bg-green-900 cursor-pointer text-white py-3 rounded-4xl mt-2"
+            className="w-full host-grotesk bg-green-800 hover:bg-green-900 cursor-pointer text-white py-3 rounded-4xl mt-2"
           >
             Verify Email
           </button>

@@ -28,40 +28,46 @@ export default function VerifyAccount({ type, email: propEmail }) {
   const router = useRouter();
   const [token, setToken] = useState(null);
   const [email, setEmail] = useState(propEmail);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedToken = localStorage.getItem("token");
-      if (savedToken) {
-        setToken(savedToken);
-        try {
-          const payload = JSON.parse(atob(savedToken.split(".")[1]));
-          setEmail(payload.email || propEmail);
-        } catch {
-          setEmail(propEmail);
-        }
+const [loading, setLoading] = useState(false);
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    const savedToken = localStorage.getItem("token");
+    if (savedToken) {
+      setToken(savedToken);
+      try {
+        const payload = JSON.parse(atob(savedToken.split(".")[1]));
+        setEmail(payload.email || propEmail);
+      } catch {
+        setEmail(propEmail);
       }
     }
-  }, [propEmail]);
+  }
+}, [propEmail]);
 
-  const onSubmit = async (data) => {
-    try {
-      if (!token) {
-        alert("Token missing!");
-        return;
-      }
-      const res = await authService.verifyEmail({ otp: data.code, token });
-      alert("Code Verified Successfully");
-      router.push("/login");
-    } catch (err) {
-      console.error(err.response?.data?.message || "Verification failed");
-      alert(err.response?.data?.message || "Verification failed");
+const onSubmit = async (data) => {
+  setLoading(true);
+  try {
+    if (!token) {
+      alert("Token missing!");
+      return;
     }
-  };
+    const res = await authService.verifyEmail({ otp: data.code, token });
+    alert("Code Verified Successfully");
+    router.push("/login");
+  } catch (err) {
+    console.error(err.response?.data?.message || "Verification failed");
+    alert(err.response?.data?.message || "Verification failed");
+  }
+};
 
-  const handleResend = () => {
-    alert("Code Resent");
-  };
+const handleResend = () => {
+  try {
+    const response = authService.resendOtp({ token });
+    if (response.success) {
+      alert("code send successfully");
+    }
+  } catch (e) {}
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">

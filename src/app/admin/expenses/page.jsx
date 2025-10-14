@@ -1,7 +1,7 @@
 "use client";
 import { CreditCard, Users, Wallet } from "lucide-react";
 import DateRangePicker from "../../../components/DatePicker";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import TransactionTable from "../../../components/UserTable";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -38,14 +38,17 @@ const cardDetails = [
 const page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [expenseData, setExpenseData] = useState([]);
   const { allExpenses, loading, error } = useSelector(
     (state) => state.expenses
   );
-
+  console.log("All Expenses:", allExpenses.expenses);
+  // setExpenseData(allExpenses?.expenses || []);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       dispatch(fetchAllExpenses({ token }));
+      setExpenseData(allExpenses?.expenses || []);
     } else {
       console.error("No authentication token found - redirecting to login");
       router.push("/login");
@@ -63,9 +66,9 @@ const page = () => {
         </div>
         <div>
           {/* Date selection area */}
-          <div className="">
+          {/* <div className="">
             <DateRangePicker />
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">

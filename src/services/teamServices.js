@@ -11,11 +11,11 @@ export const teamServices = {
     });
     return data;
   },
-  addteamMember: async ({ token, employeeId = 3 }) => {
+  addteamMember: async ({ token, employeeId }) => {
     console.log("lets add team member", token, employeeId);
 
     const data = api.post(
-      `api/teams/add-member/1`,
+      `api/teams/add-member/${employeeId}`,
       {
         employeeId: 3, // This is hardcoded, so it will always send 3
       },

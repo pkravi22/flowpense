@@ -38,8 +38,8 @@ export default function Login() {
       alert("Login successful! Redirecting...");
       localStorage.setItem("token", token);
 
-      //router.push("/login/verifyOtp");
-      router.replace("admin/dashboard");
+      router.push("/login/verifyOtp");
+      //router.replace("admin/dashboard");
       dispatch(reset());
     }
 
@@ -86,14 +86,14 @@ export default function Login() {
           <img src="/logo 1.png" alt="Flowpense" className="h-16" />
         </div>
 
-        <h2 className="text-xl font-semibold text-gray-900 ">
-          Login to your account
+        <h2 className="text-xl host-grotesk font-semibold text-gray-900 ">
+          Login your account
         </h2>
-        <p className="text-sm text-[#696E7E] mt-1">
+        <p className="text-sm text-[#696E7E] host-grotesk mt-1">
           Don't have an account?{" "}
           <a
             href="/signup"
-            className="text-green-700 font-medium hover:underline"
+            className="text-green-700 font-medium host-grotesk hover:underline"
           >
             Sign Up →
           </a>
@@ -108,7 +108,7 @@ export default function Login() {
               {...register("email")}
               type="email"
               placeholder="namesurname@gmail.com"
-              className="w-full text-sm outline-none"
+              className="w-full text-sm outline-none host-grotesk"
               disabled={loading || isLoading}
             />
           </div>
@@ -133,7 +133,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading || isLoading}
-            className={`w-full text-white cursor-pointer py-3 rounded-4xl mt-2 ${
+            className={`w-full text-white host-grotesk cursor-pointer py-3 rounded-4xl mt-2 ${
               loading || isLoading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-green-800 hover:bg-green-900"
@@ -145,7 +145,7 @@ export default function Login() {
           <button
             type="button"
             onClick={handleForgetPassword}
-            className="w-full text-blue-600 cursor-pointer py-3 rounded-4xl mt-2 "
+            className="w-full text-blue-600 host-grotesk cursor-pointer py-3 rounded-4xl mt-2 "
             disabled={loading || isLoading}
           >
             Forgot your Password?

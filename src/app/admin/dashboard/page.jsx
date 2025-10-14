@@ -151,6 +151,7 @@ const settings = {
 const Page = () => {
   const [verified, setVerified] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const [companyData, setCompanyData] = useState(null);
   const router = useRouter();
   const { user, token } = useSelector((state) => state.auth);
@@ -276,9 +277,9 @@ const Page = () => {
           </div>
           <div>
             {/* Date selection area */}
-            <div className="">
+            {/* <div className="">
               <DateRangePicker />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -397,7 +398,7 @@ const Page = () => {
         {/* Cards */}
         <div className="">
           {/* Desktop: grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 py-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 py-4">
             {allCards?.cards?.length > 0 ? (
               allCards.cards.map((card, index) => {
                 const color = cardColors[index % cardColors.length]; // cycle through colors
@@ -407,6 +408,8 @@ const Page = () => {
                     rawData={card}
                     bgColor={color.bgColor}
                     textColor={color.textColor}
+                    activeDropdown={activeDropdown}
+                    setActiveDropdown={setActiveDropdown}
                   />
                 );
               })

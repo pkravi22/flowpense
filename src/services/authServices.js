@@ -55,8 +55,16 @@ export const authService = {
     return data;
   },
 
-  resendOtp: async (paylo) => {
-    const { data } = await api.post("/auth/resend-otp", payload);
+  resendOtp: async ({ token }) => {
+    const { data } = await api.post(
+      "api/auth/resend-emailVerif/otp",
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, //
+        },
+      }
+    );
     return data;
   },
 

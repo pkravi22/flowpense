@@ -71,8 +71,10 @@ const Page = () => {
   const [cards, setCards] = useState([]);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const { user } = useSelector((state) => state.auth);
   console.log(user);
+  console.log("dropdown state", activeDropdown, setActiveDropdown);
   // Get token from localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -214,7 +216,6 @@ const Page = () => {
     fetchAllCards(); // Refresh the cards list
   };
 
-  // Filter cards based on search & status - FIXED
   const filteredCards = cards.filter((card) => {
     const matchesSearch = card.name
       ?.toLowerCase()
@@ -334,6 +335,8 @@ const Page = () => {
                     onEditLimit={handleEditLimit}
                     onDeleteCard={handleDeleteCard}
                     onViewTransactions={handleViewTransactionHistory}
+                    activeDropdown={activeDropdown}
+                    setActiveDropdown={setActiveDropdown}
                   />
                 )
               )

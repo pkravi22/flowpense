@@ -70,7 +70,7 @@ export default function ChangePassword() {
         <div className="flex justify-center mb-6">
           <img src="/logo 1.png" alt="Flowpense" className="h-16" />
         </div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-0">
+        <h2 className="text-xl font-semibold host-grotesk text-gray-900 mb-0">
           Change Password
         </h2>
         <p className="smText font-medium mb-2">

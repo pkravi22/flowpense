@@ -11,7 +11,7 @@ export default function PaymentSuccess() {
         Thank you for your payment. Your transaction was successful.
       </p>
       <Link
-        href="/"
+        href="/admin/dashboard"
         className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
       >
         Go to Home

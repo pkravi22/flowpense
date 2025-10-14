@@ -1,19 +1,10 @@
 "use client";
-import {
-  Cross,
-  CrossIcon,
-  Plus,
-  PlusIcon,
-  Settings,
-  User,
-  X,
-} from "lucide-react";
+import { Plus, Settings, User } from "lucide-react";
 import EmployeeTable from "../../../components/EmployeeTable";
 import React, { useEffect, useState } from "react";
 import AddEmployeeModal from "@/components/modals/TeamMember/AddEmployeeModal";
 import CreateTeamModal from "@/components/modals/TeamMember/CreateTeamModal";
 import AddMemberModal from "@/components/modals/TeamMember/AddMemberModal";
-import axios from "axios";
 import { teamServices } from "@/services/teamServices";
 
 const Page = () => {
@@ -21,168 +12,13 @@ const Page = () => {
   const [addEmployeeModalOpen, setAddEmployeeModalOpen] = useState(false);
   const [createTeamModal, setCreateTeamModal] = useState(false);
   const [addMemberModal, setAddMemberModal] = useState(false);
+  const [teamData, setTeamData] = useState([]);
+  const [employeeData, setEmployeeData] = useState([]);
 
-  const teamData = [
-    {
-      id: 1,
-      name: "Marketing Team",
-      subheading: "Handles all marketing campaigns",
-      budget: "₦500,000",
-      monthlyLimit: "₦50,000",
-      size: 5,
-      createdDate: "01 August, 2025",
-      members: [
-        {
-          name: "John Doe",
-          role: "Manager",
-          img: "https://randomuser.me/api/portraits/men/32.jpg",
-        },
-        {
-          name: "Diana Prince",
-          role: "Executive",
-          img: "https://randomuser.me/api/portraits/women/44.jpg",
-        },
-        {
-          name: "Ethan Hunt",
-          role: "Coordinator",
-          img: "https://randomuser.me/api/portraits/men/54.jpg",
-        },
-        {
-          name: "Fiona Gallagher",
-          role: "Analyst",
-          img: "https://randomuser.me/api/portraits/women/65.jpg",
-        },
-        {
-          name: "George Martin",
-          role: "Intern",
-          img: "https://randomuser.me/api/portraits/men/22.jpg",
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "Sales Team",
-      subheading: "Handles all marketing campaigns",
-      budget: "₦500,000",
-      monthlyLimit: "₦50,000",
-      size: 5,
-      createdDate: "01 August, 2025",
-      members: [
-        {
-          name: "John Doe",
-          role: "Manager",
-          img: "https://randomuser.me/api/portraits/men/32.jpg",
-        },
-        {
-          name: "Diana Prince",
-          role: "Executive",
-          img: "https://randomuser.me/api/portraits/women/44.jpg",
-        },
-        {
-          name: "Ethan Hunt",
-          role: "Coordinator",
-          img: "https://randomuser.me/api/portraits/men/54.jpg",
-        },
-        {
-          name: "Fiona Gallagher",
-          role: "Analyst",
-          img: "https://randomuser.me/api/portraits/women/65.jpg",
-        },
-        {
-          name: "George Martin",
-          role: "Intern",
-          img: "https://randomuser.me/api/portraits/men/22.jpg",
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "Project Management Team",
-      subheading: "Handles all marketing campaigns",
-      budget: "₦500,000",
-      monthlyLimit: "₦50,000",
-      size: 5,
-      createdDate: "01 August, 2025",
-      members: [
-        {
-          name: "John Doe",
-          role: "Manager",
-          img: "https://randomuser.me/api/portraits/men/32.jpg",
-        },
-        {
-          name: "Diana Prince",
-          role: "Executive",
-          img: "https://randomuser.me/api/portraits/women/44.jpg",
-        },
-        {
-          name: "Ethan Hunt",
-          role: "Coordinator",
-          img: "https://randomuser.me/api/portraits/men/54.jpg",
-        },
-        {
-          name: "Fiona Gallagher",
-          role: "Analyst",
-          img: "https://randomuser.me/api/portraits/women/65.jpg",
-        },
-        {
-          name: "George Martin",
-          role: "Intern",
-          img: "https://randomuser.me/api/portraits/men/22.jpg",
-        },
-      ],
-    },
-  ];
-
-  const employeeData = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      role: "Marketing",
-      department: "Marketing",
-      status: "Active",
-      dateJoined: "01 Jan, 2025",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      role: "Finance",
-      department: "Finance",
-      status: "Inactive",
-      dateJoined: "15 Feb, 2025",
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      role: "HR",
-      department: "HR",
-      status: "Active",
-      dateJoined: "20 Mar, 2025",
-    },
-    {
-      id: 4,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      role: "Engineering",
-      department: "Engineering",
-      status: "Active",
-      dateJoined: "10 Apr, 2025",
-    },
-    {
-      id: 5,
-      name: "Charlie Brown",
-      email: "charlie@example.com",
-      role: "Sales",
-      department: "Sales",
-      status: "Active",
-      dateJoined: "05 May, 2025",
-    },
-  ];
-
+  const [loadingTeams, setLoadingTeams] = useState(false);
+  const [loadingEmployees, setLoadingEmployees] = useState(false);
   const [token, setToken] = useState(null);
-
+  const [employeeSmallData, setEmployeeSmallData] = useState([]);
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedToken = localStorage.getItem("token");
@@ -191,24 +27,43 @@ const Page = () => {
   }, []);
 
   const getALLTeams = async () => {
-    if (!token) return; // guard
+    if (!token) return;
+    setLoadingTeams(true);
     try {
       const data = await teamServices.getAllTeams({ token });
-      console.log("team data", data.data);
+      setTeamData(data.data.teams || []);
     } catch (e) {
-      console.log("error during fetching teams data");
+      console.error("Error fetching teams:", e);
+    } finally {
+      setLoadingTeams(false);
     }
   };
+
+  const getAllEmployees = async () => {
+    if (!token) return;
+    setLoadingEmployees(true);
+    try {
+      const data = await teamServices.getAllEmployees({ token });
+      setEmployeeData(data.data.Employee || []);
+      const smallData = data.data.Employee.map((emp) => ({
+        id: emp.id,
+        name: emp.fullName,
+      }));
+      setEmployeeSmallData(smallData);
+    } catch (e) {
+      console.error("Error fetching employees:", e);
+    } finally {
+      setLoadingEmployees(false);
+    }
+  };
+
   const handleAddEmployee = async ({ employeeData }) => {
-    // const token = localStorage.getItem("token");
     try {
       const data = await teamServices.addEmployee({
         token,
         employeeData,
       });
       console.log("add employee response", data);
-
-      // Refresh team data after adding employee
       getALLTeams();
       setAddEmployeeModalOpen(false);
     } catch (e) {
@@ -217,49 +72,29 @@ const Page = () => {
   };
 
   const handleCreateTeam = async ({ teamData }) => {
-    console.log("teamdata in page", teamData);
     try {
-      //  const token = localStorage.getItem("token");
-      const data = await teamServices.teamCreation({
-        teamData,
-        token,
-      });
-
+      const data = await teamServices.teamCreation({ teamData, token });
       console.log("create team response", data);
       setCreateTeamModal(false);
-      // Refresh team data after creating team
       getALLTeams();
     } catch (e) {
       console.log("error during creating team", e);
     }
   };
 
-  const handleAddMember = async (employeeId) => {
+  const handleAddMember = async ({ employeeId }) => {
+    console.log("employeeId", employeeId);
     try {
-      const data = await teamServices.addteamMember({
-        token,
-      });
-
-      console.log("create team response", data.data);
-      setCreateTeamModal(false);
+      const data = await teamServices.addteamMember({ token });
+      console.log("add member response", data.data);
+      setAddMemberModal(false);
+      getAllEmployees();
     } catch (e) {
       alert("Failed to add member. Please try again.");
-      console.log("error during adding member to team", e);
-    }
-
-    setAddMemberModal(false);
-
-    getALLTeams();
-  };
-  const getAllEmployees = async () => {
-    //const token = localStorage.getItem("token");
-    try {
-      const data = await teamServices.getAllEmployees({ token });
-      console.log("team data", data);
-    } catch (e) {
-      console.log("error during fetching employees  data", e);
+      console.log("error during adding member", e);
     }
   };
+
   useEffect(() => {
     if (token) {
       getALLTeams();
@@ -269,7 +104,7 @@ const Page = () => {
 
   return (
     <div>
-      {/* Show Modals */}
+      {/* Modals */}
       {addEmployeeModalOpen && (
         <AddEmployeeModal
           handleAddEmployee={handleAddEmployee}
@@ -286,11 +121,12 @@ const Page = () => {
         <AddMemberModal
           handleAddMember={handleAddMember}
           setAddMemberModal={setAddMemberModal}
+          employeeSmallData={employeeSmallData}
         />
       )}
 
       {/* Header */}
-      <div className="w-full flex flex-col md:flex-row  items-start md:items-center justify-between gap-4">
+      <div className="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Team Management</h1>
           <p className="pageSubTitle mt-2">
@@ -320,127 +156,173 @@ const Page = () => {
         <div className="mt-6 w-full flex items-center bg-gray-200 h-[45px] p-2 rounded-2xl shadow-md">
           <button
             className={`w-1/2 rounded-2xl shadow-md h-[30px] cursor-pointer border border-gray-300 
-            ${
-              activeTab === "team"
-                ? "bg-white text-[#101113] font-semibold"
-                : "bg-gray-200 text-gray-600"
-            }`}
+              ${
+                activeTab === "team"
+                  ? "bg-white text-[#101113] font-semibold"
+                  : "bg-gray-200 text-gray-600"
+              }`}
             onClick={() => setActiveTab("team")}
           >
             Team Management
           </button>
           <button
             className={`w-1/2 rounded-2xl shadow-md h-[30px] cursor-pointer border border-gray-300 
-            ${
-              activeTab === "employee"
-                ? "bg-white text-[#101113] font-semibold"
-                : "bg-gray-200 text-gray-600"
-            }`}
+              ${
+                activeTab === "employee"
+                  ? "bg-white text-[#101113] font-semibold"
+                  : "bg-gray-200 text-gray-600"
+              }`}
             onClick={() => setActiveTab("employee")}
           >
             Employee
           </button>
         </div>
 
-        {/* Tab Content */}
         <div className="mt-4 space-y-4">
-          {activeTab === "team" &&
-            teamData.map((team) => {
-              const spentValue = Number(team.budget.replace(/[^0-9.-]+/g, ""));
-              const limitValue = Number(
-                team.monthlyLimit.replace(/[^0-9.-]+/g, "")
-              );
-              const percentage = limitValue
-                ? (limitValue / spentValue) * 100
-                : 0;
-              return (
-                <div
-                  key={team.id}
-                  className="bg-white p-4 rounded-lg shadow-md flex flex-col gap-4"
-                >
-                  {/* Row 1 */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="font-sans text-[#020817] text-xl font-semibold tracking-[-0.6px]">
-                        {team.name}
-                      </h2>
-                      <p className="text-slate-500 text-[13.563px] leading-5">
-                        {team.subheading}
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setAddMemberModal(true)}
-                        className=" flex gap-2  rounded-md  text-black  border  px-4 py-1 "
-                      >
-                        <User />
-                        Add Member
-                      </button>
-                      <button className=" border rounded-md px-2 ">
-                        <Settings />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Row 2 */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm text-gray-700">
-                    <div className="flex flex-col gap-1">
-                      <p className="font-semibold">Budget Usage</p>
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="text-gray-500 text-xs">Monthly Spent</p>
-                        <span>{team.budget}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 flex items-center rounded-full h-[6px] overflow-hidden">
-                        <div
-                          className="bg-[#CED671] h-[4px] rounded-full"
-                          style={{ width: `${percentage}%` }}
-                        ></div>
-                      </div>
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="text-gray-500 text-xs">
-                          {percentage.toFixed(0)}% used This Month
-                        </p>
-                        <span>{team.monthlyLimit}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                      <p className="font-semibold">Team Size</p>
-                      <span className="bg-blue-100 w-[120px] text-center py-1 rounded-3xl">
-                        {team.size} Members
-                      </span>
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                      <p className="font-semibold">Created Date</p>
-                      <span>{team.createdDate}</span>
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                      <p className="font-semibold">Team Members</p>
-                      <div className="flex -space-x-2">
-                        {team.members.slice(0, 3).map((member, idx) => (
-                          <img
-                            key={idx}
-                            src={member.img}
-                            alt={member.name}
-                            className="w-8 h-8 rounded-full border-2 border-white"
-                          />
-                        ))}
-                        {team.members.length > 3 && (
-                          <div className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center text-xs font-semibold text-gray-600">
-                            +{team.members.length - 3}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+          {activeTab === "team" && (
+            <>
+              {loadingTeams ? (
+                <div className="animate-pulse space-y-3">
+                  {Array(3)
+                    .fill(0)
+                    .map((_, i) => (
+                      <div
+                        key={i}
+                        className="bg-gray-100 h-32 rounded-lg w-full"
+                      ></div>
+                    ))}
+                  <p className="text-gray-500 text-center">Loading teams...</p>
                 </div>
-              );
-            })}
+              ) : teamData.length === 0 ? (
+                <p className="text-gray-500 text-center">No teams available.</p>
+              ) : (
+                teamData.map((team) => {
+                  const percentage =
+                    (parseFloat(team.MonthlyBudget) /
+                      parseFloat(team.monthlyLimit)) *
+                      100 || 50;
+                  return (
+                    <div
+                      key={team.id}
+                      className="bg-white p-4 rounded-lg shadow-md flex flex-col gap-4"
+                    >
+                      {/* Header */}
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h2 className="text-xl font-semibold text-[#020817]">
+                            {team.TeamName}
+                          </h2>
+                          <p className="text-slate-500 text-sm">
+                            {team.Description}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setAddMemberModal(true)}
+                            className="flex gap-2 rounded-md text-black border px-4 py-1"
+                          >
+                            <User />
+                            Add Member
+                          </button>
+                          <button className="border rounded-md px-2">
+                            <Settings />
+                          </button>
+                        </div>
+                      </div>
 
+                      {/* Team Info */}
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-sm text-gray-700">
+                        <div className="flex flex-col gap-1">
+                          {" "}
+                          <p className="font-semibold">Budget Usage</p>{" "}
+                          <div className="flex items-center justify-between gap-2">
+                            {" "}
+                            <p className="text-gray-500 text-xs">
+                              Monthly Spent
+                            </p>{" "}
+                            <span>{team.MonthlyBudget}</span>{" "}
+                          </div>{" "}
+                          <div className="w-full bg-gray-200 flex items-center rounded-full h-[6px] overflow-hidden">
+                            {" "}
+                            <div
+                              className="bg-[#CED671] h-[4px] rounded-full"
+                              style={{ width: `${percentage}%` }}
+                            ></div>{" "}
+                          </div>{" "}
+                          <div className="flex items-center justify-between gap-2">
+                            {" "}
+                            <p className="text-gray-500 text-xs">
+                              {" "}
+                              {percentage.toFixed(0)}% used This Month{" "}
+                            </p>{" "}
+                            <span>{team.monthlyLimit}</span>{" "}
+                          </div>{" "}
+                        </div>
+                        <div>
+                          <p className="font-semibold">Team Size</p>
+                          <span className="bg-blue-100 w-[120px] text-center py-1 rounded-3xl block">
+                            {team.TotalMembers} Members
+                          </span>
+                        </div>
+
+                        {/* Created Date */}
+                        <div>
+                          <p className="font-semibold">Created Date</p>
+                          <span>
+                            {new Date(team.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        {/* Members Section */}
+                        <div>
+                          <p className="font-semibold mb-1">Members</p>
+                          <div className="flex -space-x-2">
+                            {/* Hardcoded Member Images */}
+                            {[
+                              "https://randomuser.me/api/portraits/women/44.jpg",
+                              "https://randomuser.me/api/portraits/men/32.jpg",
+                              "https://randomuser.me/api/portraits/men/45.jpg",
+                              "https://randomuser.me/api/portraits/women/12.jpg",
+                            ].map((img, idx) => (
+                              <img
+                                key={idx}
+                                src={img}
+                                alt={`Member ${idx}`}
+                                className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                              />
+                            ))}
+
+                            {/* Show "+N" if more members */}
+                            <span className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs text-gray-600 border-2 border-white">
+                              +{Math.max(team.TotalMembers - 4, 0)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </>
+          )}
+
+          {/* EMPLOYEE TAB */}
           {activeTab === "employee" && (
-            <EmployeeTable employees={employeeData} />
+            <>
+              {loadingEmployees ? (
+                <div className="animate-pulse">
+                  <div className="bg-gray-100 h-8 w-1/3 mb-3 rounded"></div>
+                  <div className="bg-gray-100 h-[300px] rounded"></div>
+                  <p className="text-gray-500 text-center mt-3">
+                    Loading employees...
+                  </p>
+                </div>
+              ) : employeeData.length === 0 ? (
+                <p className="text-gray-500 text-center">No employees found.</p>
+              ) : (
+                <EmployeeTable employees={employeeData} />
+              )}
+            </>
           )}
         </div>
       </div>
