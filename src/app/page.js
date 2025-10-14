@@ -6,21 +6,20 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 export default function Home() {
   const router = useRouter();
-const token = useLocalStorage("token", null);
-useEffect(() => {
-  // get token from local storage
+  const [token] = useLocalStorage("token", null); // ✅ get token from localStorage
 
-  if (token) {
-    // decode token to get role (optional)
-    //const payload = JSON.parse(atob(token.split(".")[1]));
-    const payload = "admin";
-    const destination =
-      payload === "admin" ? "/admin/dashboard" : "/user/dashboard";
-    router.replace(destination); // redirect to dashboard
-  } else {
-    router.replace("/login"); // redirect to signin if not logged in
-  }
-}, [router]);
+  useEffect(() => {
+    if (token) {
+      const payload = "admin";
+      const destination =
+        payload === "admin" ? "/admin/dashboard" : "/user/dashboard";
+      router.replace(destination);
+    } else {
+      router.replace("/login"); // redirect to login if no token
+    }
+  }, [token, router]);
 
-  return <div className="flex justify-center items-center">Loading...</div>; // simple placeholder
+  return (
+    <div className="flex justify-center items-center h-screen">Loading...</div>
+  );
 }
