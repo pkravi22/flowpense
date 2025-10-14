@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   Search,
   SlidersHorizontal,
@@ -7,56 +7,6 @@ import {
   Download,
   MoreVertical,
 } from "lucide-react";
-
-const seed = [
-  {
-    date: "Apr 12, 2023",
-    merchant: "Jumia Food",
-    category: "Food & Dining",
-    cardDetails: "•••• 2045",
-    cardHolder: "Jane Cooper",
-    amount: 18250,
-    status: "Completed",
-  },
-  {
-    date: "Apr 12, 2023",
-    merchant: "Jumia Food",
-    category: "Dining",
-    cardDetails: "•••• 2045",
-    cardHolder: "Wade Warren",
-    amount: 18250,
-    status: "Pending",
-  },
-  {
-    date: "Apr 12, 2023",
-    merchant: "Pemia Food",
-    category: "Food & Dining",
-    cardDetails: "•••• 2045",
-    cardHolder: "Courtney Henry",
-    amount: 18250,
-    status: "Completed",
-  },
-  {
-    date: "Apr 12, 2023",
-    merchant: "Jumia Food",
-    category: "Food & Dining",
-    cardDetails: "•••• 2045",
-    cardHolder: "Courtney Henry",
-    amount: 18250,
-    status: "Declined",
-  },
-];
-
-
-const transactions = Array.from({ length: 30 }, (_, i) => {
-  const row = seed[i % seed.length];
-  return {
-    ...row,
-    id: i + 1,
-    date: row.date,
-    amount: row.amount + (i % 7) * 250, // slight variation
-  };
-});
 
 const StatusBadge = ({ status }) => {
   const base = "px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap";
@@ -68,43 +18,49 @@ const StatusBadge = ({ status }) => {
   return <span className={`${base} ${map[status] || ""}`}>{status}</span>;
 };
 
-export default function TransactionTable({ allExpenses = [] }) {
-  const transactions = allExpenses.expenses;
+export default function TransactionTable({ allExpenses = { expenses: [] } }) {
+  const transactions = allExpenses?.expenses || [];
+
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All");
   const [category, setCategory] = useState("All");
   const [showFilter, setShowFilter] = useState(false);
 
-  const [rowsPerPage, setRowsPerPage] = useState(30);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(1);
 
+  // Categories
   const categories = useMemo(() => {
-    const set = new Set(transactions.map((t) => t.category));
+    const set = new Set(transactions.map((t) => t.category || ""));
     return ["All", ...Array.from(set)];
-  }, []);
+  }, [transactions]);
 
+  // Filtered & searched rows
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
-    let rows = transactions.filter((t) => {
+    return transactions.filter((t) => {
       const hit =
-        t.merchant.toLowerCase().includes(q) ||
-        t.category.toLowerCase().includes(q) ||
-        t.cardHolder.toLowerCase().includes(q) ||
-        t.cardDetails.toLowerCase().includes(q) ||
+        t.merchant?.toLowerCase().includes(q) ||
+        t.category?.toLowerCase().includes(q) ||
+        t.cardHolder?.toLowerCase().includes(q) ||
+        t.cardDetails?.toLowerCase().includes(q) ||
         String(t.amount).includes(q);
+
       const statusOk = status === "All" ? true : t.status === status;
       const catOk = category === "All" ? true : t.category === category;
       return hit && statusOk && catOk;
     });
-    return rows;
-  }, [query, status, category]);
+  }, [transactions, query, status, category]);
 
+  // Pagination
   const total = filtered.length;
   const totalPages = Math.max(1, Math.ceil(total / rowsPerPage));
   const safePage = Math.min(page, totalPages);
   const start = (safePage - 1) * rowsPerPage;
   const end = Math.min(start + rowsPerPage, total);
   const pageRows = filtered.slice(start, end);
+
+  useEffect(() => setPage(1), [query, status, category, rowsPerPage]);
 
   const formatMoney = (n) =>
     new Intl.NumberFormat("en-NG", {
@@ -113,6 +69,7 @@ export default function TransactionTable({ allExpenses = [] }) {
       maximumFractionDigits: 0,
     }).format(n);
 
+  // CSV export
   const exportCSV = () => {
     const cols = [
       "Date",
@@ -127,13 +84,13 @@ export default function TransactionTable({ allExpenses = [] }) {
       cols.join(","),
       ...filtered.map((t) =>
         [
-          t.date,
-          t.merchant,
-          t.category,
-          t.cardDetails,
-          t.cardHolder,
-          t.amount,
-          t.status,
+          t.date || "",
+          t.merchant || "",
+          t.category || "",
+          t.cardDetails || "",
+          t.cardHolder || "",
+          t.amount || 0,
+          t.status || "",
         ]
           .map((v) => `"${String(v).replace(/"/g, '""')}"`)
           .join(",")
@@ -152,9 +109,9 @@ export default function TransactionTable({ allExpenses = [] }) {
 
   const goTo = (p) => setPage(Math.min(Math.max(1, p), totalPages));
 
-  const PageButton = ({ p, active = false, onClick }) => (
+  const PageButton = ({ p, active = false }) => (
     <button
-      onClick={onClick}
+      onClick={() => goTo(p)}
       className={`h-8 min-w-8 px-2 rounded-md text-sm ${
         active ? "bg-gray-900 text-white" : "hover:bg-gray-100"
       }`}
@@ -166,20 +123,11 @@ export default function TransactionTable({ allExpenses = [] }) {
   const renderPages = () => {
     const items = [];
     const add = (p) =>
-      items.push(
-        <PageButton
-          key={p}
-          p={p}
-          active={p === safePage}
-          onClick={() => goTo(p)}
-        />
-      );
-
+      items.push(<PageButton key={p} p={p} active={p === safePage} />);
     if (totalPages <= 7) {
       for (let i = 1; i <= totalPages; i++) add(i);
       return items;
     }
-
     add(1);
     if (safePage > 4)
       items.push(
@@ -187,11 +135,9 @@ export default function TransactionTable({ allExpenses = [] }) {
           …
         </span>
       );
-
     const startP = Math.max(2, safePage - 1);
     const endP = Math.min(totalPages - 1, safePage + 1);
     for (let i = startP; i <= endP; i++) add(i);
-
     if (safePage < totalPages - 3)
       items.push(
         <span key="el2" className="px-2">
@@ -199,14 +145,12 @@ export default function TransactionTable({ allExpenses = [] }) {
         </span>
       );
     add(totalPages);
-
     return items;
   };
 
-  React.useEffect(() => setPage(1), [query, status, category, rowsPerPage]);
-
   return (
     <div className="flex flex-col gap-4 mt-4">
+      {/* Search & Filter */}
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-1 items-center gap-2">
           <div className="relative w-full md:max-w-sm">
@@ -218,7 +162,6 @@ export default function TransactionTable({ allExpenses = [] }) {
               className="w-full pl-9 pr-3 h-10 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-gray-900/10"
             />
           </div>
-
           <div className="relative">
             <button
               onClick={() => setShowFilter((s) => !s)}
@@ -227,7 +170,6 @@ export default function TransactionTable({ allExpenses = [] }) {
               <SlidersHorizontal className="h-4 w-4" />
               Filter
             </button>
-
             {showFilter && (
               <div className="absolute z-20 mt-2 w-56 rounded-lg border bg-white shadow-lg p-3">
                 <label className="text-xs text-gray-500">Category</label>
@@ -246,7 +188,6 @@ export default function TransactionTable({ allExpenses = [] }) {
             )}
           </div>
         </div>
-
         <div className="flex items-center gap-2 mt-4">
           <div className="relative">
             <select
@@ -261,20 +202,18 @@ export default function TransactionTable({ allExpenses = [] }) {
             </select>
             <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           </div>
-
           <button
             onClick={exportCSV}
             className="h-10 px-3 rounded-lg bg-lime-200 text-gray-900 border border-lime-300 flex items-center gap-2 hover:bg-lime-300"
-            title="Export CSV"
           >
-            <Download className="h-4 w-4" />
-            Export
+            <Download className="h-4 w-4" /> Export
           </button>
         </div>
       </div>
 
-      <div className="mt-3 min-h-[300px]  w-[360px] sm:w-[540px] md:w-[600px] lg:w-[1000px] overflow-x-auto">
-        <table className=" w-full  border-collapse">
+      {/* Table */}
+      <div className="mt-3 min-h-[300px] overflow-x-auto w-full">
+        <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-100 text-left text-sm font-medium text-gray-600">
               <th className="p-3">Date</th>
@@ -288,31 +227,31 @@ export default function TransactionTable({ allExpenses = [] }) {
             </tr>
           </thead>
           <tbody className="text-sm text-gray-700">
-            {pageRows.map((t) => (
-              <tr
-                key={t.id}
-                className="border-b last:border-0 hover:bg-gray-50"
-              >
-                <td className="p-3 whitespace-nowrap">{t.date}</td>
-                <td className="p-3 whitespace-nowrap">{t.merchant}</td>
-                <td className="p-3 whitespace-nowrap">{t.category}</td>
-                <td className="p-3 whitespace-nowrap">{t.cardDetails}</td>
-                <td className="p-3 whitespace-nowrap">{t.cardHolder}</td>
-                <td className="p-3 whitespace-nowrap">
-                  {formatMoney(t.amount)}
-                </td>
-                <td className="p-3 whitespace-nowrap">
-                  <StatusBadge status={t.status} />
-                </td>
-                <td className="p-3">
-                  <button className="p-1 rounded hover:bg-gray-100">
-                    <MoreVertical className="h-4 w-4 text-gray-500" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-
-            {pageRows.length === 0 && (
+            {pageRows.length > 0 ? (
+              pageRows.map((t) => (
+                <tr
+                  key={t.id}
+                  className="border-b last:border-0 hover:bg-gray-50"
+                >
+                  <td className="p-3 whitespace-nowrap">{t.date}</td>
+                  <td className="p-3 whitespace-nowrap">{t.merchant}</td>
+                  <td className="p-3 whitespace-nowrap">{t.category}</td>
+                  <td className="p-3 whitespace-nowrap">{t.cardDetails}</td>
+                  <td className="p-3 whitespace-nowrap">{t.cardHolder}</td>
+                  <td className="p-3 whitespace-nowrap">
+                    {formatMoney(t.amount)}
+                  </td>
+                  <td className="p-3 whitespace-nowrap">
+                    <StatusBadge status={t.status} />
+                  </td>
+                  <td className="p-3">
+                    <button className="p-1 rounded hover:bg-gray-100">
+                      <MoreVertical className="h-4 w-4 text-gray-500" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
                 <td colSpan={8} className="p-8 text-center text-gray-500">
                   No data found.
@@ -323,6 +262,7 @@ export default function TransactionTable({ allExpenses = [] }) {
         </table>
       </div>
 
+      {/* Pagination & Rows */}
       <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3 text-sm text-gray-600">
           <div className="flex items-center gap-2">
@@ -344,7 +284,6 @@ export default function TransactionTable({ allExpenses = [] }) {
             {total.toLocaleString()}
           </span>
         </div>
-
         <div className="flex items-center gap-2">
           <button
             onClick={() => goTo(safePage - 1)}

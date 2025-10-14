@@ -11,15 +11,12 @@ const Page = () => {
   const router = useRouter();
   const [expenseData, setExpenseData] = useState([]);
 
-  const { allExpenses, loading, error } = useSelector(
-    (state) => state.expenses
-  );
+  const { allExpenses } = useSelector((state) => state.expenses) || {};
 
-  // Safely extract expenses array
-  const expenses = allExpenses?.expenses || [];
-
+  // Client-side only: fetch expenses after component mounts
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) {
       router.push("/login");
       return;
@@ -29,19 +26,24 @@ const Page = () => {
 
   // Update local state when Redux data changes
   useEffect(() => {
-    setExpenseData(expenses);
-  }, [expenses]);
+    if (allExpenses?.expenses) {
+      setExpenseData(allExpenses.expenses);
+    } else {
+      setExpenseData([]); // fallback
+    }
+  }, [allExpenses]);
 
+  // Safe totals
   const totalExpenses = expenseData.reduce(
-    (sum, exp) => sum + (exp.Amount || 0),
+    (sum, exp) => sum + (exp?.Amount || 0),
     0
   );
   const approvedExpenses = expenseData
-    .filter((exp) => exp.status === "Approved")
-    .reduce((sum, exp) => sum + (exp.Amount || 0), 0);
+    .filter((exp) => exp?.status === "Approved")
+    .reduce((sum, exp) => sum + (exp?.Amount || 0), 0);
   const pendingExpenses = expenseData
-    .filter((exp) => exp.status === "Pending")
-    .reduce((sum, exp) => sum + (exp.Amount || 0), 0);
+    .filter((exp) => exp?.status === "Pending")
+    .reduce((sum, exp) => sum + (exp?.Amount || 0), 0);
 
   const cardDetails = [
     {
@@ -108,7 +110,7 @@ const Page = () => {
 
       <div>
         {/* Pass safe array to TransactionTable */}
-        <TransactionTable allExpenses={expenses} />
+        <TransactionTable allExpenses={expenseData || []} />
       </div>
     </div>
   );
