@@ -1,13 +1,6 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 
-const data = [
-  { name: "Travel", value: 1200, transactions: 24 },
-  { name: "Food", value: 800, transactions: 15 },
-  { name: "Marketing", value: 600, transactions: 10 },
-  { name: "Software", value: 400, transactions: 8 },
-];
-
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 // Custom sharp arrow slice
@@ -22,12 +15,10 @@ const SharpArrowSlice = ({
   const RADIAN = Math.PI / 180;
   const angle = -midAngle * RADIAN;
 
-  // Outer tip of the arrow
   const tipX = cx + outerRadius * Math.cos(angle);
   const tipY = cy + outerRadius * Math.sin(angle);
 
-  // Inner base points
-  const startX = cx + innerRadius * Math.cos(angle - 20); // slight angle for base
+  const startX = cx + innerRadius * Math.cos(angle - 20);
   const startY = cy + innerRadius * Math.sin(angle - 20);
 
   const endX = cx + innerRadius * Math.cos(angle + 20);
@@ -40,14 +31,27 @@ const SharpArrowSlice = ({
     L ${endX},${endY}
     Z
   `;
-
   return <path d={path} fill={fill} />;
 };
 
-export default function Piechart() {
+export default function Piechart({ allExpenses }) {
+  const approvedExpenses =
+    allExpenses?.expenses?.filter((exp) => exp.status === "Approved") || [];
+
+  // Group by merchant
+  const grouped = approvedExpenses.reduce((acc, exp) => {
+    if (!acc[exp.merchant]) {
+      acc[exp.merchant] = { value: 0, transactions: 0, name: exp.merchant };
+    }
+    acc[exp.merchant].value += exp.Amount;
+    acc[exp.merchant].transactions += 1;
+    return acc;
+  }, {});
+
+  const data = Object.values(grouped);
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
-  if (data.length === 0) {
+  if (!data.length) {
     return (
       <div className="flex flex-col items-center justify-center h-[250px] w-full text-gray-500 font-medium">
         No Data Available
@@ -79,14 +83,17 @@ export default function Piechart() {
           ))}
         </Pie>
         <Tooltip
-          formatter={(value, name) => {
+          formatter={(value, name, entry) => {
             const percent = ((value / total) * 100).toFixed(1);
-            return [`₦${value} (${percent}%)`, name];
+            return [
+              `₦${value} (${percent}%) • ${entry.transactions} txns`,
+              name,
+            ];
           }}
         />
       </PieChart>
 
-      {/* Expense Categories List */}
+      {/* Merchant List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 w-full">
         {data.map((item, index) => (
           <div

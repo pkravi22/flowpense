@@ -53,7 +53,8 @@ const onSubmit = async (data) => {
     }
     const res = await authService.verifyEmail({ otp: data.code, token });
     alert("Code Verified Successfully");
-    router.push("/login");
+    router.push("/register-company");
+    // router.push("/login");
   } catch (err) {
     console.error(err.response?.data?.message || "Verification failed");
     alert(err.response?.data?.message || "Verification failed");

@@ -337,7 +337,7 @@ const Page = () => {
           <div className="w-full h-full min-w-[300px] min-h-[300px] ">
             {/* Chart area */}
             <div className="w-full h-[250px] ">
-              <Example />
+              <Example allExpenses={allExpenses} />
             </div>
           </div>
         </div>
@@ -367,7 +367,7 @@ const Page = () => {
           </div>
 
           <div className="flex justify-center">
-            <Piechart />
+            <Piechart allExpenses={allExpenses} />
           </div>
           <div className="w-full px-6 my-2">
             <button className="text-text-primary  cursor-pointer flex items-center justify-center gap-2  rounded w-full py-2 text-center border border-borderColor">

@@ -1,7 +1,7 @@
 import api from "./api";
 
 export const companyServices = {
-  registerCompany: async (payload) => {
+  registerCompany: async ({ payload, token }) => {
     console.log("payload", payload);
     const { data } = await api.post("api/companies/register", payload, {
       headers: {

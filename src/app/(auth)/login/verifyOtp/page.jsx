@@ -28,8 +28,8 @@ export default function VerifyAccount({ type, email: propEmail }) {
   const router = useRouter();
   const [token, setToken] = useState(null);
   const [email, setEmail] = useState(propEmail);
+  const [loading, setLoading] = useState(false); // ✅ loading state
 
-  // ✅ Load token and email from localStorage
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -49,16 +49,15 @@ export default function VerifyAccount({ type, email: propEmail }) {
     }
   }, [propEmail, router]);
 
-  // ✅ Verify OTP
   const onSubmit = async (data) => {
-    console.log(data.code);
+    if (!token) {
+      alert("Token missing! Please login again.");
+      router.replace("/login");
+      return;
+    }
+
+    setLoading(true); // ✅ start loading
     try {
-      if (!token) {
-        alert("Token missing! Please login again.");
-        router.replace("/login");
-        return;
-      }
-      console.log(data.code, token);
       const res = await authService.verifyOtpAfterLogin({
         otpCode: data.code,
         token,
@@ -71,24 +70,28 @@ export default function VerifyAccount({ type, email: propEmail }) {
     } catch (err) {
       console.error(err.response?.data?.message || "Verification failed");
       alert(err.response?.data?.message || "Verification failed");
+    } finally {
+      setLoading(false); // ✅ stop loading
     }
   };
 
-  // ✅ Resend OTP
   const handleResend = async () => {
-    try {
-      if (!token) {
-        alert("Token missing! Please login again.");
-        router.replace("/login");
-        return;
-      }
+    if (!token) {
+      alert("Token missing! Please login again.");
+      router.replace("/login");
+      return;
+    }
 
+    setLoading(true); // optional: disable while resending
+    try {
       const res = await authService.resendOtpAfterLogin({ token });
       alert("📩 Code resent successfully to your email!");
       console.log("Resend Response:", res);
     } catch (err) {
       console.error(err.response?.data?.message || "Resend failed");
       alert(err.response?.data?.message || "Resend failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -125,6 +128,7 @@ export default function VerifyAccount({ type, email: propEmail }) {
                     placeholder="Enter 6-digit code"
                     maxLength={6}
                     className="w-full text-sm outline-none"
+                    disabled={loading} // disable input while loading
                   />
                 </div>
                 <p className="text-xs text-red-500 mt-1">
@@ -133,17 +137,20 @@ export default function VerifyAccount({ type, email: propEmail }) {
 
                 <button
                   type="submit"
-                  className="w-full bg-green-800 hover:bg-green-900 text-white py-3 rounded-4xl mt-2"
+                  className="w-full bg-green-800 hover:bg-green-900 text-white py-3 rounded-4xl mt-2 disabled:opacity-60"
+                  disabled={loading}
                 >
-                  Verify
+                  {loading ? "Verifying..." : "Verify"} {/* ✅ loading text */}
                 </button>
 
                 <button
                   type="button"
                   onClick={handleResend}
-                  className="w-full text-blue-600 py-3 rounded-4xl mt-2"
+                  className="w-full text-blue-600 py-3 rounded-4xl mt-2 disabled:opacity-60"
+                  disabled={loading}
                 >
-                  Resend Code
+                  {loading ? "Resending..." : "Resend Code"}{" "}
+                  {/* ✅ loading text */}
                 </button>
               </form>
             </div>
