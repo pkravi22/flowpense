@@ -16,44 +16,8 @@ import CardFlow from "@/components/new_card_creation/CardFlow";
 import DateRangePicker from "@/components/DatePicker";
 import { cardServices } from "@/services/cardServices";
 import { useSelector } from "react-redux";
+import { teamServices } from "@/services/teamServices";
 
-// Stats card data
-// const cardDetails = [
-//   {
-//     id: 1,
-//     title: "Total cards created",
-//     value: "20",
-//     icon: <BoxSelect />,
-//     iconColor: "#035638",
-//     sub: "10 % increase from last month",
-//   },
-//   {
-//     id: 2,
-//     title: "Active Cards",
-//     value: "15",
-//     icon: <CreditCard />,
-//     iconColor: "#B91C1C",
-//     sub: "15 % increase from last month",
-//   },
-//   {
-//     id: 3,
-//     title: "Frozen cards",
-//     value: "10",
-//     icon: <Users />,
-//     iconColor: "#1E40AF",
-//     sub: "8 new members added this month",
-//   },
-//   {
-//     id: 4,
-//     title: "Wallet Balance",
-//     value: "$8,250.00",
-//     icon: <Wallet />,
-//     iconColor: "#065F46",
-//     sub: "4 % increase from last month",
-//   },
-// ];
-
-// Color palette for cards
 const cardColors = [
   { bgColor: "#4e4f2eff", textColor: "white" },
   { bgColor: "#1d2c91ff", textColor: "white" },
@@ -73,9 +37,13 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const { user } = useSelector((state) => state.auth);
+
+  const [loadingEmployees, setLoadingEmployees] = useState(false);
+  const [employeeData, setEmployeeData] = useState([]);
+  const [employeeSmallData, setEmployeeSmallData] = useState([]);
   console.log(user);
   console.log("dropdown state", activeDropdown, setActiveDropdown);
-  // Get token from localStorage
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedToken = localStorage.getItem("token");
@@ -83,7 +51,6 @@ const Page = () => {
     }
   }, []);
 
-  // Format card data from API response
   const formatCardData = (apiCards) => {
     if (!apiCards || !Array.isArray(apiCards)) return [];
 
@@ -131,66 +98,86 @@ const Page = () => {
       setLoading(false);
     }
   };
+  const getAllEmployees = async () => {
+    if (!token) return;
+    setLoadingEmployees(true);
+    try {
+      const data = await teamServices.getAllEmployees({ token });
+      setEmployeeData(data.data.Employee || []);
+      const smallData = data.data.Employee.map((emp) => ({
+        id: emp.id,
+        name: emp.fullName,
+        jobTitle: emp.jobTitle,
+        department: emp.department,
+      }));
+      setEmployeeSmallData(smallData);
+    } catch (e) {
+      console.error("Error fetching employees:", e);
+    } finally {
+      setLoadingEmployees(false);
+    }
+  };
 
   useEffect(() => {
     if (token) {
       fetchAllCards();
+      getAllEmployees();
     }
   }, [token]);
 
-
   // Inside Page component, after fetching all cards and companyData
 
-// Compute dynamic stats
-// Compute dynamic stats from cards array
-const totalCardsCreated = cards.length;
-const activeCardsCount = cards.filter(card => card.status === "Active").length;
-const frozenCardsCount = cards.filter(
-  card => card.status === "Frozen" || card.status === "Inactive"
-).length;
+  // Compute dynamic stats
+  // Compute dynamic stats from cards array
+  const totalCardsCreated = cards.length;
+  const activeCardsCount = cards.filter(
+    (card) => card.status === "Active"
+  ).length;
+  const frozenCardsCount = cards.filter(
+    (card) => card.status === "Frozen" || card.status === "Inactive"
+  ).length;
 
-// Calculate total wallet balance from card funding
-const walletBalance = cards.reduce((sum, card) => {
-  const funding = card.rawData?.CardFunding || 0;
-  return sum + funding;
-}, 0);
+  // Calculate total wallet balance from card funding
+  const walletBalance = cards.reduce((sum, card) => {
+    const funding = card.rawData?.CardFunding || 0;
+    return sum + funding;
+  }, 0);
 
-// Prepare stat card data dynamically
-const cardDetails = [
-  {
-    id: 1,
-    title: "Total cards created",
-    value: totalCardsCreated.toString(),
-    icon: <BoxSelect />,
-    iconColor: "#035638",
-    sub: "Total cards in the system",
-  },
-  {
-    id: 2,
-    title: "Active Cards",
-    value: activeCardsCount.toString(),
-    icon: <CreditCard />,
-    iconColor: "#B91C1C",
-    sub: "Currently active cards",
-  },
-  {
-    id: 3,
-    title: "Frozen Cards",
-    value: frozenCardsCount.toString(),
-    icon: <Users />,
-    iconColor: "#1E40AF",
-    sub: "Cards blocked or inactive",
-  },
-  {
-    id: 4,
-    title: "Wallet Balance",
-    value: `₦${walletBalance.toLocaleString()}`,
-    icon: <Wallet />,
-    iconColor: "#065F46",
-    sub: "Sum of all card funding",
-  },
-];
-
+  // Prepare stat card data dynamically
+  const cardDetails = [
+    {
+      id: 1,
+      title: "Total cards created",
+      value: totalCardsCreated.toString(),
+      icon: <BoxSelect />,
+      iconColor: "#035638",
+      sub: "Total cards in the system",
+    },
+    {
+      id: 2,
+      title: "Active Cards",
+      value: activeCardsCount.toString(),
+      icon: <CreditCard />,
+      iconColor: "#B91C1C",
+      sub: "Currently active cards",
+    },
+    {
+      id: 3,
+      title: "Frozen Cards",
+      value: frozenCardsCount.toString(),
+      icon: <Users />,
+      iconColor: "#1E40AF",
+      sub: "Cards blocked or inactive",
+    },
+    {
+      id: 4,
+      title: "Wallet Balance",
+      value: `₦${walletBalance.toLocaleString()}`,
+      icon: <Wallet />,
+      iconColor: "#065F46",
+      sub: "Sum of all card funding",
+    },
+  ];
 
   const handleFundCard = async (cardId, amount) => {
     console.log("token", token);
@@ -258,16 +245,14 @@ const cardDetails = [
         id: cardId,
       });
       console.log("Transaction history:", response.data);
-      // You can display this in a modal or separate page
     } catch (error) {
       console.error("Error fetching transaction history:", error);
     }
   };
 
-  // Handle card creation
   const handleCardCreated = () => {
     setShowCardFlow(false);
-    fetchAllCards(); // Refresh the cards list
+    fetchAllCards();
   };
 
   const filteredCards = cards.filter((card) => {
@@ -282,7 +267,6 @@ const cardDetails = [
 
   return (
     <div>
-      {/* Header */}
       <div className="w-full flex flex-col md:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Card Management</h1>
@@ -295,7 +279,6 @@ const cardDetails = [
         </div>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
         {cardDetails.map(({ id, icon, iconColor, title, value, sub }) => (
           <div
@@ -410,7 +393,6 @@ const cardDetails = [
         />
       )}
 
-      {/* Card Flow Modal */}
       {showCardFlow && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
           <div className="rounded-2xl shadow-lg w-full max-w-lg bg-white relative">
@@ -420,7 +402,12 @@ const cardDetails = [
             >
               <X size={14} />
             </button>
-            <CardFlow onCardCreated={handleCardCreated} token={token} />
+            <CardFlow
+              onCardCreated={handleCardCreated}
+              token={token}
+              employees={employeeSmallData} // ✅ pass small employee data
+              loadingEmployees={loadingEmployees} // ✅ pass loading state
+            />
           </div>
         </div>
       )}

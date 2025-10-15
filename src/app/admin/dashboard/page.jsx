@@ -233,7 +233,7 @@ const Page = () => {
   console.log("all cards", allCards.cards);
   console.log("all expenses", allExpenses.expenses);
 
-  // Inside Page component, after fetching allExpenses, allCards, and companyData
+  console.log(companyData?.users?.length);
 const totalSpent = allExpenses?.expenses
   ?.filter((exp) => exp.status === "Approved")
   .reduce((sum, exp) => sum + exp.Amount, 0) || 0;

@@ -32,7 +32,7 @@ export default function ReviewSummaryStep({ data, nextStep, prevStep }) {
   ];
 
   return (
-    <div className="max-h-[600px] overflow-auto">
+    <div className="min-h-[400px] overflow-auto">
       <div className="border-b border-gray-200 flex justify-between items-center p-4">
         <p>Review and Create Card</p>
         <p className="text-[#035638] text-[16px]">Step 4 Of 4</p>

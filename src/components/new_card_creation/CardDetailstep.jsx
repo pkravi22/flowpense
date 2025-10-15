@@ -1,31 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function CardDetailsStep({
   nextStep,
   prevStep,
   updateData,
   data,
+  employees,
+  loadingEmployees,
 }) {
   const [enabled, setEnabled] = useState(data.allowTopUps || false);
   const [holderOpen, setHolderOpen] = useState(false);
   const [approverOpen, setApproverOpen] = useState(false);
   const [teamName, setTeamName] = useState(data.teamName || "");
 
-  // ✅ Sample data
-  const holders = [
-    { name: "101", role: "Software Developer", department: "Engineering" },
-    { name: "102", role: "Designer", department: "Marketing" },
-    { name: "103", role: "Team Lead", department: "Sales" },
-  ];
+  console.log(employees);
+  const holders = employees;
 
-  const approvers = [
-    { name: "201", role: "Project Manager", department: "Engineering" },
-    { name: "202", role: "QA Engineer", department: "Engineering" },
-    { name: "203", role: "CTO", department: "Engineering" },
-  ];
+  const approvers = employees;
 
   // ✅ Toggle top-up switch
   const toggleSwitch = () => {
@@ -76,15 +70,15 @@ export default function CardDetailsStep({
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 py-4">
       <div className="border-b border-gray-200 flex gap-2 justify-between items-center px-4 py-4">
         <p>Assign Holder & Approver</p>
         <p className="text-[#035638] text-[16px]">Step 2 Of 4</p>
       </div>
 
-      <div className="flex flex-col gap-4 p-8">
+      <div className="flex flex-col gap-4 ">
         {/* ✅ Team Name */}
-        <div>
+        <div className="px-8">
           <label className="block text-sm font-medium mb-1">Team Name</label>
           <input
             type="text"
@@ -96,7 +90,7 @@ export default function CardDetailsStep({
         </div>
 
         {/* ✅ Card Holders */}
-        <div className="relative">
+        <div className="relative px-8 p-2">
           <label className="block text-sm font-medium mb-1">
             Card Holder(s)
           </label>
@@ -130,7 +124,7 @@ export default function CardDetailsStep({
                     <div>
                       <div className="font-medium">{holder.name}</div>
                       <div className="text-xs text-gray-500">
-                        {holder.role} — {holder.department}
+                        {holder.jobTitle} — {holder.department}
                       </div>
                     </div>
                   </div>
@@ -141,7 +135,7 @@ export default function CardDetailsStep({
         </div>
 
         {/* ✅ Approver */}
-        <div className="relative">
+        <div className="relative px-8">
           <label className="block text-sm font-medium mb-1">
             Team Leader / Approver
           </label>
@@ -175,7 +169,7 @@ export default function CardDetailsStep({
                     <div>
                       <div className="font-medium">{approver.name}</div>
                       <div className="text-xs text-gray-500">
-                        {approver.role} — {approver.department}
+                        {approver.jobTitle} — {approver.department}
                       </div>
                     </div>
                   </div>
@@ -213,18 +207,20 @@ export default function CardDetailsStep({
         </div>
 
         {/* ✅ Navigation */}
-        <div className="flex justify-between mt-6">
+        <div className="flex justify-between px-4 pt-6 border-t border-green-900">
           <button
             onClick={prevStep}
-            className="px-6 py-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
+            className="px-6 py-2 flex gap-1 items-center bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
           >
+            <ChevronLeft size={14} />
             Previous
           </button>
           <button
             onClick={handleNext}
-            className="px-6 py-2 bg-[#035638] text-white rounded-full hover:bg-[#02452e]"
+            className="px-6 py-2 flex gap-1 items-center bg-[#035638] text-white rounded-full hover:bg-[#02452e]"
           >
             Next
+            <ChevronRight size={14} />
           </button>
         </div>
       </div>

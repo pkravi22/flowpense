@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CardTypeStep from "./CardTypeStep";
 import CardDetailsStep from "./CardDetailstep";
 import ReviewStep from "./ReviewStep";
@@ -7,23 +7,27 @@ import SuccessStep from "./SuccessStep";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ReviewSummaryStep from "./ReviewCard";
 import { cardServices } from "@/services/cardServices";
+import { useSelector } from "react-redux";
 
-export default function CardFlow() {
+export default function CardFlow({ employees, loadingEmployees }) {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
+  const { user, token } = useSelector((state) => state.auth);
+
+  //console.log(employees);
   const [formData, setFormData] = useState({
     cardType: "",
     cardName: "",
-    cardHolder: [], // Should contain user IDs like ["101", "102"]
-    approver: [], // Should contain user IDs like ["201"]
+    cardHolder: [],
+    approver: [],
     teamName: "",
     dailySpendLimit: "",
     weeklySpendLimit: "",
     monthlyLimit: "",
     perTransactionLimit: "",
     cardFunding: 0,
-    blockedCategory: [], // Should contain strings like ["entertainment", "alcohol"]
+    blockedCategory: [],
     allowTopUps: false,
   });
 
@@ -34,25 +38,24 @@ export default function CardFlow() {
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
-  const token = localStorage.getItem("token");
+  console.log(user, token);
   const handleSubmit = async () => {
     setIsLoading(true);
     setApiError(null);
 
     try {
-      // Prepare final data in exact API format
       const apiData = {
-        cardType: formData.cardType.toLowerCase() + " card", // "virtual card"
+        cardType: formData.cardType.toLowerCase() + " card",
         cardName: formData.cardName,
-        cardHolder: formData.cardHolder, // Already array of IDs
-        approver: formData.approver, // Already array of IDs
+        cardHolder: formData.cardHolder,
+        approver: formData.approver,
         teamName: formData.teamName,
         dailySpendLimit: Number(formData.dailySpendLimit),
         weeklySpendLimit: Number(formData.weeklySpendLimit),
         monthlyLimit: Number(formData.monthlyLimit),
         perTransactionLimit: Number(formData.perTransactionLimit),
         cardFunding: formData.cardFunding,
-        blockedCategory: formData.blockedCategory, // Array of category strings
+        blockedCategory: formData.blockedCategory,
       };
 
       console.log("Sending to API:", apiData);
@@ -65,7 +68,7 @@ export default function CardFlow() {
       }
 
       console.log("Card Created Successfully:", result);
-      nextStep(); // Only proceed on success
+      nextStep();
     } catch (error) {
       console.error("Error creating card:", error);
       setApiError(error.message || "An unexpected error occurred");
@@ -102,6 +105,8 @@ export default function CardFlow() {
             prevStep={prevStep}
             updateData={updateData}
             data={formData}
+            employees={employees}
+            loadingEmployees={loadingEmployees}
           />
         )}
         {step === 3 && (
@@ -123,7 +128,7 @@ export default function CardFlow() {
       </div>
 
       {step === 4 && (
-        <div className="flex justify-between w-full px-4 my-4">
+        <div className="flex justify-between py-4 border-t-2 border-green-900 px-2">
           {step > 1 ? (
             <button
               onClick={prevStep}

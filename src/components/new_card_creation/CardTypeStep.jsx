@@ -31,8 +31,8 @@ export default function CardTypeStep({ nextStep, updateData, data }) {
         <p>Card Type and Name</p>
         <p className="text-[#035638] text-[16px]">Step 1 Of 4</p>
       </div>
-      <div className="px-8 flex flex-col gap-4 border-b-2 py-12">
-        <div className="flex gap-4 justify-center items-center">
+      <div className=" flex flex-col gap-4 border-b-2 ">
+        <div className="px-8 flex gap-4 justify-center items-center py-12">
           {/* Virtual Card */}
           <div className="w-[200px] h-[120px] flex items-center justify-center border rounded-2xl">
             <button
@@ -87,8 +87,8 @@ export default function CardTypeStep({ nextStep, updateData, data }) {
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1">Card Name</label>
+        <div className="px-8">
+          <label className="block text-sm font-medium mb-1 ">Card Name</label>
           <input
             type="text"
             value={cardName}
@@ -102,7 +102,7 @@ export default function CardTypeStep({ nextStep, updateData, data }) {
           </div>
         </div>
 
-        <div className="flex justify-end mt-4">
+        <div className="px-8 flex justify-end py-4 border-t-2 border-green-900">
           <button
             onClick={handleNext}
             disabled={!data.cardType || !cardName.trim()}

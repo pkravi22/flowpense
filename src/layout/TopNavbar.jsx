@@ -70,7 +70,7 @@ return (
         <UserCircle size={32} className="text-black" />
         <div className="text-black hidden sm:block">
           <p className="text-sm font-medium">{userEmail}</p>
-          <p className="text-xs text-black">{user.role}</p>
+          <p className="text-xs text-black">{user?.role}</p>
         </div>
       </div>
     </div>

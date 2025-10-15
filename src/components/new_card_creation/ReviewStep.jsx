@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
@@ -148,18 +149,20 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between pt-6">
+      <div className="flex justify-between pt-6 border-t-2 border-green-600">
         <button
           onClick={prevStep}
-          className="px-6 py-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
+          className="px-6 py-2 flex gap-1 items-center bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
         >
+          <ChevronLeft size={14} />
           Previous
         </button>
         <button
           onClick={handleNext}
-          className="px-6 py-2 bg-[#035638] text-white rounded-full hover:bg-[#02452e]"
+          className="px-6 py-2 flex gap-1 items-center bg-[#035638] text-white rounded-full hover:bg-[#02452e]"
         >
           Next
+          <ChevronRight size={14} />
         </button>
       </div>
     </div>
