@@ -30,8 +30,8 @@ export const companyServices = {
     });
     return data;
   },
-  getCompanyInfo: async ({ token }) => {
-    const { data } = await api.get(`api/companies/1`, {
+  getCompanyInfo: async ({ token, id }) => {
+    const { data } = await api.get(`api/companies/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -47,6 +47,7 @@ const Page = () => {
     try {
       const data = await teamServices.getAllEmployees({ token });
       setEmployeeData(data.data.Employee || []);
+      console.log(data.data.Employee);
       const smallData = data.data.Employee.map((emp) => ({
         id: emp.id,
         name: emp.fullName,

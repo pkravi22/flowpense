@@ -155,7 +155,8 @@ const Page = () => {
   const [companyData, setCompanyData] = useState(null);
   const router = useRouter();
   const { user, token } = useSelector((state) => state.auth);
-  console.log("token from store", token);
+
+  console.log("token from store", user);
   let storedCompany = null;
   let storedVerified = null;
   const dispatch = useDispatch();
@@ -209,7 +210,10 @@ const Page = () => {
       //   return;
       // }
 
-      const data = await companyServices.getCompanyInfo({ token });
+      const data = await companyServices.getCompanyInfo({
+        token,
+        id: user.companyId,
+      });
       console.log("Fetched company data:", data);
 
       if (data.success && data.company) {
@@ -227,60 +231,61 @@ const Page = () => {
   };
 
   useEffect(() => {
-    getCompanyDetails(token);
+    getCompanyDetails();
   }, []);
 
   console.log("all cards", allCards.cards);
   console.log("all expenses", allExpenses.expenses);
 
   console.log(companyData?.users?.length);
-const totalSpent = allExpenses?.expenses
-  ?.filter((exp) => exp.status === "Approved")
-  .reduce((sum, exp) => sum + exp.Amount, 0) || 0;
+  const totalSpent =
+    allExpenses?.expenses
+      ?.filter((exp) => exp.status === "Approved")
+      .reduce((sum, exp) => sum + exp.Amount, 0) || 0;
 
-const totalCards = allCards?.cards?.length || 0;
-const totalUsers = companyData?.users?.length || 0;
-const walletBalance = companyData?.walletBalance || 0;
+  const totalCards = allCards?.cards?.length || 0;
+  const totalUsers = companyData?.users?.length || 0;
+  const walletBalance = companyData?.walletBalance || 0;
 
-// Dynamic stat card data
-const cardDetails = [
-  {
-    id: 1,
-    title: "Total Spent",
-    value: `₦${totalSpent.toLocaleString()}`,
-    icon: <BoxSelect />,
-    iconBg: "#E5EE7D",
-    iconColor: "#035638",
-    sub: "10% increase from last month",
-  },
-  {
-    id: 2,
-    title: "Total Cards",
-    value: totalCards.toString(),
-    icon: <CreditCard />,
-    iconBg: "#FFD6D6",
-    iconColor: "#B91C1C",
-    sub: "15% increase from last month",
-  },
-  {
-    id: 3,
-    title: "Team Members",
-    value: totalUsers.toString(),
-    icon: <Users />,
-    iconBg: "#E0E7FF",
-    iconColor: "#1E40AF",
-    sub: "New members added this month",
-  },
-  {
-    id: 4,
-    title: "Wallet Balance",
-    value: `₦${walletBalance.toLocaleString()}`,
-    icon: <Wallet />,
-    iconBg: "#D1FAE5",
-    iconColor: "#065F46",
-    sub: "Current wallet balance",
-  },
-];
+  // Dynamic stat card data
+  const cardDetails = [
+    {
+      id: 1,
+      title: "Total Spent",
+      value: `₦${totalSpent.toLocaleString()}`,
+      icon: <BoxSelect />,
+      iconBg: "#E5EE7D",
+      iconColor: "#035638",
+      sub: "10% increase from last month",
+    },
+    {
+      id: 2,
+      title: "Total Cards",
+      value: totalCards.toString(),
+      icon: <CreditCard />,
+      iconBg: "#FFD6D6",
+      iconColor: "#B91C1C",
+      sub: "15% increase from last month",
+    },
+    {
+      id: 3,
+      title: "Team Members",
+      value: totalUsers.toString(),
+      icon: <Users />,
+      iconBg: "#E0E7FF",
+      iconColor: "#1E40AF",
+      sub: "New members added this month",
+    },
+    {
+      id: 4,
+      title: "Wallet Balance",
+      value: `₦${walletBalance.toLocaleString()}`,
+      icon: <Wallet />,
+      iconBg: "#D1FAE5",
+      iconColor: "#065F46",
+      sub: "Current wallet balance",
+    },
+  ];
 
   return (
     <div className="p-0 md:p-4 overflow-visible bg-gray-100">
@@ -430,7 +435,7 @@ const cardDetails = [
         </div>
       </div>
       {/* Active Cards */}
-      <div className=" bg-white p-2 rounded-2xl shadow-md">
+      <div className=" bg-white p-4 rounded-2xl shadow-md">
         <div className="flex items-center justify-between ">
           <div>
             <p className="pageTitle">Active Cards</p>
