@@ -325,8 +325,8 @@ const Page = () => {
         )}
         <div className="w-full flex flex-col md:flex-row  items-start md:items-center   md:justify-between gap-4">
           <div>
-            <h1 className="pageTitle">Dashboard</h1>
-            <p className="pageSubTitle mt-2">
+            <h1 className="pageTitle ">Dashboard</h1>
+            <p className="pageSubTitle mt-2 font-custom">
               Monitor your business expenses and card usage
             </p>
           </div>

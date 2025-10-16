@@ -29,7 +29,7 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
       !data.monthlyLimit &&
       !data.perTransactionLimit
     ) {
-      alert("Please set at least one spending limit");
+      toast.error("Please set at least one spending limit");
       return;
     }
     nextStep();

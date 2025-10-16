@@ -15,7 +15,7 @@ export default function Topbar({ setIsOpen }) {
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    setIsClient(true); // ✅ indicates this runs only after client mount
+    setIsClient(true);
     const t = localStorage.getItem("token");
     setToken(t);
 
@@ -37,7 +37,7 @@ export default function Topbar({ setIsOpen }) {
 
   const handleUserModal = () => setUsermodal(!userModal);
 
-  // 🚫 Avoid hydration mismatch by rendering nothing until after mount
+  
   if (!isClient) return null;
 
   return (

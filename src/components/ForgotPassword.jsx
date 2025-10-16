@@ -23,11 +23,11 @@ export default function ForgetPassword() {
   const onSubmit = async (data) => {
     try {
       const res = await authService.forgotPassword({ email: data.email });
-      alert("Otp sent succeefully");
+      toast.success("Otp sent succeefully");
       localStorage.setItem("forgetToken", res.TemporaryToken); // <-- here
       router.push("/forget-password/verify-otp");
     } catch (e) {
-      alert("error in sending otp");
+  toast.error("error in sending otp");
     }
   };
 

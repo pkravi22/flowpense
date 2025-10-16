@@ -38,7 +38,7 @@ export default function RegisterCompany() {
   }, [router]);
 
   const onSubmit = async (data) => {
-    if (!token) return alert("Token missing!");
+    if (!token) return toast.error("Token missing!");
 
     setLoading(true);
     try {
@@ -47,12 +47,12 @@ export default function RegisterCompany() {
         token,
       });
 
-      alert("Company registered successfully!");
+      toast.success("Company registered successfully!");
       //localStorage.removeItem("token"); // optional: clear token
       router.push("/login"); // redirect to login
     } catch (err) {
       console.error(err);
-      alert(err?.response?.data?.message || "Registration failed");
+      toast.error(err?.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);
     }

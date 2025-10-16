@@ -1,3 +1,5 @@
+import { Controller } from "react-hook-form";
+import PhoneInput from "react-phone-input-2";
 export default function BusinessVerification() {
   return (
     <div className="p-6 bg-white rounded-xl px-6 md:px-24">
@@ -37,16 +39,27 @@ export default function BusinessVerification() {
           </select>
         </div>
 
-        <div>
-          <label className="labelText">Phone Number</label>
-          <div className="flex gap-2">
-            <span className="border p-2 rounded-md">+31</span>
-            <input
-              type="text"
-              placeholder="000 000 000"
-              className="border p-2 rounded-md flex-1 border-gray-200"
-            />
-          </div>
+        <div className="w-full">
+          <Controller
+            name="mobileNumber"
+            rules={{ required: "Mobile number is required" }}
+            render={({ field }) => (
+              <PhoneInput
+                {...field}
+                country="us"
+                enableSearch
+                enableAreaCodes
+                containerClass="w-full"
+                inputClass="w-full text-sm outline-none px-3 py-2"
+                buttonClass="h-full border-r"
+                inputStyle={{ width: "100%" }}
+                buttonStyle={{ flexShrink: 0 }}
+              />
+            )}
+          />
+          {/* <p className="text-xs text-red-500 mt-1">
+              {errors.mobile?.message}
+            </p> */}
         </div>
       </div>
 

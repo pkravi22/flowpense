@@ -1,5 +1,6 @@
 import { PlusIcon, X } from "lucide-react";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const AddMemberModal = ({
   setAddMemberModal,
@@ -15,7 +16,7 @@ const AddMemberModal = ({
     e.preventDefault();
 
     if (!selectedEmployeeId) {
-      alert("Please select an employee before adding.");
+      toast.error("Please select an employee before adding.");
       return;
     }
     const employeeId = Number(selectedEmployeeId);
@@ -43,9 +44,7 @@ const AddMemberModal = ({
           Add an existing employee to Product Development.
         </p>
 
-        {/* Form */}
         <form className="space-y-4 px-8 py-4" onSubmit={handleSubmit}>
-          {/* Employee Dropdown */}
           <div>
             <label className="labelText block mb-1 font-medium text-gray-700">
               Select Member
@@ -58,7 +57,7 @@ const AddMemberModal = ({
               <option value="">Select Employee </option>
               {employeeSmallData?.map((emp) => (
                 <option key={emp.id} value={emp.id}>
-                  {emp.name}
+                  {emp.firstName + " " + emp.lastName}
                 </option>
               ))}
             </select>
@@ -78,18 +77,17 @@ const AddMemberModal = ({
             />
           </div>
 
-          {/* Buttons */}
           <div className="flex w-full gap-2">
             <button
               type="button"
               onClick={() => setAddMemberModal(false)}
-              className="px-4 py-2 flex-1 border text-sm rounded-full border-gray-300"
+              className="px-2  sm:px-4 py-2 flex-1 border text-sm rounded-full border-gray-300"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 flex-1 bg-[#035638] text-white text-sm rounded-full flex items-center justify-center gap-2"
+              className="px-2  sm:px-4 py-2 flex-1 bg-[#035638] text-white text-sm rounded-full flex items-center justify-center gap-2"
             >
               <PlusIcon size={16} />
               Add Member

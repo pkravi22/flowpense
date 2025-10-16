@@ -7,6 +7,7 @@ import { z } from "zod";
 import { LockKeyhole } from "lucide-react";
 import { authService } from "@/services/authServices";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const schema = z.object({
   code: z
@@ -44,15 +45,15 @@ export default function VerifyAccount({ type, email: propEmail }) {
   const onSubmit = async (data) => {
     try {
       if (!token) {
-        alert("Token missing!");
+        toast.error("Token missing!");
         return;
       }
       const res = await authService.verifyEmail({ otp: data.code, token });
-      alert("Code Verified Successfully");
+      toast.success("Code Verified Successfully");
       router.push("/login");
     } catch (err) {
       console.error(err.response?.data?.message || "Verification failed");
-      alert(err.response?.data?.message || "Verification failed");
+      toast.error(err.response?.data?.message || "Verification failed");
     }
   };
 

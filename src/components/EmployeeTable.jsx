@@ -1,4 +1,5 @@
 "use client";
+import { Download } from "lucide-react";
 import React, { useMemo, useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
 
@@ -70,8 +71,9 @@ const EmployeeTable = ({ employees = [] }) => {
         <CSVLink
           data={csvData}
           filename={"employees.csv"}
-          className="border text-black px-4 py-1 rounded-md text-sm whitespace-nowrap"
+          className="border flex gap-1 items-center text-black px-4 py-1 rounded-md text-sm whitespace-nowrap"
         >
+          <Download size={14} />
           Export CSV
         </CSVLink>
       </div>

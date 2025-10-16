@@ -36,7 +36,7 @@ const RecentTransactions = ({ recentTransactions, onExport, loading }) => {
             <div className="text-right">
               <p
                 className={`font-semibold ${
-                  tx.txType === "credit" ? "text-green-600" : "text-blue-600"
+                  tx.txType === "credit" ? "text-green-600" : "text-red-600"
                 }`}
               >
                 ₦{tx.amount.toLocaleString("en-NG")}

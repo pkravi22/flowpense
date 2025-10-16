@@ -1,5 +1,5 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
+
 @import "react-phone-input-2/lib/style.css";
 
 @import "tailwindcss";
@@ -10,7 +10,7 @@
 
 }
 @theme {
-  --font-sans: "Host Grotesk sans-serif"; /* Replaces default sans-serif stack */
+  --font-custom: "Host Grotesk"; /* Replaces default sans-serif stack */
 }
 
 @theme inline {
@@ -27,12 +27,10 @@
   font-family: "Host Grotesk", sans-serif;
 }
 
-*{
-  font-family: "Host Grotesk", sans-serif;
-}
+
 
 .heading{
-   @apply text-black text-2xl not-italic font-[600] leading-[120%];
+   @apply text-black font-custom text-2xl not-italic font-[600] leading-[120%];
 
 }
 .smText{
@@ -40,44 +38,44 @@
   
 }
 .inputFeild{
-  @apply border border-[color:var(--stroke-soft-200,#E2E4E9)] shadow-[0_1px_2px_0_rgba(228,229,231,0.24)] rounded-[10px] border-solid;
+  @apply  font-sans border border-[color:var(--stroke-soft-200,#E2E4E9)] shadow-[0_1px_2px_0_rgba(228,229,231,0.24)] rounded-[10px] border-solid;
   background: var(--bg-white-0, #fff);
 }
 .formHeading{
-  @apply text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6;
+  @apply  font-sans text-[color:var(--Foundation-Green-Normal,#035638)] font-sans text-2xl not-italic font-medium leading-6;
   
 }
 
 
 .labelText{
-@apply text-[color:var(--Neutral-900,#101828)] text-sm not-italic font-medium leading-[160%];
+@apply text-[color:var(--Neutral-900,#101828)] font-sans text-sm not-italic font-medium leading-[160%];
  
 }
 .linkText{
-  @apply font-medium text-[16px] leading-[16px] tracking-[0%] text-[#838794] 
+  @apply  text-[16px] leading-[16px] font-sans tracking-[0%] text-[#838794] 
 }
 .activeLink{
-  @apply font-medium text-[16px] leading-[16px] tracking-[0%] text-[#92c651] bg-green-300 px-4 py-1 rounded-lg
+  @apply font-medium text-[16px] leading-[16px] font-sans tracking-[0%] text-[#92c651] bg-green-300 px-4 py-1 rounded-lg
 }
 
 .pageTitle{
-  @apply font-['Bagel_Fat_One'] font-normal text-[24px] leading-[100%] tracking-[0%];
+  @apply font-sans  text-[24px] leading-[100%] tracking-[0%];
 }
 .pageSubTitle{
-  @apply  text-[color:var(--Neutral-Neutral400,#838794)] font-sans text-base not-italic font-medium leading-[normal]
+  @apply  text-[color:var(--Neutral-Neutral400,#838794)]  text-base not-italic font-sans leading-[normal]
 }
 .statcardTitle{
-  @apply  font-semibold text-[16px] leading-[100%] tracking-[0%] text-[#838794];
+  @apply  font-semibold font-sans text-[16px] leading-[100%] tracking-[0%] text-[#838794];
 }
 .statcardNumber{
-  @apply  font-semibold text-[20px] leading-[100%] tracking-[0%] text-[#000000];
+  @apply  font-semibold font-sans text-[20px] leading-[100%] tracking-[0%] text-[#000000];
 }
 
 .statcardSubTitle{
-  @apply  font-semibold text-[12px] leading-[100%] tracking-[0%] text-[#838794];
+  @apply  font-semibold font-sans text-[12px] leading-[100%] tracking-[0%] text-[#838794];
 }
 .topHeading1{
-   @apply text-black text-2xl not-italic font-normal leading-[100%];
+   @apply text-black font-sans text-2xl not-italic font-normal leading-[100%];
   font-family: "Bagel Fat One";
 }
 

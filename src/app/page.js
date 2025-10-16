@@ -2,18 +2,15 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useSelector } from "react-redux";
 
 export default function Home() {
   const router = useRouter();
-  const [token] = useLocalStorage("token", null); // ✅ get token from localStorage
+  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (token) {
-      const payload = "admin";
-      const destination =
-        payload === "admin" ? "/admin/dashboard" : "/user/dashboard";
-      router.replace(destination);
+      router.replace("/admin/dashboard");
     } else {
       router.replace("/login"); // redirect to login if no token
     }

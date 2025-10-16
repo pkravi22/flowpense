@@ -7,6 +7,7 @@ import { LockKeyhole } from "lucide-react";
 import { authService } from "@/services/authServices";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 // Zod Schema for 6-digit code
 const schema = z.object({
@@ -28,47 +29,47 @@ export default function VerifyAccount({ type, email: propEmail }) {
   const router = useRouter();
   const [token, setToken] = useState(null);
   const [email, setEmail] = useState(propEmail);
-const [loading, setLoading] = useState(false);
-useEffect(() => {
-  if (typeof window !== "undefined") {
-    const savedToken = localStorage.getItem("token");
-    if (savedToken) {
-      setToken(savedToken);
-      try {
-        const payload = JSON.parse(atob(savedToken.split(".")[1]));
-        setEmail(payload.email || propEmail);
-      } catch {
-        setEmail(propEmail);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedToken = localStorage.getItem("token");
+      if (savedToken) {
+        setToken(savedToken);
+        try {
+          const payload = JSON.parse(atob(savedToken.split(".")[1]));
+          setEmail(payload.email || propEmail);
+        } catch {
+          setEmail(propEmail);
+        }
       }
     }
-  }
-}, [propEmail]);
+  }, [propEmail]);
 
-const onSubmit = async (data) => {
-  setLoading(true);
-  try {
-    if (!token) {
-      alert("Token missing!");
-      return;
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      if (!token) {
+        toast.error("Token missing!");
+        return;
+      }
+      const res = await authService.verifyEmail({ otp: data.code, token });
+      toast.success("Code Verified Successfully");
+      // router.push("/register-company")
+      router.push("/login");
+    } catch (err) {
+      console.error(err.response?.data?.message || "Verification failed");
+      toast.error(err.response?.data?.message || "Verification failed");
     }
-    const res = await authService.verifyEmail({ otp: data.code, token });
-    alert("Code Verified Successfully");
-    // router.push("/register-company")
-    router.push("/login");
-  } catch (err) {
-    console.error(err.response?.data?.message || "Verification failed");
-    alert(err.response?.data?.message || "Verification failed");
-  }
-};
+  };
 
-const handleResend = () => {
-  try {
-    const response = authService.resendOtp({ token });
-    if (response.success) {
-      alert("code send successfully");
-    }
-  } catch (e) {}
-};
+  const handleResend = () => {
+    try {
+      const response = authService.resendOtp({ token });
+      if (response.success) {
+        toast.success("code send successfully");
+      }
+    } catch (e) {}
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">

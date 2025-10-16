@@ -4,7 +4,7 @@ export const approvalServices = {
   approveExpense: async ({ payload, token }) => {
     const data = api.post(
       "api/approvals/approve-expense",
-      { payload },
+       payload ,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ export const approvalServices = {
   },
 
   getAllExpenses: async ({ token }) => {
-    const data = api.post(
+    const data = api.get(
       "api/approvals/all-expenses",
 
       {

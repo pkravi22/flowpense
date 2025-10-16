@@ -17,6 +17,7 @@ import DateRangePicker from "@/components/DatePicker";
 import { cardServices } from "@/services/cardServices";
 import { useSelector } from "react-redux";
 import { teamServices } from "@/services/teamServices";
+import { toast } from "react-toastify";
 
 const cardColors = [
   { bgColor: "#4e4f2eff", textColor: "white" },
@@ -125,10 +126,6 @@ const Page = () => {
     }
   }, [token]);
 
-  // Inside Page component, after fetching all cards and companyData
-
-  // Compute dynamic stats
-  // Compute dynamic stats from cards array
   const totalCardsCreated = cards.length;
   const activeCardsCount = cards.filter(
     (card) => card.status === "Active"
@@ -190,7 +187,7 @@ const Page = () => {
       });
       fetchAllCards(); // Refresh cards
     } catch (error) {
-      alert(error?.response?.data?.message || "Error funding card");
+      toast.error(error?.response?.data?.message || "Error funding card");
       console.error("Error funding card:", error);
     }
   };
@@ -405,8 +402,8 @@ const Page = () => {
             <CardFlow
               onCardCreated={handleCardCreated}
               token={token}
-              employees={employeeSmallData} // ✅ pass small employee data
-              loadingEmployees={loadingEmployees} // ✅ pass loading state
+              employees={employeeSmallData}
+              loadingEmployees={loadingEmployees}
             />
           </div>
         </div>

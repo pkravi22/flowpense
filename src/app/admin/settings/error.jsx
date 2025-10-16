@@ -3,10 +3,10 @@
 
 export default function Error({ error, reset }) {
   return (
-    <div>
-      <h2>⚠️ Wallet Error</h2>
+    <div className="flex flex-col justify-center items-center my-auto">
+      <h2> Wallet Error</h2>
       <p>{error.message}</p>
-      <button onClick={() => reset()}>🔄 Try Again</button>
+      <button>Refresh Again</button>
     </div>
   );
 }

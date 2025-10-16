@@ -30,6 +30,7 @@ export const fetchRejectedRequests = createAsyncThunk(
   "approvals/fetchRejected",
   async (token, { rejectWithValue }) => {
     try {
+      console.log("hey buddy");
       const response = await approvalServices.getRejectedRequests({ token });
       return response.data;
     } catch (err) {
@@ -43,6 +44,7 @@ export const fetchAllExpenses = createAsyncThunk(
   async (token, { rejectWithValue }) => {
     try {
       const response = await approvalServices.getAllExpenses({ token });
+      // console.log("all expenses", response);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);

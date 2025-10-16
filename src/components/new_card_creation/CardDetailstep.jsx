@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { toast } from "react-toastify";
 
 export default function CardDetailsStep({
   nextStep,
@@ -53,15 +54,15 @@ export default function CardDetailsStep({
   // ✅ Step validation
   const handleNext = () => {
     if (!data.cardHolder || data.cardHolder.length === 0) {
-      alert("Please select at least one card holder");
+      toast.error("Please select at least one card holder");
       return;
     }
     if (!data.approver || data.approver.length === 0) {
-      alert("Please select an approver");
+    toast.error("Please select an approver");
       return;
     }
     if (!teamName.trim()) {
-      alert("Please enter a team name");
+     toast.error("Please enter a team name");
       return;
     }
 

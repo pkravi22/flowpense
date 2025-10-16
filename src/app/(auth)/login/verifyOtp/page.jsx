@@ -8,6 +8,7 @@ import { authService } from "@/services/authServices";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 const schema = z.object({
   code: z
@@ -52,7 +53,7 @@ export default function VerifyAccount({ type, email: propEmail }) {
 
   const onSubmit = async (data) => {
     if (!token) {
-      alert("Token missing! Please login again.");
+      toast.error("Token missing! Please login again.");
       router.replace("/login");
       return;
     }
@@ -63,14 +64,14 @@ export default function VerifyAccount({ type, email: propEmail }) {
         otpCode: data.code,
         token,
       });
-
+      toast.success("Code Verified Successfully!");
       //alert(" Code Verified Successfully!");
       localStorage.setItem("token", res.accessToken);
       localStorage.setItem("refreshToken", res.refreshToken);
       router.replace("/admin/dashboard");
     } catch (err) {
-      console.error(err.response?.data?.message || "Verification failed");
-      alert(err.response?.data?.message || "Verification failed");
+      // console.error(err.response?.data?.message || "Verification failed");
+      toast.error(err.response?.data?.message || "Verification failed");
     } finally {
       setVerifyLoading(false);
     }
@@ -78,7 +79,7 @@ export default function VerifyAccount({ type, email: propEmail }) {
 
   const handleResend = async () => {
     if (!token) {
-      alert("Token missing! Please login again.");
+     toast.error("Token missing! Please login again.");
       router.replace("/login");
       return;
     }
@@ -86,11 +87,11 @@ export default function VerifyAccount({ type, email: propEmail }) {
     setResendLoading(true);
     try {
       const res = await authService.resendOtpAfterLogin({ token });
-      alert("📩 Code resent successfully to your email!");
+      toast.success(" Code resent successfully to your email!");
       console.log("Resend Response:", res);
     } catch (err) {
       console.error(err.response?.data?.message || "Resend failed");
-      alert(err.response?.data?.message || "Resend failed");
+      toast.error(err.response?.data?.message || "Resend failed");
     } finally {
       setResendLoading(false);
     }

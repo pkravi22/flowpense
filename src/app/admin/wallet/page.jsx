@@ -19,6 +19,7 @@ import BalanceBreakdown from "../../../components/walletPages/BalanceBreakdown";
 import { companyServices } from "@/services/companyServices";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 // const cardDetails = [
 //   {
 //     id: 2,
@@ -88,12 +89,12 @@ const Page = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.bank || !formData.amount || !formData.method) {
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
 
     if (!userDetail || !token) {
-      alert("User not authenticated");
+      toast.error("User not authenticated");
       return;
     }
 
@@ -112,11 +113,11 @@ const Page = () => {
         setFormData({ bank: "", amount: "", method: "" });
         router.push(response.authorization_url);
       } else {
-        alert("Failed to add funds: " + response.message);
+        toast.error("Failed to add funds: " + response.message);
       }
     } catch (error) {
       console.error("Error adding funds:", error);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -152,7 +153,8 @@ const Page = () => {
     .filter((tx) => tx.txType === "card_funding")
     .reduce((sum, tx) => sum + tx.amount, 0);
 
-  const totalBalance = totalAvailable + totalAllocated;
+  const totalLeftInWallet = totalAvailable - totalAllocated;
+  const totalBalance = totalLeftInWallet + totalAllocated;
 
   // === Stat Cards Data ===
   const cardDetails = [
@@ -168,7 +170,7 @@ const Page = () => {
     {
       id: 2,
       title: "Available Balance",
-      value: `₦${totalAvailable.toLocaleString()}`,
+      value: `₦${totalLeftInWallet.toLocaleString()}`,
       icon: <CreditCard />,
       iconBg: "#FEE2E2",
       iconColor: "#B91C1C",
@@ -187,7 +189,7 @@ const Page = () => {
 
   const exportToCSV = () => {
     if (!recentTransactions || recentTransactions.length === 0) {
-      alert("No transactions available to export!");
+      toast.error("No transactions available to export!");
       return;
     }
 
@@ -266,7 +268,7 @@ const Page = () => {
 
             <button
               className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1"
-              onClick={() => alert("Feature coming soon!")}
+              onClick={() =>toast.error("Feature coming soon!")}
             >
               <ArrowUpRight className="inline md:mr-2" size={16} />
               <span className="text-sm">Transfer Funds</span>

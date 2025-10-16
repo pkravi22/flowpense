@@ -91,7 +91,7 @@ export default function CardFlow({ employees, loadingEmployees }) {
       )}
 
       {/* Card content */}
-      <div className="w-full max-w-lg bg-white rounded-2xl">
+      <div className="w-full max-w-lg overflow-y-auto  bg-white rounded-2xl">
         {step === 1 && (
           <CardTypeStep
             nextStep={nextStep}

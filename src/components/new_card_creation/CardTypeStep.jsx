@@ -6,7 +6,7 @@ export default function CardTypeStep({ nextStep, updateData, data }) {
 
   const handleCardTypeSelect = (type) => {
     if (type === "Physical") {
-      alert("Physical cards coming soon!");
+      toast.error("Physical cards coming soon!");
       return;
     }
     updateData({ cardType: type });
@@ -14,11 +14,11 @@ export default function CardTypeStep({ nextStep, updateData, data }) {
 
   const handleNext = () => {
     if (!data.cardType) {
-      alert("Please select a card type");
+      toast.error("Please select a card type");
       return;
     }
     if (!cardName.trim()) {
-      alert("Please enter a card name");
+      toast.error("Please enter a card name");
       return;
     }
     updateData({ cardName: cardName.trim() });

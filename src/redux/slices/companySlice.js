@@ -4,14 +4,12 @@ import { companyServices } from "@/services/companyServices";
 // Fetch company info (only if needed)
 export const fetchCompany = createAsyncThunk(
   "company/fetchCompany",
-  async (token, thunkAPI) => {
+  async ({ token, id }, { rejectWithValue }) => {
     try {
-      const response = await companyServices.getCompanyInfo({ token });
-      return response.company; // backend returns {success, company}
+      const response = await companyServices.getCompanyInfo({ id, token });
+      return response.company;
     } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Failed to fetch company"
-      );
+      return rejectWithValue(err.response?.data || err.message);
     }
   }
 );

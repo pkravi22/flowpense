@@ -6,6 +6,8 @@ import AddEmployeeModal from "@/components/modals/TeamMember/AddEmployeeModal";
 import CreateTeamModal from "@/components/modals/TeamMember/CreateTeamModal";
 import AddMemberModal from "@/components/modals/TeamMember/AddMemberModal";
 import { teamServices } from "@/services/teamServices";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCompany } from "@/redux/slices/companySlice";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("team");
@@ -17,17 +19,15 @@ const Page = () => {
 
   const [loadingTeams, setLoadingTeams] = useState(false);
   const [loadingEmployees, setLoadingEmployees] = useState(false);
-  const [token, setToken] = useState(null);
+  //const [token, setToken] = useState(null);
   const [employeeSmallData, setEmployeeSmallData] = useState([]);
   const [selectedTeamId, setSelectedTeamId] = useState(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("token");
-      setToken(storedToken);
-    }
-  }, []);
-
+  const { user, token } = useSelector((state) => state.auth);
+  const { company, isLoading, isError, message } = useSelector(
+    (state) => state.company
+  );
+  const dispatch = useDispatch();
+  // console.log("company", company);
   const getALLTeams = async () => {
     if (!token) return;
     setLoadingTeams(true);
@@ -101,7 +101,7 @@ const Page = () => {
       getAllEmployees();
       getALLTeams(); // refresh teams after adding member
     } catch (e) {
-      alert("Failed to add member. Please try again.");
+      toast.error("Failed to add member. Please try again.");
       console.log("error during adding member", e);
     }
   };
@@ -110,8 +110,14 @@ const Page = () => {
     if (token) {
       getALLTeams();
       getAllEmployees();
+      dispatch(fetchCompany({ id: user.companyId, token }));
     }
   }, [token]);
+
+  const teamMembers = company?.users?.filter((user) => {
+    return user.role === "EMPLOYEE";
+  });
+  console.log(teamMembers);
 
   return (
     <div>
@@ -132,7 +138,7 @@ const Page = () => {
         <AddMemberModal
           handleAddMember={handleAddMember}
           setAddMemberModal={setAddMemberModal}
-          employeeSmallData={employeeSmallData}
+          employeeSmallData={teamMembers}
           teamId={selectedTeamId}
         />
       )}
@@ -245,7 +251,6 @@ const Page = () => {
                         </div>
                       </div>
 
-                      {/* Team Info */}
                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-sm text-gray-700">
                         <div className="flex flex-col gap-1">
                           {" "}
@@ -288,26 +293,20 @@ const Page = () => {
                           </span>
                         </div>
 
-                        {/* Members Section */}
                         <div>
                           <p className="font-semibold mb-1">Members</p>
                           <div className="flex -space-x-2">
-                            {/* Hardcoded Member Images */}
-                            {[
-                              "https://randomuser.me/api/portraits/women/44.jpg",
-                              "https://randomuser.me/api/portraits/men/32.jpg",
-                              "https://randomuser.me/api/portraits/men/45.jpg",
-                              "https://randomuser.me/api/portraits/women/12.jpg",
-                            ].map((img, idx) => (
-                              <img
-                                key={idx}
-                                src={img}
-                                alt={`Member ${idx}`}
-                                className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                              />
-                            ))}
+                            {Array.from({ length: team.TotalMembers }).map(
+                              (_, idx) => (
+                                <img
+                                  key={idx}
+                                  src="https://randomuser.me/api/portraits/women/44.jpg"
+                                  alt={`Member ${idx}`}
+                                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                                />
+                              )
+                            )}
 
-                            {/* Show "+N" if more members */}
                             <span className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs text-gray-600 border-2 border-white">
                               +{Math.max(team.TotalMembers - 4, 0)}
                             </span>

@@ -12,6 +12,7 @@ import { cardServices } from "@/services/cardServices";
 import { useSelector } from "react-redux";
 import { fetchAllCards } from "@/redux/slices/cardSlice";
 import CardModal from "@/components/modals/CardModal";
+import { toast } from "react-toastify";
 
 const Card = ({
   rawData,
@@ -74,13 +75,13 @@ const Card = ({
           companyId: user?.companyId,
         },
       });
-      alert("Card funded successfully!");
+      toast.success("Card funded successfully!");
       fetchAllCards && fetchAllCards();
       setShowFundModal(false);
       dispatch(fetchAllCards());
       setFundAmount("");
     } catch (error) {
-      alert(error?.response?.data?.message || "Error funding card");
+      toast.error(error?.response?.data?.message || "Error funding card");
     } finally {
       setLoading(false);
     }
@@ -96,7 +97,7 @@ const Card = ({
         id,
         payload: newLimits,
       });
-      alert("Card limits updated successfully!");
+      toast.success("Card limits updated successfully!");
       fetchAllCards && fetchAllCards();
       setShowEditLimitModal(false);
       dispatch(fetchAllCards());
@@ -108,7 +109,7 @@ const Card = ({
       });
     } catch (error) {
       console.error("Error editing limits:", error);
-      alert("Failed to update limits");
+      toast.error("Failed to update limits");
     } finally {
       setLoading(false);
     }
@@ -121,13 +122,13 @@ const Card = ({
     setLoading(true);
     try {
       await cardServices.blockUnlockCard({ token, id, action });
-      alert(
+      toast.success(
         `Card ${action === "frozen" ? "frozen" : "unfrozen"} successfully!`
       );
       fetchAllCards && dispatch(fetchAllCards());
     } catch (error) {
       console.error("Error toggling card status:", error);
-      alert("Failed to update card status");
+      toast.error("Failed to update card status");
     } finally {
       setLoading(false);
     }
@@ -139,11 +140,11 @@ const Card = ({
     setLoading(true);
     try {
       await cardServices.deleteCard({ token, id });
-      alert("Card deleted successfully!");
+      toast.error("Card deleted successfully!");
       fetchAllCards && dispatch(fetchAllCards());
     } catch (error) {
       console.error("Error deleting card:", error);
-      alert("Failed to delete card");
+      toast.error("Failed to delete card");
     } finally {
       setLoading(false);
     }
@@ -160,7 +161,7 @@ const Card = ({
       setTransactions(response.data || []);
     } catch (error) {
       console.error("Error fetching transactions:", error);
-      alert("Failed to fetch transactions");
+    toast.error("Failed to fetch transactions");
     } finally {
       setLoading(false);
     }
