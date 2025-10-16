@@ -10,9 +10,10 @@ export default function Home() {
 
   useEffect(() => {
     if (token) {
+      console.log("in main paeg",token)
       router.replace("/admin/dashboard");
     } else {
-      router.replace("/login"); // redirect to login if no token
+      router.replace("/login"); 
     }
   }, [token, router]);
 

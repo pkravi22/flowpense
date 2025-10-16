@@ -16,8 +16,8 @@ const CurvedBar = (props) => {
     <path
       d={`
         M${x},${y + height} 
-        L${x},${y + 10} 
-        Q${x + width / 2},${y - 18} ${x + width},${y + 10} 
+        L${x},${y + 0} 
+        Q${x + width / 2},${y - 0} ${x + width},${y + 0} 
         L${x + width},${y + height} 
         Z
       `}
