@@ -20,6 +20,9 @@ import { companyServices } from "@/services/companyServices";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { bankServices } from "@/services/bankServices";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCompany } from "@/redux/slices/companySlice";
 // const cardDetails = [
 //   {
 //     id: 2,
@@ -54,30 +57,21 @@ const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [token, setToken] = useState(null);
+  // const [token, setToken] = useState(null);
   const [userDetail, setUserDetail] = useState(null);
   const [recentTransactions, setReecentTransactions] = useState([]);
-
+  const [bankModalOpen, setBankModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     bank: "",
     amount: "",
-    method: "",
+    currency: "",
   });
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("token");
-      if (storedToken) {
-        setToken(storedToken);
-        try {
-          const decoded = jwtDecode(storedToken);
-          setUserDetail(decoded);
-        } catch (err) {
-          console.error("Invalid token:", err);
-        }
-      }
-    }
-  }, []);
+  const { user, token } = useSelector((state) => state.auth);
+  const { company } = useSelector((state) => state.company);
+  const dispatch = useDispatch();
+
+  console.log("user in wallet", user);
   const fundWallet = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -87,13 +81,14 @@ const Page = () => {
   };
 
   const handleSubmit = async (e) => {
+    console.log("hello");
     e.preventDefault();
-    if (!formData.bank || !formData.amount || !formData.method) {
+    if (!formData.bank || !formData.amount || !formData.currency) {
       toast.error("Please fill all fields");
       return;
     }
 
-    if (!userDetail || !token) {
+    if (!user || !token) {
       toast.error("User not authenticated");
       return;
     }
@@ -102,11 +97,11 @@ const Page = () => {
 
     try {
       const payload = {
-        companyId: userDetail.companyId,
-        email: userDetail.email,
+        companyId: user.companyId,
         amount: formData.amount,
+        currency: formData.currency,
       };
-      const response = await companyServices.walletTopup({ payload, token });
+      const response = await bankServices.depositToBank({ payload, token });
 
       if (response.success) {
         closeModal();
@@ -124,11 +119,11 @@ const Page = () => {
   };
 
   const fetchWalletLedger = async () => {
-    if (!userDetail || !token) return;
+    if (!user || !token) return;
     setLoading(true);
     try {
       const response = await companyServices.getWalletLedger({
-        companyId: userDetail.companyId,
+        companyId: user.companyId,
         token,
       });
       setReecentTransactions(response.ledger || []);
@@ -141,9 +136,59 @@ const Page = () => {
     }
   };
 
+  const getAllBanks = async () => {
+    if (!user || !token) return;
+    setLoading(true);
+    try {
+      const response = await bankServices.getAllBanks();
+      setReecentTransactions(response.ledger || []);
+
+      console.log("Wallet banks:", response);
+    } catch (error) {
+      console.error("Error fetching banks:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const createPaymentId = async () => {
+    if (!user || !token) return;
+    setLoading(true);
+    try {
+      const response = await companyServices.createPayment({
+        companyId: user.companyId,
+        email: user.email,
+      });
+      setReecentTransactions(response.ledger || []);
+
+      console.log("Wallet banks:", response);
+    } catch (error) {
+      console.error("Error fetching wallet ledger:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log("company", company);
+  const getUSerBankAccounts = async () => {
+    try {
+      const response = await bankServices.getUserBankAccount({ token });
+      console.log("user bank accounts", response);
+    } catch (error) {
+      console.error("Error fetching user bank accounts:", error);
+    }
+  };
+
   useEffect(() => {
+    if (user && token) {
+      console.log("lets do ");
+      dispatch(fetchCompany({ token, id: user.companyId }));
+    }
     fetchWalletLedger();
-  }, [userDetail, token]);
+
+    getAllBanks();
+    getUSerBankAccounts();
+    createPaymentId();
+  }, [user, token]);
 
   const totalAvailable = recentTransactions
     .filter((tx) => tx.txType === "credit")
@@ -153,10 +198,9 @@ const Page = () => {
     .filter((tx) => tx.txType === "card_funding")
     .reduce((sum, tx) => sum + tx.amount, 0);
 
-  const totalLeftInWallet = totalAvailable - totalAllocated;
-  const totalBalance = totalLeftInWallet + totalAllocated;
+  const totalLeftInWallet = company ? company.walletBalance : 0;
+  const totalBalance = (company ? company.walletBalance : 0) + totalAllocated;
 
-  // === Stat Cards Data ===
   const cardDetails = [
     {
       id: 1,
@@ -203,9 +247,6 @@ const Page = () => {
 
     const totalBalance = totalAvailable + totalAllocated;
 
-    // === Stat Cards Data ===
-
-    // Define CSV header
     const headers = [
       "ID",
       "Transaction Type",
@@ -229,7 +270,6 @@ const Page = () => {
       new Date(tx.createdAt).toLocaleString(),
     ]);
 
-    // Combine into CSV string
     const csvContent = [
       headers.join(","), // header row
       ...rows.map((r) => r.join(",")), // data rows
@@ -268,7 +308,7 @@ const Page = () => {
 
             <button
               className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1"
-              onClick={() =>toast.error("Feature coming soon!")}
+              onClick={() => toast.error("Feature coming soon!")}
             >
               <ArrowUpRight className="inline md:mr-2" size={16} />
               <span className="text-sm">Transfer Funds</span>
@@ -279,7 +319,7 @@ const Page = () => {
               onClick={fundWallet}
             >
               <Plus className="inline md:mr-2" size={16} />
-              <span className="text-sm"> Fund Wallet</span>
+              <span className="text-sm"> Payment To Compnay Admin</span>
             </button>
           </div>
         </div>
@@ -310,7 +350,10 @@ const Page = () => {
       <div className="flex flex-col">
         <div className="flex flex-col md:flex-row gap-4 mt-4 ">
           <div className="flex-1">
-            <BankDetails />
+            <BankDetails
+              bankModalOpen={bankModalOpen}
+              setBankModalOpen={setBankModalOpen}
+            />
           </div>
           <div className="flex-2">
             <RecentTransactions
@@ -375,14 +418,14 @@ const Page = () => {
 
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Payment Method
+                  Currency
                 </label>
                 <input
                   type="text"
-                  name="method"
-                  value={formData.method}
+                  name="currency"
+                  value={formData.currency}
                   onChange={handleInputChange}
-                  placeholder="e.g. UPI / NetBanking / Card"
+                  placeholder="NGN"
                   className="w-full border border-gray-200 p-2 rounded"
                 />
               </div>
@@ -401,13 +444,7 @@ const Page = () => {
                   className="px-4 py-2 flex flex-1 items-center gap-2 rounded-full bg-[#035638] text-white"
                   disabled={loading}
                 >
-                  {loading ? (
-                    "Adding Funds..."
-                  ) : (
-                    <>
-                      <PlusIcon size={16} /> Add Funds
-                    </>
-                  )}
+                  <PlusIcon size={16} /> Add Funds
                 </button>
               </div>
             </form>

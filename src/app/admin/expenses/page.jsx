@@ -10,8 +10,9 @@ const Page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { allExpenses } = useSelector((state) => state.expenses) || {};
+  const { company } = useSelector(state.company);
   const [expenseData, setExpenseData] = useState([]);
-
+  
   // Fetch expenses
   useEffect(() => {
     const token =

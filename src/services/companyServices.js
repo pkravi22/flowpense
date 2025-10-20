@@ -21,9 +21,9 @@ export const companyServices = {
     return data;
   },
 
-  walletTopup: async ({ payload, token }) => {
+  createPayment: async ({ payload, token }) => {
     console.log("payload", payload);
-    const { data } = await api.post("wallet/topup", payload, {
+    const { data } = await api.post("wallet/create/payment", payload, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

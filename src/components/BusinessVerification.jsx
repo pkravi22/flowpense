@@ -3,7 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 
 export default function BusinessVerification() {
-  // Initialize react-hook-form
+ 
   const {
     control,
     handleSubmit,
@@ -27,7 +27,6 @@ export default function BusinessVerification() {
     },
   });
 
-  // Submit handler
   const onSubmit = (data) => {
     console.log("Form Data:", data);
   };
@@ -35,7 +34,6 @@ export default function BusinessVerification() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="p-6 bg-white rounded-xl px-6 md:px-24">
-        {/* Section 1 - Primary Contact */}
         <h2 className="text-xl font-semibold mb-1">
           Primary Contact / Admin Details
         </h2>
@@ -98,11 +96,11 @@ export default function BusinessVerification() {
               render={({ field }) => (
                 <PhoneInput
                   {...field}
-                  country={"us"} // default country
-                  enableSearch={true} // search for countries
-                  enableAreaCodes={true} // show area codes
-                  disableDropdown={false} // enable dropdown
-                  countryCodeEditable={true} // allow editing country code manually
+                  country={"us"}
+                  enableSearch={true}
+                  enableAreaCodes={true}
+                  disableDropdown={false}
+                  countryCodeEditable={true}
                   containerClass="w-full"
                   inputClass="w-full text-sm outline-none px-3 py-2"
                   buttonClass="h-full border-r"

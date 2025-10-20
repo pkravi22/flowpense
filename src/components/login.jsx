@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, reset } from "../redux/slices/authSlice.js";
 import { toast } from "react-toastify";
+import Image from "next/image.js";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -91,7 +92,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full sm:max-w-md bg-white rounded-2xl shadow-md p-8">
         <div className="flex justify-center mb-6">
-          <img src="/logo 1.png" alt="Flowpense" className="h-16" />
+          <Image src="/logo 1.png" alt="Flowpense" width={200} height={40} />
         </div>
 
         <h2 className="text-xl host-grotesk font-semibold text-gray-900 ">
