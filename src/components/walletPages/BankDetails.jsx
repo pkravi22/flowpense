@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
+const BankDetails = ({ bankModalOpen, setBankModalOpen, userBankAccounts }) => {
   const [formData, setFormData] = useState({
     AccountNumber: "",
     country: "",
@@ -14,7 +14,7 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
   const { user, token } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
   const [allBanks, setAllBanks] = useState([]);
-
+  console.log("userBankAccounts", userBankAccounts);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -37,16 +37,10 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
     try {
       const response = await bankServices.addBankAccount({ formData, token });
 
-      if (response.success) {
-        toast.success("Bank account added successfully");
-        setFormData({ AccountNumber: "", country: "", BankCode: "" });
-        setBankModalOpen(false);
-      } else {
-        toast.error("Failed to add bank: " + response.message);
-      }
+      toast.success("Bank added successfully");
     } catch (error) {
       console.error("Error adding bank:", error);
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -76,18 +70,32 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
     <div className="flex flex-col p-3 min-h-[430px] rounded-2xl shadow-md gap-2">
       <div className="text-2xl font-[600]"> Bank Details</div>
 
-      {/* Static Example Bank Entries */}
-      <div className="flex items-center justify-between p-2">
-        <div className="flex flex-col ">
-          <p>Guaranty Trust Bank</p>
-          <p>****2323</p>
-        </div>
-        <div className="border border-green-300 px-4 py-1 text-sm text-green-400 rounded-full">
-          <p>Verified</p>
-        </div>
+      <div className="flex flex-col w-full mt-3">
+        {userBankAccounts && userBankAccounts.length > 0 ? (
+          userBankAccounts.map((bank) => (
+            <div
+              key={bank.id || bank.AccountNumber}
+              className="flex justify-between items-center  p-3 mb-3 bg-gray-50  hover:shadow-md transition-all duration-200"
+            >
+              <div>
+                <p className="text-sm font-semibold text-gray-800">
+                  <span className="text-[#035638]">{bank.BankCode}</span>
+                </p>
+                <p className="text-sm text-gray-600">{bank.AccountNumber}</p>
+              </div>
+
+              <div className="border border-green-300 px-3 py-1 text-xs text-green-700 rounded-full font-medium">
+                Verified
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-gray-500 text-sm italic text-center py-4">
+            No bank accounts added yet.
+          </div>
+        )}
       </div>
 
-      {/* Add New Bank Button */}
       <div
         className="text-sm text-black border mt-4 border-black rounded-sm text-center py-1 cursor-pointer"
         onClick={() => setBankModalOpen(true)}
@@ -95,7 +103,6 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
         + Add New Bank Account
       </div>
 
-      {/* Add Bank Modal */}
       {bankModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-lg relative">
@@ -111,7 +118,6 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
             </div>
 
             <form className="space-y-4" onSubmit={handleSubmit}>
-              {/* Bank Dropdown */}
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Select Bank

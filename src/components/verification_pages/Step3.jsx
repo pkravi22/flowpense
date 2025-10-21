@@ -41,13 +41,6 @@ const ComplianceVerification = ({ formData, setFormData }) => {
               }
               className="w-full border border-gray-300 rounded-lg px-3 py-2"
             />
-            <button
-              type="button"
-              onClick={() => handleVerify("tin")}
-              className="bg-background  text-white px-3 py-2 rounded-full"
-            >
-              Submit
-            </button>
           </div>
         </div>
 
@@ -68,13 +61,6 @@ const ComplianceVerification = ({ formData, setFormData }) => {
               }
               className="w-full border border-gray-300 rounded-lg px-3 py-2"
             />
-            <button
-              type="button"
-              onClick={() => handleVerify("cac")}
-              className="bg-background  text-white px-3 py-2 rounded-full"
-            >
-              Submit
-            </button>
           </div>
         </div>
 
@@ -95,13 +81,6 @@ const ComplianceVerification = ({ formData, setFormData }) => {
               }
               className="w-full border border-gray-300 rounded-lg px-3 py-2"
             />
-            <button
-              type="button"
-              onClick={() => handleVerify("vat")}
-              className="bg-background  text-white px-3 py-2 rounded-full"
-            >
-              Submit
-            </button>
           </div>
         </div>
 
@@ -122,13 +101,6 @@ const ComplianceVerification = ({ formData, setFormData }) => {
               }
               className="w-full border border-gray-300 rounded-lg px-3 py-2"
             />
-            <button
-              type="button"
-              onClick={() => handleVerify("bvn")}
-              className="bg-background  text-white px-3 py-2 rounded-full"
-            >
-              Submit
-            </button>
           </div>
         </div>
 

@@ -50,7 +50,7 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
 
   const registerCompany = async () => {
     try {
-      const data = await companyServices.registerCompany(formData);
+      const data = await companyServices.registerCompany({ formData, token });
     } catch (e) {
       console.log("error:", e);
     }

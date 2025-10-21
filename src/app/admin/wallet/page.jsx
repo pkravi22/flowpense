@@ -23,56 +23,39 @@ import { toast } from "react-toastify";
 import { bankServices } from "@/services/bankServices";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCompany } from "@/redux/slices/companySlice";
-// const cardDetails = [
-//   {
-//     id: 2,
-//     title: "Completed",
-//     value: "$15,00,000",
-//     icon: <CreditCard />,
-//     iconBg: "#FFD6D6",
-//     iconColor: "#B91C1C",
-//     sub: "15 % increase from last month",
-//   },
-//   {
-//     id: 3,
-//     title: "Pending",
-//     value: "$45,00,000",
-//     icon: <Users />,
-//     iconBg: "#E0E7FF",
-//     iconColor: "#1E40AF",
-//     sub: " 4 % increase from last month",
-//   },
-//   {
-//     id: 4,
-//     title: "Pending",
-//     value: "$8,250.00",
-//     icon: <Wallet />,
-//     iconBg: "#D1FAE5",
-//     iconColor: "#065F46",
-//     sub: "4 % increase from last month",
-//   },
-// ];
 
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingStates, setLoadingStates] = useState({
+    initial: true,
+    ledger: false,
+    banks: false,
+    userBanks: false,
+    payment: false,
+  });
+  const [errorStates, setErrorStates] = useState({
+    ledger: null,
+    banks: null,
+    userBanks: null,
+    payment: null,
+  });
   const router = useRouter();
-  // const [token, setToken] = useState(null);
-  const [userDetail, setUserDetail] = useState(null);
+
   const [recentTransactions, setReecentTransactions] = useState([]);
   const [bankModalOpen, setBankModalOpen] = useState(false);
+  const { user, token } = useSelector((state) => state.auth);
   const [allBanks, setAllBanks] = useState([]);
+  const [userBankAccounts, setUserBankAccounts] = useState([]);
+
   const [formData, setFormData] = useState({
-    bank: "",
+    companyId: user?.companyId,
     amount: "",
     currency: "",
   });
 
-  const { user, token } = useSelector((state) => state.auth);
   const { company } = useSelector((state) => state.company);
   const dispatch = useDispatch();
 
-  console.log("user in wallet", user);
   const fundWallet = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -82,9 +65,8 @@ const Page = () => {
   };
 
   const handleSubmit = async (e) => {
-    console.log("hello");
     e.preventDefault();
-    if (!formData.bank || !formData.amount || !formData.currency) {
+    if (!formData.amount || !formData.currency) {
       toast.error("Please fill all fields");
       return;
     }
@@ -94,7 +76,7 @@ const Page = () => {
       return;
     }
 
-    setLoading(true);
+    setLoadingStates((prev) => ({ ...prev, payment: true }));
 
     try {
       const payload = {
@@ -103,101 +85,148 @@ const Page = () => {
         currency: formData.currency,
       };
       const response = await bankServices.depositToBank({ payload, token });
+      // console.log("deposit reponse", response.data.success)
 
-      if (response.success) {
-        closeModal();
-        setFormData({ bank: "", amount: "", method: "" });
-        router.push(response.authorization_url);
-      } else {
-        toast.error("Failed to add funds: " + response.message);
+      if (response.data) {
+        toast.success("Deposit Process successful");
+        isModalOpen(false);
       }
     } catch (error) {
       console.error("Error adding funds:", error);
       toast.error("Something went wrong");
     } finally {
-      setLoading(false);
+      setLoadingStates((prev) => ({ ...prev, payment: false }));
     }
   };
 
   const fetchWalletLedger = async () => {
     if (!user || !token) return;
-    setLoading(true);
+    setLoadingStates((prev) => ({ ...prev, ledger: true }));
+    setErrorStates((prev) => ({ ...prev, ledger: null }));
+
     try {
       const response = await companyServices.getWalletLedger({
         companyId: user.companyId,
         token,
       });
       setReecentTransactions(response.ledger || []);
-
-      console.log("Wallet Ledger:", response);
     } catch (error) {
       console.error("Error fetching wallet ledger:", error);
+      setErrorStates((prev) => ({ ...prev, ledger: error.message }));
+      toast.error("Failed to load transactions");
     } finally {
-      setLoading(false);
+      setLoadingStates((prev) => ({ ...prev, ledger: false }));
     }
   };
 
   const getAllBanks = async () => {
     if (!user || !token) return;
-    setLoading(true);
+    setLoadingStates((prev) => ({ ...prev, banks: true }));
+    setErrorStates((prev) => ({ ...prev, banks: null }));
+
     try {
       const response = await bankServices.getAllBanks();
-      //setReecentTransactions(response.ledger || []);
       setAllBanks(response.data || []);
-      console.log("Wallet banks:", response);
     } catch (error) {
       console.error("Error fetching banks:", error);
+      setErrorStates((prev) => ({ ...prev, banks: error.message }));
     } finally {
-      setLoading(false);
+      setLoadingStates((prev) => ({ ...prev, banks: false }));
     }
   };
+
   const createPaymentId = async () => {
     if (!user || !token) return;
-    setLoading(true);
-    try {
-      const response = await companyServices.createPayment({
-        companyId: user.companyId,
-        email: user.email,
-      });
-      setReecentTransactions(response.ledger || []);
+    setLoadingStates((prev) => ({ ...prev, payment: true }));
+    setErrorStates((prev) => ({ ...prev, payment: null }));
 
-      console.log("Wallet banks:", response);
+    try {
+      const payload = { companyId: user.companyId, email: user.email };
+      console.log("payload for creating payment");
+      const response = await companyServices.createPayment({ payload, token });
     } catch (error) {
-      console.error("Error fetching wallet ledger:", error);
+      console.error("Error creating payment ID:", error);
+      setErrorStates((prev) => ({ ...prev, payment: error.message }));
     } finally {
-      setLoading(false);
+      setLoadingStates((prev) => ({ ...prev, payment: false }));
     }
   };
 
-  console.log("company", company);
   const getUSerBankAccounts = async () => {
+    if (!user || !token) return;
+    setLoadingStates((prev) => ({ ...prev, userBanks: true }));
+    setErrorStates((prev) => ({ ...prev, userBanks: null }));
+
     try {
       const response = await bankServices.getUserBankAccount({ token });
-      console.log("user bank accounts", response);
+      console.log(":user bank", response);
+      setUserBankAccounts(response.bank || []);
     } catch (error) {
       console.error("Error fetching user bank accounts:", error);
+      setErrorStates((prev) => ({ ...prev, userBanks: error.message }));
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, userBanks: false }));
+    }
+  };
+
+  const loadInitialData = async () => {
+    if (!user || !token) return;
+
+    setLoadingStates((prev) => ({ ...prev, initial: true }));
+
+    try {
+      await Promise.allSettled([
+        dispatch(fetchCompany({ token, id: user.companyId })),
+        fetchWalletLedger(),
+        getAllBanks(),
+        getUSerBankAccounts(),
+        createPaymentId(),
+      ]);
+    } catch (error) {
+      console.error("Error loading initial data:", error);
+      toast.error("Failed to load some data");
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, initial: false }));
+    }
+  };
+
+  const retryFailedRequests = () => {
+    const promises = [];
+
+    if (errorStates.ledger) {
+      promises.push(fetchWalletLedger());
+    }
+    if (errorStates.banks) {
+      promises.push(getAllBanks());
+    }
+    if (errorStates.userBanks) {
+      promises.push(getUSerBankAccounts());
+    }
+    if (errorStates.payment) {
+      promises.push(createPaymentId());
+    }
+
+    if (promises.length > 0) {
+      Promise.allSettled(promises).then(() => {
+        toast.info("Retried failed requests");
+      });
     }
   };
 
   useEffect(() => {
     if (user && token) {
-      console.log("lets do ");
-      dispatch(fetchCompany({ token, id: user.companyId }));
+      loadInitialData();
     }
-    fetchWalletLedger();
-
-    //  getAllBanks();
-    getUSerBankAccounts();
-    createPaymentId();
   }, [user, token]);
 
+  // Calculate totals with fallbacks
   const totalAvailable = recentTransactions
     .filter((tx) => tx.txType === "credit")
-    .reduce((sum, tx) => sum + tx.amount, 0);
+    .reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
   const totalAllocated = recentTransactions
     .filter((tx) => tx.txType === "card_funding")
-    .reduce((sum, tx) => sum + tx.amount, 0);
+    .reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
   const totalLeftInWallet = company ? company.walletBalance : 0;
   const totalBalance = (company ? company.walletBalance : 0) + totalAllocated;
@@ -211,6 +240,7 @@ const Page = () => {
       iconBg: "#E6FFFA",
       iconColor: "#035638",
       sub: "Available + Allocated Funds",
+      loading: loadingStates.initial || loadingStates.ledger,
     },
     {
       id: 2,
@@ -220,6 +250,7 @@ const Page = () => {
       iconBg: "#FEE2E2",
       iconColor: "#B91C1C",
       sub: "Funds available in wallet",
+      loading: loadingStates.initial,
     },
     {
       id: 3,
@@ -229,6 +260,7 @@ const Page = () => {
       iconBg: "#E0E7FF",
       iconColor: "#1E40AF",
       sub: "Total amount transferred to cards",
+      loading: loadingStates.initial || loadingStates.ledger,
     },
   ];
 
@@ -237,16 +269,6 @@ const Page = () => {
       toast.error("No transactions available to export!");
       return;
     }
-
-    const totalAvailable = recentTransactions
-      .filter((tx) => tx.txType === "credit")
-      .reduce((sum, tx) => sum + tx.amount, 0);
-
-    const totalAllocated = recentTransactions
-      .filter((tx) => tx.txType === "card_funding")
-      .reduce((sum, tx) => sum + tx.amount, 0);
-
-    const totalBalance = totalAvailable + totalAllocated;
 
     const headers = [
       "ID",
@@ -259,7 +281,6 @@ const Page = () => {
       "Created At",
     ];
 
-    // Format rows
     const rows = recentTransactions.map((tx) => [
       tx.id,
       tx.txType,
@@ -272,11 +293,10 @@ const Page = () => {
     ]);
 
     const csvContent = [
-      headers.join(","), // header row
-      ...rows.map((r) => r.join(",")), // data rows
+      headers.join(","),
+      ...rows.map((r) => r.join(",")),
     ].join("\n");
 
-    // Create Blob and download
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
 
@@ -288,10 +308,40 @@ const Page = () => {
     URL.revokeObjectURL(url);
   };
 
+  const CardSkeleton = () => (
+    <div className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start justify-start gap-4 animate-pulse">
+      <div className="flex items-center gap-4 w-full">
+        <div className="rounded-full w-12 h-12 bg-gray-200"></div>
+        <div className="flex-1 space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+        </div>
+      </div>
+      <div className="h-8 bg-gray-200 rounded w-full"></div>
+    </div>
+  );
+
   return (
     <div className="">
+      {/* Error Retry Banner */}
+      {/* {Object.values(errorStates).some((error) => error) && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center justify-between">
+          <div className="flex items-center">
+            <span className="text-red-600 text-sm">
+              Some data failed to load.
+            </span>
+          </div>
+          <button
+            onClick={retryFailedRequests}
+            className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      )} */}
+
       <div className="w-full flex flex-col md:flex-row items-start md:items-center justify-start md:justify-between gap-4">
-        <div className="flex flex-col justify-start  sm:ml-0">
+        <div className="flex flex-col justify-start sm:ml-0">
           <h1 className="pageTitle">Wallet</h1>
           <p className="pageSubTitle mt-2">
             Manage organization funds and transfer to cards
@@ -300,15 +350,16 @@ const Page = () => {
         <div className="">
           <div className="flex flex-wrap gap-2">
             <button
-              className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1"
+              className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1 hover:bg-gray-50 transition-colors"
               onClick={exportToCSV}
+              disabled={loadingStates.ledger || recentTransactions.length === 0}
             >
               <Download className="inline md:mr-2" size={16} />
               <span className="text-sm">Export Statement</span>
             </button>
 
             <button
-              className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1"
+              className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1 hover:bg-gray-50 transition-colors"
               onClick={() => toast.error("Feature coming soon!")}
             >
               <ArrowUpRight className="inline md:mr-2" size={16} />
@@ -316,66 +367,106 @@ const Page = () => {
             </button>
 
             <button
-              className="flex items-center px-2 rounded-[10px] cursor-pointer border p-1 bg-[#035638] text-white"
+              className="flex items-center px-2 rounded-[10px] cursor-pointer border p-1 bg-[#035638] text-white hover:bg-[#02422a] transition-colors"
               onClick={fundWallet}
+              disabled={loadingStates.payment}
             >
               <Plus className="inline md:mr-2" size={16} />
-              <span className="text-sm"> Payment To Compnay Admin</span>
+              <span className="text-sm">
+                {loadingStates.payment
+                  ? "Processing..."
+                  : "Payment To Company Admin"}
+              </span>
             </button>
           </div>
         </div>
       </div>
 
+      {/* Cards Grid with Loading States */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        {cardDetails.map(
-          ({ id, icon, iconBg, title, value, iconColor, sub }) => (
-            <div
-              key={id}
-              className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start justify-start gap-4"
-            >
-              <div className="flex items-center gap-4 w-full">
-                <div className="rounded-full flex items-center justify-center">
-                  {React.cloneElement(icon, { color: iconColor, size: 24 })}
+        {loadingStates.initial
+          ? Array(3)
+              .fill(0)
+              .map((_, index) => <CardSkeleton key={index} />)
+          : cardDetails.map(
+              ({ id, icon, iconBg, title, value, iconColor, sub, loading }) => (
+                <div
+                  key={id}
+                  className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start justify-start gap-4 transition-all duration-200 hover:shadow-lg"
+                >
+                  {loading ? (
+                    <div className="animate-pulse w-full">
+                      <div className="flex items-center gap-4 w-full">
+                        <div className="rounded-full w-12 h-12 bg-gray-200"></div>
+                        <div className="flex-1 space-y-2">
+                          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                        </div>
+                      </div>
+                      <div className="h-8 bg-gray-200 rounded w-3/4 mt-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-full mt-2"></div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-4 w-full">
+                        <div
+                          className="rounded-full flex items-center justify-center p-2"
+                          style={{ backgroundColor: iconBg }}
+                        >
+                          {React.cloneElement(icon, {
+                            color: iconColor,
+                            size: 24,
+                          })}
+                        </div>
+                        <div className="flex flex-col justify-between h-full">
+                          <p className="statcardTitle">{title}</p>
+                        </div>
+                      </div>
+                      <p className="statcardNumber">{value}</p>
+                      <p className="statcardSubTitle">{sub}</p>
+                    </>
+                  )}
                 </div>
-                <div className="flex flex-col justify-between h-full">
-                  <p className="statcardTitle">{title}</p>
-                </div>
-              </div>
-              <p className="statcardNumber">{value}</p>
-              <p className="statcardSubTitle">{sub}</p>
-            </div>
-          )
-        )}
+              )
+            )}
       </div>
 
+      {/* Main Content with Loading States */}
       <div className="flex flex-col">
-        <div className="flex flex-col md:flex-row gap-4 mt-4 ">
+        <div className="flex flex-col md:flex-row gap-4 mt-4">
           <div className="flex-1">
             <BankDetails
               bankModalOpen={bankModalOpen}
               setBankModalOpen={setBankModalOpen}
               allBanks={allBanks}
+              userBankAccounts={userBankAccounts}
+              loading={loadingStates.banks || loadingStates.userBanks}
+              error={errorStates.banks || errorStates.userBanks}
+              onRetry={getUSerBankAccounts}
             />
           </div>
           <div className="flex-2">
             <RecentTransactions
               recentTransactions={recentTransactions}
               onExport={exportToCSV}
-              loading={loading}
+              loading={loadingStates.ledger}
+              error={errorStates.ledger}
+              onRetry={fetchWalletLedger}
             />
           </div>
         </div>
         <div>
-          <BalanceBreakdown />
+          <BalanceBreakdown loading={loadingStates.initial} />
         </div>
       </div>
 
+      {/* Fund Wallet Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-lg relative">
             <button
               onClick={closeModal}
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              disabled={loadingStates.payment}
             >
               <X size={20} />
             </button>
@@ -391,22 +482,6 @@ const Page = () => {
 
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Select Bank
-                </label>
-                <select
-                  name="bank"
-                  value={formData.bank}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-200 p-2 rounded"
-                >
-                  <option value="">Select Bank Account</option>
-                  <option value="bank1">Bank 1</option>
-                  <option value="bank2">Bank 2</option>
-                </select>
-              </div>
-
-              <div>
                 <label className="block text-sm font-medium mb-1">Amount</label>
                 <input
                   type="number"
@@ -415,6 +490,7 @@ const Page = () => {
                   onChange={handleInputChange}
                   placeholder="Enter Amount"
                   className="w-full border border-gray-200 p-2 rounded"
+                  disabled={loadingStates.payment}
                 />
               </div>
 
@@ -429,24 +505,31 @@ const Page = () => {
                   onChange={handleInputChange}
                   placeholder="NGN"
                   className="w-full border border-gray-200 p-2 rounded"
+                  disabled={loadingStates.payment}
                 />
               </div>
 
               <div className="flex gap-2 mt-4">
                 <button
                   type="button"
-                  className="px-4 py-2 flex-1 rounded-full bg-gray-200"
+                  className="px-4 py-2 flex-1 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
                   onClick={closeModal}
-                  disabled={loading}
+                  disabled={loadingStates.payment}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 flex flex-1 items-center gap-2 rounded-full bg-[#035638] text-white"
-                  disabled={loading}
+                  className="px-4 py-2 flex flex-1 items-center gap-2 rounded-full bg-[#035638] text-white hover:bg-[#02422a] transition-colors disabled:opacity-50"
+                  disabled={loadingStates.payment}
                 >
-                  <PlusIcon size={16} /> Add Funds
+                  {loadingStates.payment ? (
+                    "Processing..."
+                  ) : (
+                    <>
+                      <PlusIcon size={16} /> Add Funds
+                    </>
+                  )}
                 </button>
               </div>
             </form>

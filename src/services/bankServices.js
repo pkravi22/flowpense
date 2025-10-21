@@ -16,7 +16,7 @@ export const bankServices = {
     });
     return data;
   },
-  getUserBankAccount: async ({  token }) => {
+  getUserBankAccount: async ({ token }) => {
     const { data } = await api.get(
       `api/all/user-Bank`,
 
@@ -29,14 +29,11 @@ export const bankServices = {
     return data;
   },
   depositToBank: async ({ payload, token }) => {
-    const { data } = await api.post(
-      `wallet/deposit/bank`,
-      { payload },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await api.post(`wallet/deposit/bank`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
   },
 };
