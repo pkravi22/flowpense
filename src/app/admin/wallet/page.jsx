@@ -85,17 +85,18 @@ const Page = () => {
         currency: formData.currency,
       };
       const response = await bankServices.depositToBank({ payload, token });
-      // console.log("deposit reponse", response.data.success)
+      console.log("deposit reponse", response.data);
 
       if (response.data) {
-        toast.success("Deposit Process successful");
-        isModalOpen(false);
+        toast.success(`${response.data.data.message}`);
+        // isModalOpen(false);
       }
     } catch (error) {
       console.error("Error adding funds:", error);
       // toast.error("Something went wrong");
     } finally {
       setLoadingStates((prev) => ({ ...prev, payment: false }));
+      setIsModalOpen(false);
     }
   };
 
@@ -372,11 +373,7 @@ const Page = () => {
               disabled={loadingStates.payment}
             >
               <Plus className="inline md:mr-2" size={16} />
-              <span className="text-sm">
-                {loadingStates.payment
-                  ? "Processing..."
-                  : "Payment To Company Admin"}
-              </span>
+              <span className="text-sm">"Payment To Company Admin"</span>
             </button>
           </div>
         </div>
