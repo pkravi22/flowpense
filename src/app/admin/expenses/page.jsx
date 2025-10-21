@@ -10,7 +10,7 @@ const Page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { allExpenses } = useSelector((state) => state.expenses) || {};
-  const { company } = useSelector(state.company);
+  const { company } = useSelector((state) => state.company);
   const [expenseData, setExpenseData] = useState([]);
   
   // Fetch expenses
