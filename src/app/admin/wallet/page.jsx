@@ -93,7 +93,7 @@ const Page = () => {
       }
     } catch (error) {
       console.error("Error adding funds:", error);
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     } finally {
       setLoadingStates((prev) => ({ ...prev, payment: false }));
     }

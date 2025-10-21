@@ -16,8 +16,10 @@ import axios from "axios";
 import { authService } from "@/services/authServices";
 
 import { companyServices } from "@/services/companyServices";
+import { useSelector } from "react-redux";
 const VerifyAccount = ({ onComplete, onCancel }) => {
   const [step, setStep] = useState(1);
+  const { user, token } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     businessName: "",
     tradingName: "",
@@ -50,7 +52,7 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
 
   const registerCompany = async () => {
     try {
-      const data = await companyServices.registerCompany({ formData, token });
+      const data = await companyServices.uploadKYC({ formData, token });
     } catch (e) {
       console.log("error:", e);
     }

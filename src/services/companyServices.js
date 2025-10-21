@@ -11,9 +11,9 @@ export const companyServices = {
     return data;
   },
 
-  uploadKYC: async (payload) => {
-    console.log("payload", payload);
-    const { data } = await api.post("api/companies/upload-kyc", payload, {
+  uploadKYC: async ({ formData, token }) => {
+    console.log("payload", formData);
+    const { data } = await api.post("api/companies/upload-kyc", formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
