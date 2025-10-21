@@ -2,6 +2,7 @@ import { bankServices } from "@/services/bankServices";
 import { PlusIcon, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
   const [formData, setFormData] = useState({
@@ -9,10 +10,12 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
     country: "",
     BankCode: "",
   });
+
   const { user, token } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
+  const [allBanks, setAllBanks] = useState([]);
+
   const handleInputChange = (e) => {
-    console.log(e.target);
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -20,7 +23,6 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("formData", formData);
     if (!formData.AccountNumber || !formData.country || !formData.BankCode) {
       toast.error("Please fill all fields");
       return;
@@ -32,80 +34,68 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
     }
 
     setLoading(true);
-
     try {
-      const payload = {
-        formData,
-      };
-      console.log(formData);
       const response = await bankServices.addBankAccount({ formData, token });
 
       if (response.success) {
-        closeModal();
-        setBankModalOpen(false);
         toast.success("Bank account added successfully");
         setFormData({ AccountNumber: "", country: "", BankCode: "" });
-        //router.push(response.authorization_url);
+        setBankModalOpen(false);
       } else {
-        toast.error("Failed to add funds: " + response.message);
+        toast.error("Failed to add bank: " + response.message);
       }
     } catch (error) {
-      console.error("Error adding funds:", error);
+      console.error("Error adding bank:", error);
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
-      setBankModalOpen(false);
     }
   };
 
-  const getUSerBankAccounts = async () => {
+  const getAllBanks = async () => {
+    if (!user || !token) return;
+    setLoading(true);
     try {
-      const response = await bankServices.getUserBankAccount({ token });
-      console.log("user bank accounts", response);
+      const response = await bankServices.getAllBanks();
+      setAllBanks(response.data.banks || []);
+
+      console.log("All Banks:", response.data.banks);
     } catch (error) {
-      console.error("Error fetching user bank accounts:", error);
+      console.error("Error fetching banks:", error);
+      toast.error("Failed to load bank list");
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    getAllBanks();
+  }, [user, token]);
 
   return (
     <div className="flex flex-col p-3 min-h-[430px] rounded-2xl shadow-md gap-2">
       <div className="text-2xl font-[600]"> Bank Details</div>
+
+      {/* Static Example Bank Entries */}
       <div className="flex items-center justify-between p-2">
-        {" "}
         <div className="flex flex-col ">
           <p>Guaranty Trust Bank</p>
           <p>****2323</p>
         </div>
-        <div className="border border-green-300 px-4 py-1 text-sm  text-green-400 rounded-full">
+        <div className="border border-green-300 px-4 py-1 text-sm text-green-400 rounded-full">
           <p>Verified</p>
         </div>
       </div>
-      <div className="flex items-center justify-between p-2 ">
-        {" "}
-        <div className="flex flex-col ">
-          <p>First Bank of Nigeria</p>
-          <p>****3242</p>
-        </div>
-        <div className="border border-green-300 px-4 py-1 text-sm  text-green-400 rounded-full">
-          <p>Verified</p>
-        </div>
-      </div>
-      <div className="flex items-center justify-between p-2">
-        {" "}
-        <div className="flex flex-col ">
-          <p>United Bank for Africa</p>
-          <p>****2323</p>
-        </div>
-        <div className="border border-orange-300 px-4 py-1 text-sm  text-orange-400 rounded-full">
-          <p>Pending</p>
-        </div>
-      </div>
+
+      {/* Add New Bank Button */}
       <div
         className="text-sm text-black border mt-4 border-black rounded-sm text-center py-1 cursor-pointer"
         onClick={() => setBankModalOpen(true)}
       >
         + Add New Bank Account
       </div>
+
+      {/* Add Bank Modal */}
       {bankModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-lg relative">
@@ -118,13 +108,13 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
 
             <div className="mb-4">
               <h2 className="text-[24px] text-[#035638]">Add Bank Account</h2>
-              <p className="text-[#838794] text-[16px]"></p>
             </div>
 
             <form className="space-y-4" onSubmit={handleSubmit}>
+              {/* Bank Dropdown */}
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Bank Code
+                  Select Bank
                 </label>
                 <select
                   name="BankCode"
@@ -132,12 +122,16 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
                   onChange={handleInputChange}
                   className="w-full border border-gray-200 p-2 rounded"
                 >
-                  <option value="">Select Bank Code</option>
-                  <option value="bank1">Bank 1</option>
-                  <option value="bank2">Bank 2</option>
+                  <option value="">Select Bank</option>
+                  {allBanks.map((bank, index) => (
+                    <option key={index} value={bank.code || bank.BankCode}>
+                      {bank.name || bank.BankName}
+                    </option>
+                  ))}
                 </select>
               </div>
 
+              {/* Country */}
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Country
@@ -152,6 +146,7 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
                 />
               </div>
 
+              {/* Account Number */}
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Account Number
@@ -166,6 +161,7 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen }) => {
                 />
               </div>
 
+              {/* Buttons */}
               <div className="flex gap-2 mt-4">
                 <button
                   type="button"

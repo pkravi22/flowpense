@@ -61,6 +61,7 @@ const Page = () => {
   const [userDetail, setUserDetail] = useState(null);
   const [recentTransactions, setReecentTransactions] = useState([]);
   const [bankModalOpen, setBankModalOpen] = useState(false);
+  const [allBanks, setAllBanks] = useState([]);
   const [formData, setFormData] = useState({
     bank: "",
     amount: "",
@@ -141,8 +142,8 @@ const Page = () => {
     setLoading(true);
     try {
       const response = await bankServices.getAllBanks();
-      setReecentTransactions(response.ledger || []);
-
+      //setReecentTransactions(response.ledger || []);
+      setAllBanks(response.data || []);
       console.log("Wallet banks:", response);
     } catch (error) {
       console.error("Error fetching banks:", error);
@@ -185,7 +186,7 @@ const Page = () => {
     }
     fetchWalletLedger();
 
-    getAllBanks();
+    //  getAllBanks();
     getUSerBankAccounts();
     createPaymentId();
   }, [user, token]);
@@ -353,6 +354,7 @@ const Page = () => {
             <BankDetails
               bankModalOpen={bankModalOpen}
               setBankModalOpen={setBankModalOpen}
+              allBanks={allBanks}
             />
           </div>
           <div className="flex-2">
