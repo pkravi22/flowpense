@@ -373,7 +373,7 @@ const Page = () => {
               disabled={loadingStates.payment}
             >
               <Plus className="inline md:mr-2" size={16} />
-              <span className="text-sm">"Payment To Company Admin"</span>
+              <span className="text-sm">Payment To Company Admin</span>
             </button>
           </div>
         </div>
