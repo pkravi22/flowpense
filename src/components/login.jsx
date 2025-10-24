@@ -92,7 +92,10 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full sm:max-w-md bg-white rounded-2xl shadow-md p-8">
         <div className="flex justify-center mb-6">
-          <Image src="/logo 1.png" alt="Flowpense" width={200} height={40} />
+          <div className="flex flex-nowrap ">
+            <Image src="/f1 (1).svg" alt="logo" width={20} height={20}></Image>
+            <Image src="/f1 (2).svg" alt="logo" width={180} height={40}></Image>
+          </div>
         </div>
 
         <h2 className="text-xl host-grotesk font-semibold text-gray-900 ">

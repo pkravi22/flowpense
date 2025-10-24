@@ -195,7 +195,6 @@ const loadInitialData = async () => {
 
   try {
     await Promise.allSettled([
-      dispatch(fetchCompany({ token, id: user.companyId })),
       fetchWalletLedger(),
       getAllBanks(),
       getUSerBankAccounts(),
@@ -242,17 +241,20 @@ const closeaccountDetail = () => {
   setAccountDetailModalOpen(false);
 };
 
-// Calculate totals with fallbacks
-const totalAvailable = recentTransactions
-  .filter((tx) => tx.txType === "credit")
-  .reduce((sum, tx) => sum + (tx.amount || 0), 0);
+const sortedTransactions = [...recentTransactions].sort(
+  (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+);
+
+const totalAvailable =
+  sortedTransactions.length > 0 ? sortedTransactions[0].balanceAfter : 0;
 
 const totalAllocated = recentTransactions
   .filter((tx) => tx.txType === "card_funding")
   .reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
-const totalLeftInWallet = company ? company.walletBalance : 0;
-const totalBalance = (company ? company.walletBalance : 0) + totalAllocated;
+const totalLeftInWallet = totalAvailable;
+
+const totalBalance = totalAvailable + totalAllocated;
 
 const cardDetails = [
   {
@@ -372,7 +374,7 @@ return (
       <div className="">
         <div className="flex flex-wrap gap-2">
           <button
-            className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1 hover:bg-gray-50 transition-colors"
+            className="flex items-center px-4 py-2 cursor-pointer rounded-[10px] border hover:bg-gray-50 transition-colors"
             onClick={exportToCSV}
             disabled={loadingStates.ledger || recentTransactions.length === 0}
           >
@@ -380,13 +382,13 @@ return (
             <span className="text-sm">Export Statement</span>
           </button>
 
-          <button
+          {/* <button
             className="flex items-center px-2 cursor-pointer rounded-[10px] border p-1 hover:bg-gray-50 transition-colors"
             onClick={() => toast.error("Feature coming soon!")}
           >
             <ArrowUpRight className="inline md:mr-2" size={16} />
             <span className="text-sm">Transfer Funds</span>
-          </button>
+          </button> */}
 
           <button
             className="flex items-center px-2 rounded-[10px] cursor-pointer border p-1 bg-[#035638] text-white hover:bg-[#02422a] transition-colors"
@@ -400,7 +402,6 @@ return (
       </div>
     </div>
 
-    {/* Cards Grid with Loading States */}
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
       {loadingStates.initial
         ? Array(3)
@@ -448,7 +449,6 @@ return (
           )}
     </div>
 
-    {/* Main Content with Loading States */}
     <div className="flex flex-col">
       <div className="flex flex-col md:flex-row gap-4 mt-4">
         <div className="flex-1">
@@ -477,7 +477,6 @@ return (
       </div>
     </div>
 
-    {/* Fund Wallet Modal */}
     {isModalOpen && (
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
         <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-lg relative">
@@ -523,7 +522,7 @@ return (
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 flex flex-1 items-center gap-2 rounded-full bg-[#035638] text-white hover:bg-[#02422a] transition-colors disabled:opacity-50"
+                className="px-4 py-2 flex flex-1 items-center justify-center gap-2 rounded-full bg-[#035638] text-white hover:bg-[#02422a] transition-colors disabled:opacity-50"
                 disabled={loadingStates.payment}
               >
                 {loadingStates.payment ? (
@@ -582,7 +581,7 @@ return (
               </button>
               <button
                 onClick={handleAddFunds}
-                className="px-4 py-2 flex flex-1 items-center gap-2 rounded-full bg-[#035638] text-white hover:bg-[#02422a] transition-colors disabled:opacity-50"
+                className="px-4 py-2 flex flex-1 items-center justify-center gap-2 rounded-full bg-[#035638] text-white hover:bg-[#02422a] transition-colors disabled:opacity-50"
                 disabled={loadingStates.payment}
               >
                 {loadingStates.payment ? (

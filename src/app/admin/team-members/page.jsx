@@ -8,6 +8,7 @@ import AddMemberModal from "@/components/modals/TeamMember/AddMemberModal";
 import { teamServices } from "@/services/teamServices";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCompany } from "@/redux/slices/companySlice";
+import { toast } from "react-toastify";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("team");
@@ -67,6 +68,8 @@ const Page = () => {
         employeeData,
       });
       console.log("add employee response", data);
+      toast.success("Employee Added successfully");
+
       getALLTeams();
       setAddEmployeeModalOpen(false);
     } catch (e) {
@@ -201,7 +204,7 @@ const Page = () => {
             <>
               {loadingTeams ? (
                 <div className="animate-pulse space-y-3">
-                  {Array(3)
+                  {Array(1)
                     .fill(0)
                     .map((_, i) => (
                       <div

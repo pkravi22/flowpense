@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { sidebarLinks } from "../data/SidebarData";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 export default function Sidebar({
   isOpen,
@@ -26,12 +27,23 @@ export default function Sidebar({
               <X className="w-5 h-5" />
             </button>
 
-            {/* Logo */}
-            <div className="flex items-center mb-6">
-              <span className="ml-2 font-bold text-lg">Flowpense</span>
+            <div className="flex items-center mb-2 mt-2 ">
+              <div className="flex flex-nowrap  ">
+                <Image
+                  src="/f1 (1).svg"
+                  alt="logo"
+                  width={20}
+                  height={20}
+                ></Image>
+                <Image
+                  src="/f1 (2).svg"
+                  alt="logo"
+                  width={180}
+                  height={40}
+                ></Image>
+              </div>
             </div>
 
-            {/* Links */}
             <nav className="space-y-2">
               {sidebarLinks.map((link, i) => {
                 const isActive = pathname === link.path;
@@ -56,22 +68,35 @@ export default function Sidebar({
         </div>
       )}
       <div
-        className={`hidden md:flex flex-col border-r bg-white shadow-lg h-screen transition-all duration-300 ${
+        className={`hidden md:flex  flex-col border-r bg-white shadow-lg h-screen transition-all duration-300 ${
           isCollapsed ? "w-20" : "w-48"
         }`}
       >
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
             {!isCollapsed && (
-              <span className="font-bold text-lg">Flowpense</span>
+              <div className="flex flex-nowrap ">
+                <Image
+                  src="/f1 (1).svg"
+                  alt="logo"
+                  width={20}
+                  height={20}
+                ></Image>
+                <Image
+                  src="/f1 (2).svg"
+                  alt="logo"
+                  width={180}
+                  height={40}
+                ></Image>
+              </div>
             )}
           </div>
           <button
-            className="p-1 rounded bg-gray-100"
+            className="p-1   md:ml-4  rounded bg-gray-100"
             onClick={() => setIsCollapsed(!isCollapsed)}
           >
             {isCollapsed ? (
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-5 h-5 " />
             ) : (
               <ChevronLeft className="w-5 h-5" />
             )}

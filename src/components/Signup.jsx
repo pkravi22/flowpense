@@ -9,6 +9,7 @@ import PhoneInput from "react-phone-input-2";
 import { authService } from "@/services/authServices";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 const schema = z
   .object({
     firstName: z.string().nonempty("First Name is required"),
@@ -86,7 +87,10 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full sm:max-w-md bg-white rounded-2xl shadow-md p-2 sm:p-8">
         <div className="flex justify-center mb-6">
-          <img src="/logo 1.png" alt="Flowpense" className="h-16" />
+          <div className="flex flex-nowrap my-4 ">
+            <Image src="/f1 (1).svg" alt="logo" width={20} height={20}></Image>
+            <Image src="/f1 (2).svg" alt="logo" width={180} height={40}></Image>
+          </div>
         </div>
 
         <h2 className="text-xl font-semibold text-gray-900">

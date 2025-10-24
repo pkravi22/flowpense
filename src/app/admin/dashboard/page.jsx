@@ -347,12 +347,14 @@ const Page = () => {
               key={id}
               className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start justify-start gap-4"
             >
-              <div className="flex items-center gap-4 w-full">
-                <div className="rounded-full flex items-center justify-center">
-                  {React.cloneElement(icon, { color: iconColor, size: 24 })}
-                </div>
-                <div className="flex flex-col justify-between h-full">
-                  <p className="statcardTitle">{title}</p>
+              <div className="flex items-center  gap-4 w-full">
+                <div className="flex items-center gap-4">
+                  <div className="rounded-full flex items-center justify-center">
+                    {React.cloneElement(icon, { color: iconColor, size: 24 })}
+                  </div>
+                  <div className="flex flex-col justify-between h-full">
+                    <p className="statcardTitle">{title}</p>
+                  </div>
                 </div>
               </div>
               <p className="statcardNumber">{value}</p>
@@ -369,7 +371,7 @@ const Page = () => {
             {/* Header */}
             <div className="flex flex-col gap-2 shadow-md rounded-2xl p-1  ">
               <p className="statcardTitle">Totoal Revenue</p>
-              <p className="statcardNumber">$ 0</p>
+              <p className="statcardNumber mt-2">$ 0</p>
               {/* <p className="text-red-500">-52% Decline in Revenue</p> */}
             </div>
             <div className="flex flex-col md:flex-row gap-4 items-center">
@@ -435,7 +437,7 @@ const Page = () => {
         </div>
       </div>
       {/* Active Cards */}
-      <div className=" bg-white p-4 rounded-2xl shadow-md">
+      <div className=" bg-white p-4 mx-2 rounded-2xl shadow-md">
         <div className="flex items-center justify-between ">
           <div>
             <p className="pageTitle">Active Cards</p>
@@ -453,7 +455,7 @@ const Page = () => {
         {/* Cards */}
         <div className="">
           {/* Desktop: grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 py-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 py-4 ">
             {allCards?.cards?.length > 0 ? (
               allCards.cards.map((card, index) => {
                 const color = cardColors[index % cardColors.length]; // cycle through colors

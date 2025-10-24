@@ -1,8 +1,8 @@
 "use client";
 
 import { logout } from "@/redux/slices/authSlice";
-import { ArrowBigRight, Bell, Menu, UserCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowBigRight, Bell, Menu, UserCircle, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Topbar({ setIsOpen }) {
@@ -13,6 +13,7 @@ export default function Topbar({ setIsOpen }) {
 
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const modalRef = useRef(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -22,7 +23,13 @@ export default function Topbar({ setIsOpen }) {
     if (t) {
       try {
         const payload = JSON.parse(atob(t.split(".")[1]));
-        setUserEmail(payload.email || "Admin");
+        const email = payload.email || "Admin";
+        // Truncate email if too long
+        const shortEmail =
+          email.length > 20
+            ? email.slice(0, 10) + "..." + email.split("@")[1]
+            : email;
+        setUserEmail(shortEmail);
       } catch (error) {
         console.error("Error parsing token:", error);
         setUserEmail("Admin");
@@ -30,29 +37,28 @@ export default function Topbar({ setIsOpen }) {
     }
   }, []);
 
+  // Close modal on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setUsermodal(false);
+      }
+    };
+    if (userModal) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [userModal]);
+
   const handleLogout = () => {
     dispatch(logout());
+    setUsermodal(false);
     window.location.href = "/login";
   };
 
-  const handleUserModal = () => setUsermodal(!userModal);
-
-  
   if (!isClient) return null;
 
   return (
-    <header className="h-[64px] w-full relative flex items-center justify-between px-4 shadow">
-      {userModal && (
-        <div className="absolute top-12 text-black flex flex-col gap-2 p-4 right-12 w-[200px] font-semibold h-[60px] border bg-white rounded-2xl">
-          <div className="flex gap-2 cursor-pointer border rounded-md p-1">
-            <button onClick={handleLogout}>Logout</button>
-            <span>
-              <ArrowBigRight />
-            </span>
-          </div>
-        </div>
-      )}
-
+    <header className="h-[50px] w-full relative flex items-center justify-between px-4 shadow bg-white z-50">
+      {/* Mobile sidebar toggle */}
       <div className="flex items-center gap-2">
         <button
           className="md:hidden p-2 rounded bg-gray-200 shadow"
@@ -62,22 +68,59 @@ export default function Topbar({ setIsOpen }) {
         </button>
       </div>
 
-      <div className="flex items-center gap-4 flex-shrink-0 ">
-        <button className="p-2 rounded-full">
-          <Bell className="w-6 h-6 text-black" />
+      {/* Right side icons */}
+      <div className="flex items-center gap-4 flex-shrink-0">
+        <button className="p-2 rounded-full hover:bg-gray-100">
+          <Bell className="w-6 h-6 text-gray-700" />
         </button>
 
         <div
-          className="flex items-center gap-2 cursor-pointer px-3 py-1 rounded"
-          onClick={handleUserModal}
+          className="flex items-center gap-2 cursor-pointer px-3 py-1 rounded hover:bg-gray-100 transition"
+          onClick={() => setUsermodal(!userModal)}
         >
-          <UserCircle size={32} className="text-black" />
-          <div className="text-black hidden sm:block">
-            <p className="text-sm font-medium">{userEmail}</p>
-            <p className="text-xs text-black">{user?.role}</p>
+          <UserCircle size={32} className="text-gray-700" />
+          <div className="text-gray-800 hidden sm:block">
+            <p className="text-sm font-medium truncate max-w-[120px]">
+              {userEmail}
+            </p>
+            <p className="text-xs text-gray-500">{user?.role || "User"}</p>
           </div>
         </div>
       </div>
+
+      {/* Profile Modal */}
+      {userModal && (
+        <div
+          ref={modalRef}
+          className="absolute top-[70px] right-4 w-[220px] bg-white shadow-lg rounded-2xl border p-4 animate-fadeIn"
+        >
+          {/* Close Button (for mobile view) */}
+          <div className="flex justify-between items-center mb-3 sm:hidden">
+            <h3 className="text-gray-700 font-semibold">Profile</h3>
+            <button
+              onClick={() => setUsermodal(false)}
+              className="p-1 hover:bg-gray-100 rounded-full"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          <div className="flex flex-col items-start gap-2">
+            <div className="w-full border-b pb-2">
+              <p className="text-sm font-semibold text-gray-800">{userEmail}</p>
+              <p className="text-xs text-gray-500">{user?.role || "User"}</p>
+            </div>
+
+            <button
+              onClick={handleLogout}
+              className="mt-2 w-full flex items-center justify-center gap-2 text-red-600 font-medium border border-red-400 hover:bg-red-50 py-1.5 rounded-lg transition"
+            >
+              Logout
+              <ArrowBigRight size={18} />
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

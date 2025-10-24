@@ -23,7 +23,7 @@ export default function SettingsPage() {
           Monitor your business information,setting and card usage
         </p>
       </div>
-      <div className="flex items-center bg-gray-200 h-[45px] p-2 mt-4 rounded-2xl shadow-md">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-center items-center bg-gray-200 h-[90px] md:h-[45px] p-2 mt-4 rounded-2xl shadow-md">
         {tabs.map((tab) => (
           <button
             key={tab.id}

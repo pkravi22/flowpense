@@ -139,7 +139,7 @@ export default function VerifyAccount({ type, email: propEmail }) {
 
                 <button
                   type="submit"
-                  className="w-full bg-green-800 hover:bg-green-900 text-white py-3 rounded-4xl mt-2 disabled:opacity-60"
+                  className="w-full bg-green-800 hover:bg-green-900 text-white py-3 rounded-4xl mt-2 disabled:opacity-60 cursor-pointer"
                   disabled={verifyLoading || resendLoading}
                 >
                   {verifyLoading ? "Verifying..." : "Verify"}

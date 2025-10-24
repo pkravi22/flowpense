@@ -36,7 +36,7 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen, userBankAccounts }) => {
     setLoading(true);
     try {
       const response = await bankServices.addBankAccount({ formData, token });
-
+      setBankModalOpen(false);
       toast.success("Bank added successfully");
     } catch (error) {
       console.error("Error adding bank:", error);
@@ -63,7 +63,7 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen, userBankAccounts }) => {
   };
 
   useEffect(() => {
-    getAllBanks();
+    //getAllBanks();
   }, [user, token]);
 
   return (
@@ -84,9 +84,9 @@ const BankDetails = ({ bankModalOpen, setBankModalOpen, userBankAccounts }) => {
                 <p className="text-sm text-gray-600">{bank.AccountNumber}</p>
               </div>
 
-              <div className="border border-green-300 px-3 py-1 text-xs text-green-700 rounded-full font-medium">
+              {/* <div className="border border-green-300 px-3 py-1 text-xs text-green-700 rounded-full font-medium">
                 Verified
-              </div>
+              </div> */}
             </div>
           ))
         ) : (

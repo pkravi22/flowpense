@@ -95,15 +95,15 @@ const AddEmployeeModal = ({ setAddEmployeeModalOpen, handleAddEmployee }) => {
             <button
               type="button"
               onClick={() => setAddEmployeeModalOpen(false)}
-              className="px-4 py-1 flex-1 border border-background text-sm rounded-full"
+              className="px-2  sm:px-4 py-2 flex-1 border border-background text-sm rounded-full"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-[10px] flex gap-2 items-center justify-center flex-1 bg-background text-sm rounded-full text-white cursor-pointer"
+              className="px-2  sm:px-4 py-2  flex gap-2 items-center justify-center flex-1 bg-background text-sm rounded-full text-white cursor-pointer"
             >
-              <PlusIcon />
+              <PlusIcon size={16} />
               Add Employee
             </button>
           </div>

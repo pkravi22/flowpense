@@ -59,7 +59,7 @@ const EmployeeTable = ({ employees = [] }) => {
   }));
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md w-full">
+    <div className="bg-white p-4 rounded-lg shadow-md w-full min-w-[360px] overflow-x-auto">
       <div className="flex flex-row justify-between items-center gap-3 mb-4">
         <input
           type="text"
@@ -78,8 +78,8 @@ const EmployeeTable = ({ employees = [] }) => {
         </CSVLink>
       </div>
 
-      <div className="mt-3 h-[500px] w-[360px] sm:w-[500px] md:w-[600px] lg:w-[1000px] overflow-auto">
-        <table className="min-w-full text-sm border-1 border-l-gray-300 ">
+      <div className="mt-3 h-[500px] w-[300px] sm:w-[500px] md:w-[600px] lg:w-[1000px] ">
+        <table className="min-w-[300px] text-sm border-1 border-l-gray-30">
           <thead className="bg-gray-100 text-left">
             <tr>
               <th className="p-3 font-semibold">ID</th>

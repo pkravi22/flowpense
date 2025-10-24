@@ -18,6 +18,9 @@ export default function Home() {
   }, [token, router]);
 
   return (
-    <div className="flex justify-center items-center h-screen">Loading...</div>
+    <div className="flex justify-center items-center h-screen">
+      <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+      Loading...
+    </div>
   );
 }

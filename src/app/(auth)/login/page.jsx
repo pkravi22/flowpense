@@ -1,8 +1,17 @@
+"use client";
 import Image from "next/image";
 import Login from "../../../components/login";
-
-
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 export default function HeroSplit() {
+  const { user, token } = useSelector((state) => state.auth);
+  const router = useRouter();
+  useEffect(() => {
+    if (token) {
+      router.replace("/admin/dashboard");
+    }
+  }, []);
   return (
     <section className="relative w-full">
       <div className="grid grid-cols-1 md:grid-cols-2   lg:min-h-screen  bg-[url(/main.svg)] sm:bg-[url(/bgImage.png)] bg-cover bg-center">
