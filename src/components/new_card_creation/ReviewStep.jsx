@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { toast } from "react-toastify"; // ✅ Add toast import for messages
 
 export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
+  const [errors, setErrors] = useState({});
+
   const categories = [
     "Travel",
     "Food",
@@ -20,69 +22,63 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
     updateData({ blockedCategory: updated });
   };
 
-  const handleNext = () => {
-    if (
-      !data.dailySpendLimit &&
-      !data.weeklySpendLimit &&
-      !data.monthlyLimit &&
-      !data.perTransactionLimit
-    ) {
-      toast.error("Please set at least one spending limit");
-      return;
+  // ✅ Validation logic
+  const validateLimits = () => {
+    const newErrors = {};
+
+    const daily = Number(data.dailySpendLimit) || 0;
+    const weekly = Number(data.weeklySpendLimit) || 0;
+    const monthly = Number(data.monthlyLimit) || 0;
+    const perTxn = Number(data.perTransactionLimit) || 0;
+
+    if (!daily && !weekly && !monthly && !perTxn) {
+      newErrors.general = "Please set at least one spending limit.";
     }
-    nextStep();
+
+    if (weekly && monthly && weekly >= monthly) {
+      newErrors.weeklySpendLimit =
+        "Weekly limit should be less than monthly limit.";
+    }
+
+    if (daily && weekly && daily >= weekly) {
+      newErrors.dailySpendLimit =
+        "Daily limit should be less than weekly limit.";
+    }
+
+    if (perTxn && daily && perTxn >= daily) {
+      newErrors.perTransactionLimit =
+        "Per transaction limit should be less than daily limit.";
+    }
+
+    if (perTxn && weekly && perTxn >= weekly) {
+      newErrors.perTransactionLimit =
+        "Per transaction limit should be less than weekly limit.";
+    }
+
+    if (perTxn && monthly && perTxn >= monthly) {
+      newErrors.perTransactionLimit =
+        "Per transaction limit should be less than monthly limit.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  // ✅ Validation logic for spending limits
+  const handleNext = () => {
+    if (validateLimits()) nextStep();
+  };
+
   const handleLimitChange = (field, value) => {
-    const num = value ? Number(value) : "";
-
-    switch (field) {
-      case "monthlyLimit":
-        updateData({ monthlyLimit: num });
-        break;
-
-      case "weeklySpendLimit":
-        if (num && data.monthlyLimit && num >= data.monthlyLimit) {
-          toast.error("Weekly limit should be less than monthly limit");
-          return;
-        }
-        updateData({ weeklySpendLimit: num });
-        break;
-
-      case "dailySpendLimit":
-        if (num && data.weeklySpendLimit && num >= data.weeklySpendLimit) {
-          toast.error("Daily limit should be less than weekly limit");
-          return;
-        }
-        updateData({ dailySpendLimit: num });
-        break;
-
-      case "perTransactionLimit":
-        if (
-          num &&
-          ((data.dailySpendLimit && num >= data.dailySpendLimit) ||
-            (data.weeklySpendLimit && num >= data.weeklySpendLimit) ||
-            (data.monthlyLimit && num >= data.monthlyLimit))
-        ) {
-          toast.error(
-            "Per transaction limit should be less than all other limits"
-          );
-          return;
-        }
-        updateData({ perTransactionLimit: num });
-        break;
-
-      default:
-        break;
-    }
+    updateData({ [field]: value ? Number(value) : "" });
+    // clear error on change
+    setErrors((prev) => ({ ...prev, [field]: undefined, general: undefined }));
   };
 
   return (
     <div className="p-6 space-y-6">
       <div className="border-b border-gray-200 flex justify-between items-center pb-4">
-        <p>Set Spending Limits & Restrictions</p>
-        <p className="text-[#035638] text-[16px]">Step 3 Of 4</p>
+        <p className="font-medium">Set Spending Limits & Restrictions</p>
+        <p className="text-[#035638] text-[16px]">Step 3 of 4</p>
       </div>
 
       <div className="space-y-6">
@@ -99,8 +95,17 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
                 handleLimitChange("dailySpendLimit", e.target.value)
               }
               placeholder="10000"
-              className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 focus:border-[#035638]"
+              className={`w-full border rounded-lg px-3 py-2 outline-none ${
+                errors.dailySpendLimit
+                  ? "border-red-500 focus:border-red-500"
+                  : "border-gray-300 focus:border-[#035638]"
+              }`}
             />
+            {errors.dailySpendLimit && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.dailySpendLimit}
+              </p>
+            )}
           </div>
 
           {/* Weekly Spend Limit */}
@@ -115,8 +120,17 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
                 handleLimitChange("weeklySpendLimit", e.target.value)
               }
               placeholder="30000"
-              className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 focus:border-[#035638]"
+              className={`w-full border rounded-lg px-3 py-2 outline-none ${
+                errors.weeklySpendLimit
+                  ? "border-red-500 focus:border-red-500"
+                  : "border-gray-300 focus:border-[#035638]"
+              }`}
             />
+            {errors.weeklySpendLimit && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.weeklySpendLimit}
+              </p>
+            )}
           </div>
 
           {/* Monthly Limit */}
@@ -131,8 +145,15 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
                 handleLimitChange("monthlyLimit", e.target.value)
               }
               placeholder="50000"
-              className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 focus:border-[#035638]"
+              className={`w-full border rounded-lg px-3 py-2 outline-none ${
+                errors.monthlyLimit
+                  ? "border-red-500 focus:border-red-500"
+                  : "border-gray-300 focus:border-[#035638]"
+              }`}
             />
+            {errors.monthlyLimit && (
+              <p className="text-xs text-red-500 mt-1">{errors.monthlyLimit}</p>
+            )}
           </div>
 
           {/* Per Transaction Limit */}
@@ -147,11 +168,25 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
                 handleLimitChange("perTransactionLimit", e.target.value)
               }
               placeholder="2000"
-              className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 focus:border-[#035638]"
+              className={`w-full border rounded-lg px-3 py-2 outline-none ${
+                errors.perTransactionLimit
+                  ? "border-red-500 focus:border-red-500"
+                  : "border-gray-300 focus:border-[#035638]"
+              }`}
             />
+            {errors.perTransactionLimit && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.perTransactionLimit}
+              </p>
+            )}
           </div>
         </div>
 
+        {errors.general && (
+          <p className="text-sm text-red-600">{errors.general}</p>
+        )}
+
+        {/* Blocked Categories */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Merchant Category Restrictions
@@ -163,17 +198,15 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
             {categories.map((category, idx) => (
               <label
                 key={idx}
-                className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"
+                className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer"
               >
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={data.blockedCategory?.includes(category) || false}
-                    onChange={() => toggleCategory(category)}
-                    className="h-4 w-4 accent-green-900 bg-green-100 border-green-900 focus:ring-green-900 cursor-pointer"
-                  />
-                  <span className="text-sm ">{category}</span>
-                </label>
+                <input
+                  type="checkbox"
+                  checked={data.blockedCategory?.includes(category) || false}
+                  onChange={() => toggleCategory(category)}
+                  className="h-4 w-4 accent-green-900 bg-green-100 border-green-900 focus:ring-green-900 cursor-pointer"
+                />
+                <span className="text-sm">{category}</span>
               </label>
             ))}
           </div>

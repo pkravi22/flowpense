@@ -102,6 +102,7 @@ export default function CardDetailsStep({
         </div>
 
         {/* Card Holders */}
+        {/* Card Holders */}
         <div className="relative px-8 p-2" ref={holderRef}>
           <label className="block text-sm font-medium mb-1">
             Card Holder(s)
@@ -118,30 +119,40 @@ export default function CardDetailsStep({
           </button>
 
           {holderOpen && (
-            <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-              {holders.map((holder, idx) => {
-                const isChecked = data.cardHolder?.includes(holder.name);
-                return (
-                  <div
-                    key={idx}
-                    className="cursor-pointer px-3 py-3 flex items-center hover:bg-gray-100"
-                    onClick={() => toggleHolder(holder)}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      readOnly
-                      className="mr-2 h-4 w-4 text-[#035638]"
-                    />
-                    <div>
-                      <div className="font-medium">{holder.name}</div>
-                      <div className="text-xs text-gray-500">
-                        {holder.jobTitle} — {holder.department}
+            <div className="absolute z-10 mt-1 max-w-[500px] bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              {loadingEmployees ? (
+                <div className="text-center py-4 text-gray-500 text-sm">
+                  Loading employees...
+                </div>
+              ) : holders && holders.length > 0 ? (
+                holders.map((holder, idx) => {
+                  const isChecked = data.cardHolder?.includes(holder.name);
+                  return (
+                    <div
+                      key={idx}
+                      className="cursor-pointer px-3 py-3 flex items-center hover:bg-gray-100"
+                      onClick={() => toggleHolder(holder)}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        readOnly
+                        className="mr-2 h-4 w-4 accent-[#035638]"
+                      />
+                      <div>
+                        <div className="font-medium">{holder.name}</div>
+                        <div className="text-xs text-gray-500">
+                          {holder.jobTitle} — {holder.department}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              ) : (
+                <div className="text-center min-w-[400px] py-4 text-gray-500 text-sm">
+                  No employees available
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -163,30 +174,40 @@ export default function CardDetailsStep({
           </button>
 
           {approverOpen && (
-            <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-              {approvers.map((approver, idx) => {
-                const isChecked = data.approver?.includes(approver.name);
-                return (
-                  <div
-                    key={idx}
-                    className="cursor-pointer px-3 py-3 flex items-center hover:bg-gray-100"
-                    onClick={() => toggleApprover(approver)}
-                  >
-                    <input
-                      type="radio"
-                      checked={isChecked}
-                      readOnly
-                      className="mr-2 h-4 w-4 text-[#035638]"
-                    />
-                    <div>
-                      <div className="font-medium">{approver.name}</div>
-                      <div className="text-xs text-gray-500">
-                        {approver.jobTitle} — {approver.department}
+            <div className="absolute z-10 mt-1 max-w-[500px] bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              {loadingEmployees ? (
+                <div className="text-center py-4 text-gray-500 text-sm">
+                  Loading approvers...
+                </div>
+              ) : approvers && approvers.length > 0 ? (
+                approvers.map((approver, idx) => {
+                  const isChecked = data.approver?.includes(approver.name);
+                  return (
+                    <div
+                      key={idx}
+                      className="cursor-pointer px-3 py-3 flex items-center hover:bg-gray-100"
+                      onClick={() => toggleApprover(approver)}
+                    >
+                      <input
+                        type="radio"
+                        checked={isChecked}
+                        readOnly
+                        className="mr-2 h-4 w-4 accent-[#035638]"
+                      />
+                      <div>
+                        <div className="font-medium">{approver.name}</div>
+                        <div className="text-xs text-gray-500">
+                          {approver.jobTitle} — {approver.department}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              ) : (
+                <div className="text-center min-w-[400px] py-4 text-gray-500 text-sm">
+                  No approvers available
+                </div>
+              )}
             </div>
           )}
         </div>
