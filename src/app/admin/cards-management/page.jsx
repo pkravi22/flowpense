@@ -263,8 +263,8 @@ const Page = () => {
   });
 
   return (
-    <div>
-      <div className="w-full flex flex-col md:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="p-0 md:p-4 overflow-visible bg-gray-100">
+      <div className="w-full  flex flex-col md:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Card Management</h1>
           <p className="pageSubTitle mt-2">
@@ -280,7 +280,7 @@ const Page = () => {
         {cardDetails.map(({ id, icon, iconColor, title, value, sub }) => (
           <div
             key={id}
-            className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start gap-4"
+            className="bg-white p-4 rounded-2xl  flex flex-col items-start gap-4"
           >
             <div className="flex items-center gap-4 w-full">
               <div className="rounded-full flex items-center justify-center">
@@ -297,26 +297,38 @@ const Page = () => {
       </div>
 
       {/* Active Cards Section */}
-      <div className="mt-6 bg-white p-4 rounded-2xl shadow-md">
-        <div className="flex items-center justify-between">
+      <div className="mt-6 bg-white p-2 md:p-4 min-h-[400px]  rounded-2xl shadow-md">
+        <div className="flex items-center gap-2 justify-between">
           <div>
             <p className="pageTitle">Active Cards</p>
-            <p className="pageSubTitle mt-2">
+            <p className=" pageSubTitle mt-2 ">
               Manage virtual business cards and spending limits
             </p>
           </div>
           <div
-            className="border border-black text-white bg-[#035638] flex p-2 w-[130px] text-[12px] justify-center items-center gap-1 rounded-4xl mt-4 cursor-pointer hover:bg-[#035638] hover:text-white transition duration-300 ease-in-out"
+            className="border border-black text-white bg-[#035638] flex p-2 w-[180px] text-[12px] justify-center items-center gap-1 rounded-4xl mt-4 cursor-pointer hover:bg-[#035638] hover:text-white transition duration-300 md:gap-2 ease-in-out min-w-[80px]"
             onClick={() => setShowCardFlow(true)}
           >
-            <Plus size={12} />
-            <p>Add new card</p>
+            <div
+              style={{
+                backgroundColor: "#80b858ff",
+                borderRadius: "50%",
+                width: "20px",
+                height: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Plus size={12} color="#E5EE7D" />
+            </div>
+            <p className="text-sm">Add new card</p>
           </div>
         </div>
 
         {/* Search + Filter */}
-        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 mt-6">
-          <div className="gap-2 border border-gray-300 flex items-center px-4 text-sm rounded-3xl py-1">
+        <div className="w-full flex  md:flex-row items-center justify-between gap-4 mt-6">
+          <div className="gap-2 border border-gray-300 flex items-center px-2  text-sm rounded-3xl py-1">
             <input
               type="text"
               className="outline-none"

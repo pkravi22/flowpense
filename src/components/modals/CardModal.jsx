@@ -78,9 +78,9 @@ const CardModal = ({ card, onClose, transactions }) => {
         <h2 className="text-2xl font-semibold mb-6">Engineering Team Card</h2>
 
         {/* Card Details Section */}
-        <div className="flex justify-between items-start bg-gray-50 rounded-xl p-4 mb-6">
+        <div className="flex flex-col md:flex-row justify-between items-start bg-gray-50 rounded-xl p-4 mb-6">
           {/* Left side card visual */}
-          <div className="bg-[#035638] text-white rounded-xl p-2 w-[55%]">
+          <div className="bg-[#035638] text-white rounded-xl p-2 w-full md:w-[55%]">
             <div className="flex items-center gap-3 mb-4">
               <div>
                 <p className="font-medium">
@@ -107,7 +107,7 @@ const CardModal = ({ card, onClose, transactions }) => {
           </div>
 
           {/* Right side info */}
-          <div className="flex flex-col justify-between w-[40%]">
+          <div className="flex flex-col justify-between w-full md:w-[40%]">
             <div className="flex justify-end">
               <p
                 className={`mt-2 text-sm font-medium ${
@@ -120,7 +120,7 @@ const CardModal = ({ card, onClose, transactions }) => {
             <div className="flex justify-between">
               <div>
                 <p className="font-medium text-gray-300">Team Lead</p>
-                <p className="text-md text-gray-800">Adebayo Okafor</p>
+                <p className="text-md text-gray-800">{card?.Approver[0]}</p>
               </div>
 
               <div className="">

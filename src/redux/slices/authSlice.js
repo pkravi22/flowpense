@@ -21,7 +21,7 @@ export const login = createAsyncThunk(
   }
 );
 
-// Helper to decode token
+
 const getUserFromToken = (token) => {
   console.log("hello token", token);
   try {
@@ -33,12 +33,16 @@ const getUserFromToken = (token) => {
   }
 };
 
-
+console.log("lets fetch localstorage");
 const tokenFromStorage =
   typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+const refreshToken =
+  typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null;
 console.log("token", tokenFromStorage);
 const initialState = {
   token: tokenFromStorage,
+  refreshToken: refreshToken,
   user: tokenFromStorage ? getUserFromToken(tokenFromStorage) : null,
   isLoading: false,
   isError: false,

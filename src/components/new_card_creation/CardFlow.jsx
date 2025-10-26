@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import ReviewSummaryStep from "./ReviewCard";
 import { cardServices } from "@/services/cardServices";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 export default function CardFlow({ employees, loadingEmployees }) {
   const [step, setStep] = useState(1);
@@ -68,9 +69,11 @@ export default function CardFlow({ employees, loadingEmployees }) {
       }
 
       console.log("Card Created Successfully:", result);
+      toast.success("Card Created Successfully");
       nextStep();
     } catch (error) {
       console.error("Error creating card:", error);
+      toast.error(error.message || "Failed to create card");
       setApiError(error.message || "An unexpected error occurred");
     } finally {
       setIsLoading(false);
@@ -78,7 +81,7 @@ export default function CardFlow({ employees, loadingEmployees }) {
   };
 
   return (
-    <div className="max-h-screen flex flex-col rounded-2xl">
+    <div className="max-h-[90vh] flex flex-col rounded-2xl ">
       {step < 5 && (
         <div className="flex flex-col gap-0 px-4 py-4">
           <h1 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6">
@@ -142,9 +145,11 @@ export default function CardFlow({ employees, loadingEmployees }) {
           )}
           <button
             onClick={step === 4 ? handleSubmit : nextStep}
-            className="px-12 py-[10px] bg-background cursor-pointer flex items-center gap-2 text-sm text-white rounded-full hover:bg-background"
+            className="px-12 py-[10px] bg-background cursor-pointer flex items-center gap-2 text-sm text-white rounded-full hover:bg-background disabled:opacity-50"
+            disabled={isLoading} // disable while API is running
           >
-            {step === 4 ? "Create Card" : "Next"}
+            {isLoading ? "Creating Card..." : "Create Card"}
+
             {step < 4 && <ChevronRight size={14} />}
           </button>
         </div>

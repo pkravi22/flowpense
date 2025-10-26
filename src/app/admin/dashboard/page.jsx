@@ -157,6 +157,7 @@ const Page = () => {
   const { user, token } = useSelector((state) => state.auth);
 
   console.log("token from store", user);
+
   let storedCompany = null;
   let storedVerified = null;
   const dispatch = useDispatch();
@@ -186,13 +187,15 @@ const Page = () => {
   };
 
   useEffect(() => {
-    // Runs only in browser
-    //  const token =
-    //    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!user) return; // Wait until user is available (avoid redirecting immediately)
 
-    if (token) {
+    if (!user.companyId) {
+      router.replace("/register-company");
+    } else if (user.companyId) {
       dispatch(fetchAllCards({ token }));
       dispatch(fetchAllExpenses({ token }));
+    } else {
+      router.replace("/login");
     }
   }, [dispatch]);
 
@@ -325,7 +328,7 @@ const Page = () => {
         )}
         <div className="w-full flex flex-col md:flex-row  items-start md:items-center   md:justify-between gap-4">
           <div>
-            <h1 className="pageTitle ">Dashboard</h1>
+            <h1 className="pageTitle bagel-fat-one ">Dashboard</h1>
             <p className="pageSubTitle mt-2 font-custom">
               Monitor your business expenses and card usage
             </p>
@@ -340,12 +343,12 @@ const Page = () => {
       </div>
 
       {/* stat-Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 ">
         {cardDetails.map(
           ({ id, icon, iconBg, title, value, iconColor, sub }) => (
             <div
               key={id}
-              className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start justify-start gap-4"
+              className="bg-white p-4 rounded-2xl  flex flex-col items-start justify-start gap-4"
             >
               <div className="flex items-center  gap-4 w-full">
                 <div className="flex items-center gap-4">
@@ -364,7 +367,7 @@ const Page = () => {
         )}
       </div>
       {/*  charts */}
-      <div className="flex flex-col  md:flex-row gap-6 mt-6  p-2 rounded-2xl ">
+      <div className="flex flex-col  md:flex-row gap-6 mt-6   rounded-2xl ">
         {/*  Bar charts */}
         <div className="flex flex-col flex-3 gap-6 bg-white shadow-md p-4  md:min-h-[400px] rounded-2xl">
           <div className="flex items-center justify-between mb-4">
@@ -437,7 +440,7 @@ const Page = () => {
         </div>
       </div>
       {/* Active Cards */}
-      <div className=" bg-white p-4 mx-2 rounded-2xl shadow-md">
+      <div className=" bg-white mt-2 px-2  rounded-2xl shadow-md">
         <div className="flex items-center justify-between ">
           <div>
             <p className="pageTitle">Active Cards</p>
@@ -471,7 +474,9 @@ const Page = () => {
                 );
               })
             ) : (
-              <p className="text-gray-500">No active cards available.</p>
+              <p className="text-gray-500  w-full">
+                No active cards available.
+              </p>
             )}
           </div>
         </div>

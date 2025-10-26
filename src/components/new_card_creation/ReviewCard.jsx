@@ -38,7 +38,7 @@ export default function ReviewSummaryStep({ data, nextStep, prevStep }) {
         <p className="text-[#035638] text-[16px]">Step 4 Of 4</p>
       </div>
 
-      <div className="grid grid-cols-2  sm:grid-cols-2 md:grid-cols-3 sm:gap-2 md:gap-4 p-1">
+      <div className="grid grid-cols-2  sm:grid-cols-2 md:grid-cols-3 my-2 gap-2 sm:gap-2 md:gap-4 p-1">
         {details.map((item, index) => (
           <div
             key={index}

@@ -1,3 +1,13 @@
+import {
+  ArrowBigDown,
+  ArrowDownLeftIcon,
+  ArrowDownRightIcon,
+  ArrowRight,
+  ArrowRightLeft,
+  ArrowUp,
+  Clock4,
+  Watch,
+} from "lucide-react";
 import React from "react";
 
 const RecentTransactions = ({ recentTransactions, onExport, loading }) => {
@@ -21,16 +31,25 @@ const RecentTransactions = ({ recentTransactions, onExport, loading }) => {
         lastFiveTransactions.map((tx) => (
           <div
             key={tx.id}
-            className="flex justify-between items-center overflow-x-auto p-3 border-b border-gray-100"
+            className="flex gap-2 justify-between items-center  overflow-x-auto p-3 border-b-2 border-gray-100"
           >
+            <div>
+              {tx.txType === "card_funding" ? (
+                <Clock4 color="#F59F0A" />
+              ) : tx.txType === "credit" ? (
+                <ArrowDownRightIcon color="#21C45D" />
+              ) : (
+                <ArrowRightLeft color="#EF4343" />
+              )}
+            </div>
             <div className="flex-1">
               <p className="  font-medium capitalize">{tx.txType}</p>
               <p className="text-sm text-gray-400">
                 {new Date(tx.createdAt).toLocaleString()}
               </p>
-              {/* <p className="text-sm text-gray-400 ">
+              <p className="text-sm text-gray-400 ">
                 Ref: {tx.receipt_url || "N/A"}
-              </p> */}
+              </p>
             </div>
             <div className=" flex-1 text-right">
               <p
@@ -47,7 +66,7 @@ const RecentTransactions = ({ recentTransactions, onExport, loading }) => {
                     : "border-orange-200 bg-orange-100 text-orange-600"
                 }`}
               >
-                {tx.status}
+                {tx.status === "success" ? "completed" : "pending"}
               </p>
             </div>
           </div>

@@ -59,7 +59,7 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl max-w-3xl max-h-[96vh] flex flex-col">
+    <div className="bg-white rounded-xl max-w-3xl max-h-[86vh] flex flex-col">
       <div className="border-b relative border-gray-200 p-4 flex flex-col md:flex-row justify-between">
         <div>
           <h1 className="topHeading1">Verify Account</h1>
@@ -74,7 +74,7 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
           </p>
         </div>
         <div
-          className="absolute -top-2 right-0 bg-white rounded-full"
+          className="absolute -top-2 right-0 bg-gray-200  rounded-full"
           onClick={onCancel}
         >
           <X size={24} />

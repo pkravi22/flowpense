@@ -61,7 +61,8 @@ const Page = () => {
     }
   };
 
-  const handleAddEmployee = async ({ employeeData }) => {
+  const handleAddEmployee = async (employeeData) => {
+    console.log(employeeData);
     try {
       const data = await teamServices.addEmployee({
         token,
@@ -71,6 +72,7 @@ const Page = () => {
       toast.success("Employee Added successfully");
 
       getALLTeams();
+      getAllEmployees();
       setAddEmployeeModalOpen(false);
     } catch (e) {
       console.log("error during adding employee to team", e);
@@ -81,8 +83,14 @@ const Page = () => {
     try {
       const data = await teamServices.teamCreation({ teamData, token });
       console.log("create team response", data);
-      setCreateTeamModal(false);
-      getALLTeams();
+
+      if (data) {
+        toast.success("Team Created successfully");
+
+        await getALLTeams();
+
+        setCreateTeamModal(false);
+      }
     } catch (e) {
       console.log("error during creating team", e);
     }
@@ -157,16 +165,16 @@ const Page = () => {
         <div className="flex gap-2">
           <div
             onClick={() => setAddEmployeeModalOpen(true)}
-            className="flex w-[200px] items-center flex-1 gap-2 border border-green-600 px-2 py-1 text-sm text-green-600 rounded-full cursor-pointer"
+            className="flex w-[200px] items-center justify-center flex-1 gap-2 border border-green-600 px-2  py-2 text-sm text-green-600 rounded-full cursor-pointer"
           >
             <User size={16} />
             <span>Add Employee</span>
           </div>
           <div
             onClick={() => setCreateTeamModal(true)}
-            className="border flex-1 items-center bg-green-900 px-4 py-1 text-sm text-white flex gap-2 rounded-full cursor-pointer"
+            className="border flex-1 items-center justify-center bg-green-900 px-4 py-2 text-sm text-white flex gap-1 rounded-full cursor-pointer"
           >
-            <Plus size={16} />
+            <Plus size={14} />
             <span>Create Team</span>
           </div>
         </div>
@@ -243,7 +251,7 @@ const Page = () => {
                               setSelectedTeamId(team.id);
                               setAddMemberModal(true);
                             }}
-                            className="flex gap-2 rounded-md text-black border px-4 py-1"
+                            className="flex gap-2 items-center min-w-[80px] rounded-md text-black border px-1 md:px-4 py-1"
                           >
                             <User />
                             Add Member
@@ -261,7 +269,7 @@ const Page = () => {
                           <div className="flex items-center justify-between gap-2">
                             {" "}
                             <p className="text-gray-500 text-xs">
-                              Monthly Spent
+                              Monthly Spent Limit
                             </p>{" "}
                             <span>{team.MonthlyBudget}</span>{" "}
                           </div>{" "}
@@ -272,14 +280,14 @@ const Page = () => {
                               style={{ width: `${percentage}%` }}
                             ></div>{" "}
                           </div>{" "}
-                          <div className="flex items-center justify-between gap-2">
+                          {/* <div className="flex items-center justify-between gap-2">
                             {" "}
                             <p className="text-gray-500 text-xs">
                               {" "}
                               {percentage.toFixed(0)}% used This Month{" "}
                             </p>{" "}
                             <span>{team.monthlyLimit}</span>{" "}
-                          </div>{" "}
+                          </div>{" "} */}
                         </div>
                         <div>
                           <p className="font-semibold">Team Size</p>

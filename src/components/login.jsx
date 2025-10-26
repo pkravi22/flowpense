@@ -50,6 +50,7 @@ export default function Login() {
         type: "manual",
         message: message || "Invalid credentials",
       });
+      toast.error(message || "Login failed");
       resetField("password");
       dispatch(reset());
     }

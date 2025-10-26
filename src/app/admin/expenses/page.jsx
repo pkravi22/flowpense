@@ -89,7 +89,7 @@ const Page = () => {
   ];
 
   return (
-    <div className="">
+    <div className="p-0 md:p-4 overflow-visible bg-gray-100">
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Expenses</h1>
@@ -103,14 +103,16 @@ const Page = () => {
         {cardDetails.map(({ id, icon, iconColor, title, value, sub }) => (
           <div
             key={id}
-            className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start gap-4"
+            className="bg-white p-4 rounded-2xl  flex flex-col items-start gap-4"
           >
-            <div className="flex items-center gap-4 w-full">
-              <div className="rounded-full flex items-center justify-center">
-                {React.cloneElement(icon, { color: iconColor, size: 24 })}
-              </div>
-              <div className="flex flex-col justify-between h-full">
-                <p className="statcardTitle">{title}</p>
+            <div className="flex items-center">
+              <div className="flex items-center gap-4 w-full">
+                <div className="rounded-full flex items-center justify-center">
+                  {React.cloneElement(icon, { color: iconColor, size: 24 })}
+                </div>
+                <div className="flex flex-col justify-between h-full">
+                  <p className="statcardTitle">{title}</p>
+                </div>
               </div>
             </div>
             <p className="statcardNumber">{value}</p>

@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { toast } from "react-toastify"; // ✅ Add toast import for messages
 
 export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
   const categories = [
@@ -12,7 +12,6 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
     "Transport",
   ];
 
-  // Handle category selection
   const toggleCategory = (category) => {
     const updated = data.blockedCategory?.includes(category)
       ? data.blockedCategory.filter((c) => c !== category)
@@ -22,7 +21,6 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
   };
 
   const handleNext = () => {
-    // Validate that at least some limits are set
     if (
       !data.dailySpendLimit &&
       !data.weeklySpendLimit &&
@@ -33,6 +31,51 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
       return;
     }
     nextStep();
+  };
+
+  // ✅ Validation logic for spending limits
+  const handleLimitChange = (field, value) => {
+    const num = value ? Number(value) : "";
+
+    switch (field) {
+      case "monthlyLimit":
+        updateData({ monthlyLimit: num });
+        break;
+
+      case "weeklySpendLimit":
+        if (num && data.monthlyLimit && num >= data.monthlyLimit) {
+          toast.error("Weekly limit should be less than monthly limit");
+          return;
+        }
+        updateData({ weeklySpendLimit: num });
+        break;
+
+      case "dailySpendLimit":
+        if (num && data.weeklySpendLimit && num >= data.weeklySpendLimit) {
+          toast.error("Daily limit should be less than weekly limit");
+          return;
+        }
+        updateData({ dailySpendLimit: num });
+        break;
+
+      case "perTransactionLimit":
+        if (
+          num &&
+          ((data.dailySpendLimit && num >= data.dailySpendLimit) ||
+            (data.weeklySpendLimit && num >= data.weeklySpendLimit) ||
+            (data.monthlyLimit && num >= data.monthlyLimit))
+        ) {
+          toast.error(
+            "Per transaction limit should be less than all other limits"
+          );
+          return;
+        }
+        updateData({ perTransactionLimit: num });
+        break;
+
+      default:
+        break;
+    }
   };
 
   return (
@@ -53,9 +96,7 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
               type="number"
               value={data.dailySpendLimit || ""}
               onChange={(e) =>
-                updateData({
-                  dailySpendLimit: e.target.value ? Number(e.target.value) : "",
-                })
+                handleLimitChange("dailySpendLimit", e.target.value)
               }
               placeholder="10000"
               className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 focus:border-[#035638]"
@@ -71,11 +112,7 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
               type="number"
               value={data.weeklySpendLimit || ""}
               onChange={(e) =>
-                updateData({
-                  weeklySpendLimit: e.target.value
-                    ? Number(e.target.value)
-                    : "",
-                })
+                handleLimitChange("weeklySpendLimit", e.target.value)
               }
               placeholder="30000"
               className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 focus:border-[#035638]"
@@ -91,9 +128,7 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
               type="number"
               value={data.monthlyLimit || ""}
               onChange={(e) =>
-                updateData({
-                  monthlyLimit: e.target.value ? Number(e.target.value) : "",
-                })
+                handleLimitChange("monthlyLimit", e.target.value)
               }
               placeholder="50000"
               className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 focus:border-[#035638]"
@@ -109,11 +144,7 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
               type="number"
               value={data.perTransactionLimit || ""}
               onChange={(e) =>
-                updateData({
-                  perTransactionLimit: e.target.value
-                    ? Number(e.target.value)
-                    : "",
-                })
+                handleLimitChange("perTransactionLimit", e.target.value)
               }
               placeholder="2000"
               className="w-full border border-gray-300 outline-0 rounded-lg px-3 py-2 focus:border-[#035638]"
@@ -121,7 +152,6 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
           </div>
         </div>
 
-        {/* Blocked Categories Section */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Merchant Category Restrictions
@@ -135,13 +165,15 @@ export default function ReviewStep({ nextStep, prevStep, data, updateData }) {
                 key={idx}
                 className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"
               >
-                <input
-                  type="checkbox"
-                  checked={data.blockedCategory?.includes(category) || false}
-                  onChange={() => toggleCategory(category)}
-                  className="h-4 w-4 text-[#035638] focus:ring-[#035638]"
-                />
-                <span className="text-sm">{category}</span>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={data.blockedCategory?.includes(category) || false}
+                    onChange={() => toggleCategory(category)}
+                    className="h-4 w-4 accent-green-900 bg-green-100 border-green-900 focus:ring-green-900 cursor-pointer"
+                  />
+                  <span className="text-sm ">{category}</span>
+                </label>
               </label>
             ))}
           </div>

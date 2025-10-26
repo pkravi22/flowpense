@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -17,10 +17,25 @@ export default function CardDetailsStep({
   const [approverOpen, setApproverOpen] = useState(false);
   const [teamName, setTeamName] = useState(data.teamName || "");
 
-  console.log(employees);
-  const holders = employees;
+  const holderRef = useRef(null);
+  const approverRef = useRef(null);
 
+  const holders = employees;
   const approvers = employees;
+
+  // ✅ Close dropdown if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (holderRef.current && !holderRef.current.contains(event.target)) {
+        setHolderOpen(false);
+      }
+      if (approverRef.current && !approverRef.current.contains(event.target)) {
+        setApproverOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // ✅ Toggle top-up switch
   const toggleSwitch = () => {
@@ -33,20 +48,16 @@ export default function CardDetailsStep({
   const toggleHolder = (holder) => {
     const exists = data.cardHolder?.includes(holder.name);
     let updatedHolders;
-
     if (exists) {
       updatedHolders = data.cardHolder.filter((h) => h !== holder.name);
     } else {
       updatedHolders = [...(data.cardHolder || []), holder.name];
     }
-
-    console.log("Updated Holders:", updatedHolders);
     updateData({ cardHolder: updatedHolders });
   };
 
   // ✅ Toggle Approver (Single-select)
   const toggleApprover = (approver) => {
-    console.log("Selected Approver:", approver.name);
     updateData({ approver: [approver.name] });
     setApproverOpen(false);
   };
@@ -58,27 +69,27 @@ export default function CardDetailsStep({
       return;
     }
     if (!data.approver || data.approver.length === 0) {
-    toast.error("Please select an approver");
+      toast.error("Please select an approver");
       return;
     }
     if (!teamName.trim()) {
-     toast.error("Please enter a team name");
+      toast.error("Please enter a team name");
       return;
     }
-
     updateData({ teamName: teamName.trim() });
     nextStep();
   };
 
   return (
     <div className="flex flex-col gap-2 py-4">
+      {/* Header */}
       <div className="border-b border-gray-200 flex gap-2 justify-between items-center px-4 py-4">
         <p>Assign Holder & Approver</p>
         <p className="text-[#035638] text-[16px]">Step 2 Of 4</p>
       </div>
 
       <div className="flex flex-col gap-4 ">
-        {/* ✅ Team Name */}
+        {/* Team Name */}
         <div className="px-8">
           <label className="block text-sm font-medium mb-1">Team Name</label>
           <input
@@ -90,8 +101,8 @@ export default function CardDetailsStep({
           />
         </div>
 
-        {/* ✅ Card Holders */}
-        <div className="relative px-8 p-2">
+        {/* Card Holders */}
+        <div className="relative px-8 p-2" ref={holderRef}>
           <label className="block text-sm font-medium mb-1">
             Card Holder(s)
           </label>
@@ -135,8 +146,8 @@ export default function CardDetailsStep({
           )}
         </div>
 
-        {/* ✅ Approver */}
-        <div className="relative px-8">
+        {/* Approver */}
+        <div className="relative px-8" ref={approverRef}>
           <label className="block text-sm font-medium mb-1">
             Team Leader / Approver
           </label>
@@ -180,7 +191,7 @@ export default function CardDetailsStep({
           )}
         </div>
 
-        {/* ✅ Top-up Toggle */}
+        {/* Top-up Toggle */}
         <div className="flex items-center justify-between p-4 bg-[#FCFDF2] rounded-lg shadow-sm">
           <div>
             <p className="text-[#035638] text-base font-medium">
@@ -190,7 +201,6 @@ export default function CardDetailsStep({
               Card Holder can request additional funding
             </p>
           </div>
-
           <button
             onClick={toggleSwitch}
             className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
@@ -207,7 +217,7 @@ export default function CardDetailsStep({
           </button>
         </div>
 
-        {/* ✅ Navigation */}
+        {/* Navigation */}
         <div className="flex justify-between px-4 pt-6 border-t border-green-900">
           <button
             onClick={prevStep}

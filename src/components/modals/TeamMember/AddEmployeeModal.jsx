@@ -1,5 +1,5 @@
 "use client";
-import { CrossIcon, PlusIcon, X } from "lucide-react";
+import { PlusIcon, Loader2, X } from "lucide-react"; // use Loader2 for spinner
 import React, { useState } from "react";
 
 const AddEmployeeModal = ({ setAddEmployeeModalOpen, handleAddEmployee }) => {
@@ -10,101 +10,102 @@ const AddEmployeeModal = ({ setAddEmployeeModalOpen, handleAddEmployee }) => {
     jobTitle: "",
   });
 
+  const [loading, setLoading] = useState(false); // Loading state
+  const [error, setError] = useState("");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEmployeeData({ ...employeeData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(employeeData);
-    handleAddEmployee({ employeeData });
-    setAddEmployeeModalOpen(false);
+    setLoading(true);
+    setError("");
+
+    try {
+      const success = await handleAddEmployee(employeeData);
+
+      if (success) {
+        setAddEmployeeModalOpen(false);
+      } else {
+        setError("Failed to add employee. Please try again.");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+      console.error(err);
+    } finally {
+      setLoading(false); // stop loading
+    }
   };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg relative ">
-        <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-          <X
-            size={20}
-            onClick={() => setAddEmployeeModalOpen(false)}
-            className="bg-gray-400 text-black rounded-full p-1"
-          />
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg relative">
+        <button
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+          onClick={() => setAddEmployeeModalOpen(false)}
+        >
+          <X size={20} className="bg-gray-400 text-black rounded-full p-1" />
         </button>
-        <div className=" p-4">
-          {" "}
-          <h2 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6">
+
+        <div className="p-4">
+          <h2 className="text-green-700 text-2xl font-medium">
             Add New Employee
           </h2>
-          <p className="text-[color:var(--Neutral-Neutral400,#838794)] text-base not-italic font-normal leading-4 mt-1 mb-3">
+          <p className="text-gray-500 text-base mt-1 mb-3">
             Add a new employee to the organization.
           </p>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 px-8 py-4">
-          <div>
-            <label className="text-sm font-medium">Name</label>
-            <input
-              type="text"
-              name="fullName"
-              value={employeeData.fullName}
-              onChange={handleChange}
-              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
-              placeholder="Enter employee name"
-              required
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Job Title</label>
-            <input
-              type="text"
-              name="jobTitle"
-              value={employeeData.jobTitle}
-              onChange={handleChange}
-              className="w-full border border-[#E2E4E9] p-2 rounded-md mt-1"
-              placeholder="Enter Job title"
-              required
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={employeeData.email}
-              onChange={handleChange}
-              className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
-              placeholder="Enter email"
-              required
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Department</label>
-            <input
-              type="text"
-              name="department"
-              value={employeeData.department}
-              onChange={handleChange}
-              className="w-full border outline-none border-[#E2E4E9] p-2 rounded-md mt-1"
-              placeholder="Enter department"
-              required
-            />
-          </div>
+          {["fullName", "jobTitle", "email", "department"].map((field) => (
+            <div key={field}>
+              <label className="text-sm font-medium capitalize">{field}</label>
+              <input
+                type={field === "email" ? "email" : "text"}
+                name={field}
+                value={employeeData[field]}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-2 outline-none rounded-md mt-1"
+                placeholder={`Enter ${field}`}
+                required
+                disabled={loading} // disable while loading
+              />
+            </div>
+          ))}
 
           <div className="flex w-full justify-between gap-2">
             <button
               type="button"
               onClick={() => setAddEmployeeModalOpen(false)}
-              className="px-2  sm:px-4 py-2 flex-1 border border-background text-sm rounded-full"
+              className="px-4 py-2 flex-1 border border-gray-400 text-sm rounded-full"
+              disabled={loading} // disable while loading
             >
               Cancel
             </button>
+
             <button
               type="submit"
-              className="px-2  sm:px-4 py-2  flex gap-2 items-center justify-center flex-1 bg-background text-sm rounded-full text-white cursor-pointer"
+              disabled={loading}
+              className={`px-2 md:px-4 py-2 flex gap-2 items-center justify-center flex-1 rounded-full text-white ${
+                loading
+                  ? "bg-green-800 opacity-70 cursor-not-allowed"
+                  : "bg-green-900 hover:bg-green-800"
+              }`}
             >
-              <PlusIcon size={16} />
-              Add Employee
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin" size={16} />
+                  Adding...
+                </>
+              ) : (
+                <>
+                  <PlusIcon size={16} />
+                  Add Employee
+                </>
+              )}
             </button>
           </div>
         </form>

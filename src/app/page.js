@@ -6,14 +6,18 @@ import { useSelector } from "react-redux";
 
 export default function Home() {
   const router = useRouter();
-  const { token } = useSelector((state) => state.auth);
+  const { user, token, refreshToken } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (token) {
-      console.log("in main paeg",token)
+      // console.log("in main paeg",token)
+      if (user.companyId === null) {
+        router.replace("/register-company");
+      }
+    } else if (token && refreshToken) {
       router.replace("/admin/dashboard");
     } else {
-      router.replace("/login"); 
+      router.replace("/login");
     }
   }, [token, router]);
 

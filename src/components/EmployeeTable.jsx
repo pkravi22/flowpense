@@ -78,8 +78,8 @@ const EmployeeTable = ({ employees = [] }) => {
         </CSVLink>
       </div>
 
-      <div className="mt-3 h-[500px] w-[300px] sm:w-[500px] md:w-[600px] lg:w-[1000px] ">
-        <table className="min-w-[300px] text-sm border-1 border-l-gray-30">
+      <div className="mt-3 h-[500px] w-[330px] sm:w-[500px] md:w-[600px] lg:w-[1000px] ">
+        <table className="min-w-[300px] text-sm border-1 border-l-gray-30 overflow-auto">
           <thead className="bg-gray-100 text-left">
             <tr>
               <th className="p-3 font-semibold">ID</th>

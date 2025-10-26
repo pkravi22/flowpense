@@ -1,5 +1,5 @@
 import { CrossIcon, X, } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 
 const CreateTeamModal = ({ setCreateTeamModal, handleCreateTeam }) => {
   const [teamData, setTeamData] = React.useState({
@@ -17,11 +17,20 @@ const CreateTeamModal = ({ setCreateTeamModal, handleCreateTeam }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("teamdata", teamData);
-    handleCreateTeam({ teamData });
-    setCreateTeamModal(false);
+    setLoading(true);
+
+    try {
+      await handleCreateTeam({ teamData });
+      setCreateTeamModal(false);
+    } catch (error) {
+      console.error("Error creating team:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -87,9 +96,9 @@ const CreateTeamModal = ({ setCreateTeamModal, handleCreateTeam }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-[10px]   flex-1  bg-background text-sm rounded-full text-white "
+              className="px-4 py-[10px]  cursor-pointer  flex-1  bg-background text-sm rounded-full text-white "
             >
-              Create Team
+              {loading ? "Creating Team.." : "Create Team"}
             </button>
           </div>
         </form>

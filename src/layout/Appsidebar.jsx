@@ -19,7 +19,6 @@ export default function Sidebar({
       {isOpen && (
         <div className="fixed inset-0 z-30 bg-black/50 md:hidden">
           <div className="fixed top-0 left-0 h-full w-64 bg-white shadow-xl p-4">
-            {/* Close button */}
             <button
               className="mb-4 p-2 rounded bg-gray-100"
               onClick={() => setIsOpen(false)}
@@ -123,7 +122,6 @@ export default function Sidebar({
           })}
         </nav>
       </div>
-      ;
     </>
   );
 }

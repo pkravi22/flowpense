@@ -10,6 +10,7 @@ import { authService } from "@/services/authServices";
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { toast } from "react-toastify";
 const schema = z
   .object({
     firstName: z.string().nonempty("First Name is required"),
@@ -47,7 +48,6 @@ export default function Signup() {
     console.log(data);
     setLoading(true);
     try {
-      // Match API exactly
       const payload = {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -65,12 +65,17 @@ export default function Signup() {
       console.log(
         "Signup successful! Please check your email for verification."
       );
+      toast.success(
+        "Signup successful! Please check your email for verification."
+      );
       localStorage.setItem("token", res.accessToken);
+      localStorage.setItem("refreshToken", res.refreshToken);
       router.push("/verifyEmail");
     } catch (err) {
       console.error(
-        err.response?.data?.message || "❌ Signup failed. Try again."
+        err.response?.data?.message || " Signup failed. Try again."
       );
+      toast.error(err.response?.data?.message || " Signup failed. Try again.");
     } finally {
       setLoading(false);
     }
@@ -225,13 +230,15 @@ export default function Signup() {
               of Flowpense
             </p>
           </div>
-          <p className="text-xs text-red-500">{errors.terms?.message}</p>
+          <p className="text-xs text-red-500 text-center">
+            {errors.terms?.message ? "Select Term & Conditions" : ""}
+          </p>
 
           <button
             type="submit"
             className="w-full bg-green-800 cursor-pointer hover:bg-green-900 text-white py-3 rounded-4xl mt-2"
           >
-            Continue
+            {loading ? "Signing up..." : "Continue"}
           </button>
         </form>
       </div>

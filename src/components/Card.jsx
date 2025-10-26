@@ -81,7 +81,8 @@ const Card = ({
       dispatch(fetchAllCards());
       setFundAmount("");
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Error funding card");
+      console.log(error);
+      toast.error(error.response?.data.error || "Failed to fund card");
     } finally {
       setLoading(false);
     }
@@ -161,7 +162,7 @@ const Card = ({
       setTransactions(response.data || []);
     } catch (error) {
       console.error("Error fetching transactions:", error);
-    toast.error("Failed to fetch transactions");
+      toast.error("Failed to fetch transactions");
     } finally {
       setLoading(false);
     }
@@ -198,7 +199,7 @@ const Card = ({
       )}
 
       {/* Card UI */}
-      <div className="w-full sm:w-[300px] h-[180px] cursor-pointer">
+      <div className="w-full sm:min-w-[300px] min-h-[180px] cursor-pointer">
         {/* Fund Modal */}
         {showFundModal && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">

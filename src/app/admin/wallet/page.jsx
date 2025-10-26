@@ -91,6 +91,7 @@ const handleAddFunds = async () => {
       setAccountDetailModalOpen(false);
       setSucessModal(true);
       setPaymentDetail(response.data.data);
+      fetchWalletLedger();
       // isModalOpen(false);
     }
   } catch (error) {
@@ -171,22 +172,22 @@ const createPaymentId = async () => {
   }
 };
 
-const getUSerBankAccounts = async () => {
-  if (!user || !token) return;
-  setLoadingStates((prev) => ({ ...prev, userBanks: true }));
-  setErrorStates((prev) => ({ ...prev, userBanks: null }));
+// const getUSerBankAccounts = async () => {
+//   if (!user || !token) return;
+//   setLoadingStates((prev) => ({ ...prev, userBanks: true }));
+//   setErrorStates((prev) => ({ ...prev, userBanks: null }));
 
-  try {
-    const response = await bankServices.getUserBankAccount({ token });
-    console.log(":user bank", response);
-    setUserBankAccounts(response.bank || []);
-  } catch (error) {
-    console.error("Error fetching user bank accounts:", error);
-    setErrorStates((prev) => ({ ...prev, userBanks: error.message }));
-  } finally {
-    setLoadingStates((prev) => ({ ...prev, userBanks: false }));
-  }
-};
+//   try {
+//     const response = await bankServices.getUserBankAccount({ token });
+//     console.log(":user bank", response);
+//     setUserBankAccounts(response.bank || []);
+//   } catch (error) {
+//     console.error("Error fetching user bank accounts:", error);
+//     setErrorStates((prev) => ({ ...prev, userBanks: error.message }));
+//   } finally {
+//     setLoadingStates((prev) => ({ ...prev, userBanks: false }));
+//   }
+// };
 
 const loadInitialData = async () => {
   if (!user || !token) return;
@@ -197,7 +198,7 @@ const loadInitialData = async () => {
     await Promise.allSettled([
       fetchWalletLedger(),
       getAllBanks(),
-      getUSerBankAccounts(),
+      // getUSerBankAccounts(),
       // createPaymentId(),
     ]);
   } catch (error) {
@@ -346,7 +347,7 @@ const CardSkeleton = () => (
 );
 
 return (
-  <div className="">
+  <div className="p-0 md:p-4 overflow-visible bg-gray-100">
     {/* Error Retry Banner */}
     {/* {Object.values(errorStates).some((error) => error) && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center justify-between">
@@ -372,9 +373,9 @@ return (
         </p>
       </div>
       <div className="">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-center items-center gap-2">
           <button
-            className="flex items-center px-4 py-2 cursor-pointer rounded-[10px] border hover:bg-gray-50 transition-colors"
+            className="flex gap-1 items-center px-4 py-2 cursor-pointer rounded-[10px] border hover:bg-gray-50 transition-colors"
             onClick={exportToCSV}
             disabled={loadingStates.ledger || recentTransactions.length === 0}
           >
@@ -391,7 +392,7 @@ return (
           </button> */}
 
           <button
-            className="flex items-center px-2 rounded-[10px] cursor-pointer border p-1 bg-[#035638] text-white hover:bg-[#02422a] transition-colors"
+            className="flex items-center px-4 py-2 rounded-[10px] cursor-pointer border p-1 bg-[#035638] text-white hover:bg-[#02422a] transition-colors"
             onClick={fundWallet}
             disabled={loadingStates.payment}
           >
@@ -411,7 +412,7 @@ return (
             ({ id, icon, iconBg, title, value, iconColor, sub, loading }) => (
               <div
                 key={id}
-                className="bg-white p-4 rounded-2xl shadow-md flex flex-col items-start justify-start gap-4 transition-all duration-200 hover:shadow-lg"
+                className="bg-white p-4 rounded-2xl  flex flex-col items-start justify-start gap-4 transition-all duration-200 hover:shadow-lg"
               >
                 {loading ? (
                   <div className="animate-pulse w-full">
@@ -426,18 +427,20 @@ return (
                   </div>
                 ) : (
                   <>
-                    <div className="flex items-center gap-4 w-full">
-                      <div
-                        className="rounded-full flex items-center justify-center p-2"
-                        style={{ backgroundColor: iconBg }}
-                      >
-                        {React.cloneElement(icon, {
-                          color: iconColor,
-                          size: 24,
-                        })}
-                      </div>
-                      <div className="flex flex-col justify-between h-full">
-                        <p className="statcardTitle">{title}</p>
+                    <div className="flex items-center">
+                      <div className="flex items-center  gap-4 w-full">
+                        <div
+                          className="rounded-full flex items-center  p-2"
+                          style={{ backgroundColor: iconBg }}
+                        >
+                          {React.cloneElement(icon, {
+                            color: iconColor,
+                            size: 24,
+                          })}
+                        </div>
+                        <div className="flex flex-col justify-between h-full">
+                          <p className="statcardTitle">{title}</p>
+                        </div>
                       </div>
                     </div>
                     <p className="statcardNumber">{value}</p>
@@ -451,17 +454,6 @@ return (
 
     <div className="flex flex-col">
       <div className="flex flex-col md:flex-row gap-4 mt-4">
-        <div className="flex-1">
-          <BankDetails
-            bankModalOpen={bankModalOpen}
-            setBankModalOpen={setBankModalOpen}
-            allBanks={allBanks}
-            userBankAccounts={userBankAccounts}
-            loading={loadingStates.banks || loadingStates.userBanks}
-            error={errorStates.banks || errorStates.userBanks}
-            onRetry={getUSerBankAccounts}
-          />
-        </div>
         <div className="flex-2">
           <RecentTransactions
             recentTransactions={recentTransactions}
@@ -473,7 +465,13 @@ return (
         </div>
       </div>
       <div>
-        <BalanceBreakdown loading={loadingStates.initial} />
+        <BalanceBreakdown
+          loading={loadingStates.initial}
+          totalBalance={totalBalance}
+          availableBalance={totalLeftInWallet}
+          allocatedToCards={totalAllocated}
+          recentTransactions={recentTransactions}
+        />
       </div>
     </div>
 

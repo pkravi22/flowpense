@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
 
 @import "react-phone-input-2/lib/style.css";
 
@@ -26,6 +26,13 @@
 .host-grotesk {
   font-family: "Host Grotesk", sans-serif;
 }
+
+.bagel-fat-one {
+  font-family: "Bagel Fat One",sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 
 
 
@@ -61,13 +68,13 @@
 }
 
 .pageTitle{
-  @apply font-sans  text-[24px] leading-[100%] tracking-[0%];
+  @apply   text-[24px] leading-[100%] tracking-[0%];
 }
 .pageSubTitle{
   @apply  text-[color:var(--Neutral-Neutral400,#838794)]  text-base not-italic font-sans leading-[normal]
 }
 .statcardTitle{
-  @apply  font-semibold font-sans text-[16px] leading-[100%] tracking-[0%] text-[#838794];
+  @apply  font-normal font-sans text-[16px] leading-[100%] tracking-[0%] text-[#838794];
 }
 .statcardNumber{
   @apply  font-semibold font-sans text-[20px] leading-[100%] tracking-[0%] text-[#000000];

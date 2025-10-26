@@ -54,11 +54,13 @@ export default function VerifyAccount({ type, email: propEmail }) {
       }
       const res = await authService.verifyEmail({ otp: data.code, token });
       toast.success("Code Verified Successfully");
-      // router.push("/register-company")
-      router.push("/login");
+      router.push("/register-company");
+      //router.push("/login");
     } catch (err) {
       console.error(err.response?.data?.message || "Verification failed");
       toast.error(err.response?.data?.message || "Verification failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,7 +107,7 @@ export default function VerifyAccount({ type, email: propEmail }) {
             type="submit"
             className="w-full bg-green-800 cursor-pointer hover:bg-green-900 text-white py-3 rounded-4xl mt-2"
           >
-            Verify
+            {loading ? "Verifying..." : "Verify"}
           </button>
 
           <button

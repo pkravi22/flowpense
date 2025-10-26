@@ -148,7 +148,8 @@ export default function TransactionTable({ expenseData: transactions }) {
   return (
     <div className="flex flex-col gap-4 mt-4">
       {/* Search & Filter */}
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 md:flex-row items-center md:justify-between">
+        {/* LEFT: Search + Filter */}
         <div className="flex flex-1 items-center gap-2">
           <div className="relative w-full md:max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -185,7 +186,9 @@ export default function TransactionTable({ expenseData: transactions }) {
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 mt-4">
+
+        {/* RIGHT: Status + Export */}
+        <div className="flex items-center gap-2">
           <div className="relative">
             <select
               value={status}
@@ -209,7 +212,7 @@ export default function TransactionTable({ expenseData: transactions }) {
       </div>
 
       {/* Table */}
-      <div className="mt-3 h-[500px] w-[360px] sm:w-[500px] md:w-[600px] lg:w-[1000px] overflow-auto">
+      <div className="mt-3 min-h-[100px] w-[360px] sm:w-[500px] md:w-[600px] lg:min-w-[1000px] overflow-auto">
         <table className="min-w-full text-sm border-1 border-l-gray-300 ">
           <thead className="sticky top-0 bg-gray-100 z-10">
             <tr className="text-left text-sm font-medium text-gray-600">

@@ -1,5 +1,6 @@
 import { CardSim, Info, Wallet, Wallet2Icon } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function CardTypeStep({ nextStep, updateData, data }) {
   const [cardName, setCardName] = useState(data.cardName || "");
@@ -94,7 +95,7 @@ export default function CardTypeStep({ nextStep, updateData, data }) {
             value={cardName}
             onChange={(e) => setCardName(e.target.value)}
             placeholder="e.g John Travel Card, Marketing Team Card"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#035638]"
+            className="w-full  border border-gray-300 rounded-lg px-3 py-2 outline-none "
           />
           <div className="text-[color:var(--Neutral-600,#475467)] flex items-center gap-1 my-1 text-xs not-italic font-normal leading-[160%]">
             <Info size={12} />
