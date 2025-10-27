@@ -6,6 +6,7 @@ import {
   Users,
   Settings,
 } from "lucide-react";
+import Image from "next/image";
 
 export const sidebarLinks = [
   {
@@ -21,7 +22,7 @@ export const sidebarLinks = [
   {
     name: "Expenses",
     path: "/admin/expenses",
-    icon: <CreditCard className="w-5 h-5" />,
+    icon: <Image src="/spending.png" alt="Cards" width={20} height={20} />,
   },
   {
     name: "Wallet",

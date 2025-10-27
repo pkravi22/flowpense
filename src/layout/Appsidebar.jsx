@@ -29,13 +29,7 @@ export default function Sidebar({
             <div className="flex items-center mb-2 mt-2 ">
               <div className="flex flex-nowrap  ">
                 <Image
-                  src="/f1 (1).svg"
-                  alt="logo"
-                  width={20}
-                  height={20}
-                ></Image>
-                <Image
-                  src="/f1 (2).svg"
+                  src="/app_logo.svg"
                   alt="logo"
                   width={180}
                   height={40}
@@ -76,13 +70,7 @@ export default function Sidebar({
             {!isCollapsed && (
               <div className="flex flex-nowrap ">
                 <Image
-                  src="/f1 (1).svg"
-                  alt="logo"
-                  width={20}
-                  height={20}
-                ></Image>
-                <Image
-                  src="/f1 (2).svg"
+                  src="/app_logo.svg"
                   alt="logo"
                   width={180}
                   height={40}
