@@ -5,6 +5,7 @@ import {
   ArrowRight,
   ArrowRightLeft,
   ArrowUp,
+  ArrowUpRight,
   Clock4,
   Watch,
 } from "lucide-react";
