@@ -199,7 +199,7 @@ const Card = ({
       )}
 
       {/* Card UI */}
-      <div className="w-full sm:min-w-[300px] min-h-[180px] cursor-pointer">
+      <div className="w-full sm:min-w-[300px] min-h-[180px] bg-gray-50 rounded-2xl cursor-pointer">
         {/* Fund Modal */}
         {showFundModal && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">

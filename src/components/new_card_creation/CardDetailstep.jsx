@@ -85,7 +85,9 @@ export default function CardDetailsStep({
       {/* Header */}
       <div className="border-b border-gray-200 flex gap-2 justify-between items-center px-4 py-4">
         <p>Assign Holder & Approver</p>
-        <p className="text-[#035638] text-[16px]">Step 2 Of 4</p>
+        <p className="text-[#035638] text-[16px] bg-[#FCFDF2] rounded-2xl px-2 py-1">
+          Step 2 Of 4
+        </p>
       </div>
 
       <div className="flex flex-col gap-4 ">
@@ -137,10 +139,13 @@ export default function CardDetailsStep({
                         type="checkbox"
                         checked={isChecked}
                         readOnly
-                        className="mr-2 h-4 w-4 accent-[#035638]"
+                        className="mr-2 h-4 w-4 border-[1.5px] border-green-600 rounded-sm appearance-none cursor-pointer 
+                   checked:bg-green-900 checked:border-green-900 focus:ring-green-900"
                       />
                       <div>
-                        <div className="font-medium">{holder.name}</div>
+                        <div className="font-normal text-green-800">
+                          {holder.name}
+                        </div>
                         <div className="text-xs text-gray-500">
                           {holder.jobTitle} — {holder.department}
                         </div>
@@ -192,10 +197,13 @@ export default function CardDetailsStep({
                         type="radio"
                         checked={isChecked}
                         readOnly
-                        className="mr-2 h-4 w-4 accent-[#035638]"
+                        className="mr-2 w-4 h-4 border-[1.5px] border-green-600 rounded-sm appearance-none cursor-pointer 
+                   checked:bg-white checked:border-green-900 focus:ring-green-900"
                       />
                       <div>
-                        <div className="font-medium">{approver.name}</div>
+                        <div className="font-normal text-green-800">
+                          {approver.name}
+                        </div>
                         <div className="text-xs text-gray-500">
                           {approver.jobTitle} — {approver.department}
                         </div>
@@ -213,7 +221,7 @@ export default function CardDetailsStep({
         </div>
 
         {/* Top-up Toggle */}
-        <div className="flex items-center justify-between p-4 bg-[#FCFDF2] rounded-lg shadow-sm">
+        <div className="flex items-center justify-between p-4 mx-7 bg-[#FCFDF2] rounded-lg shadow-sm">
           <div>
             <p className="text-[#035638] text-base font-medium">
               Allow card holder to request top-ups
@@ -239,20 +247,31 @@ export default function CardDetailsStep({
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between px-4 pt-6 border-t border-green-900">
+        <div className="flex gap-4 justify-between px-4 pt-6 border-t border-green-900">
+          {/* Previous Button */}
           <button
             onClick={prevStep}
-            className="px-6 py-2 flex gap-1 items-center bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
+            className="flex flex-1 items-center justify-center gap-2 px-6 py-2 
+               text-green-900 border border-green-900 rounded-full 
+               hover:bg-green-50 transition"
           >
-            <ChevronLeft size={14} />
-            Previous
+            <span className="flex items-center justify-center">
+              <ChevronLeft size={16} className=" relative top-[0.5px]" />
+            </span>
+            <span className="">Previous</span>
           </button>
+
+          {/* Next Button */}
           <button
             onClick={handleNext}
-            className="px-6 py-2 flex gap-1 items-center bg-[#035638] text-white rounded-full hover:bg-[#02452e]"
+            className="flex flex-1 items-center justify-center gap-2 px-6 py-2 
+               bg-[#035638] text-white rounded-full 
+               hover:bg-[#02452e] transition"
           >
-            Next
-            <ChevronRight size={14} />
+            <span className="">Next</span>
+            <span className="flex items-center justify-center">
+              <ChevronRight size={16} className=" relative top-[0.5px]" />
+            </span>
           </button>
         </div>
       </div>

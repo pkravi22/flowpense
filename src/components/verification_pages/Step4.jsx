@@ -25,9 +25,9 @@ const BankingInfo = ({ formData, setFormData, registerCompany }) => {
             className="p-2 rounded border border-gray-300 w-full"
           >
             <option value="">Select Bank</option>
-            <option>Bank A</option>
-            <option>Bank B</option>
-            <option>Bank C</option>
+            <option>Access Bank</option>
+            <option>United Bank for Africa</option>
+            <option>GT Bank</option>
           </select>
         </div>
 
@@ -47,13 +47,15 @@ const BankingInfo = ({ formData, setFormData, registerCompany }) => {
         </div>
 
         <div className="flex flex-col">
-          <label className="text-sm font-medium mb-1">Account Name</label>
+          <label className="text-sm font-medium mb-1">Bank Code</label>
           <input
             type="text"
-            placeholder="Account Name (auto-filled)"
-            value={formData.accountName || ""}
-            readOnly
-            className="p-2 rounded border border-gray-300 w-full bg-gray-100 text-gray-600"
+            placeholder="Bank Code"
+            value={formData.bankCode || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, bankCode: e.target.value })
+            }
+            className="p-2 rounded border border-gray-300 w-full  text-gray-600"
           />
         </div>
 
@@ -67,8 +69,8 @@ const BankingInfo = ({ formData, setFormData, registerCompany }) => {
             className="p-2 rounded border border-gray-300 w-full"
           >
             <option value="">Select Currency</option>
-            <option>NGN - Nigerian Naira</option>
-            <option>USD - US Dollar</option>
+            <option>NGN</option>
+            <option>USD </option>
           </select>
         </div>
       </div>

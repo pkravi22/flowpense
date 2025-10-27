@@ -17,7 +17,12 @@ import { authService } from "@/services/authServices";
 
 import { companyServices } from "@/services/companyServices";
 import { useSelector } from "react-redux";
-const VerifyAccount = ({ onComplete, onCancel }) => {
+const VerifyAccount = ({
+  nComplete,
+  onCancel,
+  getCompanyDetails,
+  setVerified,
+}) => {
   const [step, setStep] = useState(1);
   const { user, token } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
@@ -33,6 +38,7 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
     fullName: "",
     email: "",
     role: "",
+
     phone: "",
     tin: "",
     cac: "",
@@ -43,6 +49,7 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
     utility2: null,
     bankStatement: null,
     bank: "",
+    bankCode: "",
     accountNumber: "",
     currency: "",
   });
@@ -52,9 +59,81 @@ const VerifyAccount = ({ onComplete, onCancel }) => {
 
   const registerCompany = async () => {
     try {
-      const data = await companyServices.uploadKYC({ formData, token });
+      const formDataToSend = new FormData();
+
+      // Map frontend field names to backend expected field names
+      // Required fields
+      formDataToSend.append("companyId", user?.companyId?.toString() || "");
+      formDataToSend.append("adminBvn", formData.bvn || "");
+      formDataToSend.append("accountNumber", formData.accountNumber || "");
+      formDataToSend.append("bankCode", formData.bankCode || "");
+
+      // Business Profile fields
+      formDataToSend.append(
+        "registeredCompanyName",
+        formData.businessName || ""
+      );
+      formDataToSend.append("TradingName", formData.tradingName || "");
+      formDataToSend.append("BusinessType", formData.businessType || "");
+      formDataToSend.append("Industry", formData.industry || "");
+      formDataToSend.append("RegisteredNo", formData.regNumber || "");
+      formDataToSend.append("DateofInc", formData.incorporationDate || "");
+      formDataToSend.append("EmployeeNo", formData.employees || "");
+      formDataToSend.append("Website", formData.website || "");
+      formDataToSend.append("Description", formData.description || "");
+
+      // Primary Contact fields
+      formDataToSend.append("FullName", formData.fullName || "");
+      formDataToSend.append("Email", formData.email || "");
+      formDataToSend.append("Role", formData.role || "");
+      formDataToSend.append("PhoneNo", formData.phone || "");
+
+      // Compliance fields
+      formDataToSend.append("TIN", formData.tin || "");
+      formDataToSend.append("VAT", formData.vat || "");
+      formDataToSend.append("CAC", formData.cac || "");
+
+      // Banking fields
+      formDataToSend.append("BankName", formData.bank || "");
+      formDataToSend.append("Currency", formData.currency || "");
+
+      // Required by backend
+      formDataToSend.append("reviewerId", "2"); // Hardcoded as in your working example
+
+      // FILES - ALL must be appended with field name 'docs' (not individual field names)
+      const fileFields = [
+        "utility1",
+        "utility2",
+        "bankStatementPdf",
+        "cacFile",
+      ];
+      fileFields.forEach((field) => {
+        if (formData[field] instanceof File) {
+          formDataToSend.append("docs", formData[field]); // Use 'docs' as field name for ALL files
+        }
+      });
+
+      console.log("Sending KYC data with correct field mapping...");
+
+      const data = await companyServices.uploadKYC({
+        formData: formDataToSend,
+        token,
+      });
+      if (data?.success || data?.status === "success") {
+        toast.success(" Company registered with KYC successfully!");
+      }
+      await getCompanyDetails();
+      setVerified(true);
+
+      return data;
     } catch (e) {
-      console.log("error:", e);
+      const errorMsg =
+        error?.response?.data?.message ||
+        error?.message ||
+        " Failed to register company. Please try again.";
+
+      toast.error(errorMsg);
+      throw e;
     }
   };
 

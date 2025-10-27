@@ -35,15 +35,14 @@ export default function ReviewSummaryStep({ data, nextStep, prevStep }) {
     <div className="min-h-[400px] overflow-auto">
       <div className="border-b border-gray-200 flex justify-between items-center p-4">
         <p>Review and Create Card</p>
-        <p className="text-[#035638] text-[16px]">Step 4 Of 4</p>
+        <p className="text-[#035638] text-[16px] bg-[#FCFDF2] rounded-2xl px-2 py-1">
+          Step 4 Of 4
+        </p>
       </div>
 
-      <div className="grid grid-cols-2  sm:grid-cols-2 md:grid-cols-3 my-2 gap-2 sm:gap-2 md:gap-4 p-1">
+      <div className="grid grid-cols-2  sm:grid-cols-2 md:grid-cols-3 my-2 gap-2 p-4 sm:gap-2 md:gap-4 p-1">
         {details.map((item, index) => (
-          <div
-            key={index}
-            className="flex flex-col gap-1 bg-gray-50 p-1 rounded-lg border border-gray-200"
-          >
+          <div key={index} className="flex flex-col gap-1  p-1 rounded-lg  ">
             <p className="text-gray-500 text-sm">{item.label}:</p>
             <p className="text-[#035638] text-base font-medium break-words">
               {item.value}

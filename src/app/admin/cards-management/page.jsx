@@ -413,6 +413,7 @@ const Page = () => {
             </button>
             <CardFlow
               onCardCreated={handleCardCreated}
+              setShowCardFlow={setShowCardFlow}
               token={token}
               employees={employeeSmallData}
               loadingEmployees={loadingEmployees}

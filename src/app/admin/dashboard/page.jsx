@@ -177,13 +177,11 @@ const Page = () => {
     setShowVerification(true);
   };
 
-  const handleVerificationComplete = () => {
-    setVerified(true);
-    setShowVerification(false);
-
+  const handleVerificationComplete = async () => {
     // if (typeof window !== "undefined") {
     //   localStorage.setItem("verified", "true");
     // }
+    await getCompanyDetails();
   };
 
   useEffect(() => {
@@ -322,6 +320,8 @@ const Page = () => {
               <VerifyAccount
                 onComplete={handleVerificationComplete}
                 onCancel={() => setShowVerification(false)}
+                getCompanyDetails={getCompanyDetails}
+                setVerified={setVerified}
               />
             </div>
           </div>
@@ -440,7 +440,7 @@ const Page = () => {
         </div>
       </div>
       {/* Active Cards */}
-      <div className=" bg-white mt-2 px-2  rounded-2xl shadow-md">
+      <div className=" bg-white mt-2 px-4 py-2  rounded-2xl shadow-md">
         <div className="flex items-center justify-between ">
           <div>
             <p className="pageTitle">Active Cards</p>

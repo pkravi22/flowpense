@@ -46,10 +46,7 @@ const ComplianceVerification = ({ formData, setFormData }) => {
 
         {/* CAC */}
         <div className="flex flex-col">
-          <label className="block text-sm font-medium mb-1">
-            CAC Number{" "}
-            <span className="text-xs text-gray-500 mt-1">{status.cac}</span>
-          </label>
+          <label className="block text-sm font-medium mb-1">CAC Number </label>
 
           <div className="flex flex-col gap-2">
             <input
@@ -68,8 +65,6 @@ const ComplianceVerification = ({ formData, setFormData }) => {
         <div className="flex flex-col">
           <label className="block text-sm font-medium mb-1">
             VAT Registered Number{" "}
-            <span className="text-gray-400">(Optional)</span>{" "}
-            <span className="text-xs text-gray-500 mt-1">{status.vat}</span>
           </label>
           <div className="flex flex-col gap-2">
             <input
@@ -86,10 +81,7 @@ const ComplianceVerification = ({ formData, setFormData }) => {
 
         {/* BVN */}
         <div className="flex flex-col">
-          <label className="block text-sm font-medium mb-1">
-            Active BVN{" "}
-            <span className="text-xs text-gray-500 mt-1">{status.bvn}</span>
-          </label>
+          <label className="block text-sm font-medium mb-1">Active BVN </label>
 
           <div className="flex flex-col gap-2">
             <input
@@ -105,75 +97,104 @@ const ComplianceVerification = ({ formData, setFormData }) => {
         </div>
 
         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col">
-            <label className="block text-sm font-medium mb-1">
-              Utility Bill 1
-            </label>
-            <div className="flex items-center border border-gray-300 rounded-lg p-4 h-28 cursor-pointer">
-              <FileText className="text-gray-500 mr-3" />
-              <input
-                type="file"
-                onChange={(e) =>
-                  setFormData({ ...formData, utility1: e.target.files[0] })
-                }
-                className="w-full"
-              />
+          {[1, 2].map((num) => (
+            <div key={num} className="flex flex-col">
+              <label className="block text-sm font-medium mb-2">
+                Utility Bill {num}
+              </label>
+
+              {/* Clickable upload area */}
+              <div
+                className="flex flex-col items-center justify-center border border-gray-300 rounded-lg p-4 h-36 cursor-pointer hover:border-green-600 transition-colors relative"
+                onClick={() => document.getElementById(`utility${num}`).click()}
+              >
+                <Upload className="text-gray-400 text-4xl mb-2" />
+
+                <span className="text-sm font-medium mb-1 text-center">
+                  Click to upload file
+                </span>
+
+                <span className="text-xs text-gray-500 mb-2 text-center">
+                  PDF, PNG, JPG — Max 10MB
+                </span>
+
+                {/* Hidden file input */}
+                <input
+                  type="file"
+                  id={`utility${num}`}
+                  className="hidden"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      [`utility${num}`]: e.target.files[0],
+                    })
+                  }
+                />
+
+                {/* Show selected file name */}
+                {formData[`utility${num}`] && (
+                  <span className="text-sm text-gray-700 mt-2 text-center truncate w-full">
+                    {formData[`utility${num}`].name}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col">
-            <label className="block text-sm font-medium mb-1">
-              Utility Bill 2
-            </label>
-            <div className="flex items-center border border-gray-300 rounded-lg p-4 h-28 cursor-pointer">
-              <FileText className="text-gray-500 mr-3" />
-              <input
-                type="file"
-                onChange={(e) =>
-                  setFormData({ ...formData, utility2: e.target.files[0] })
-                }
-                className="w-full"
-              />
-            </div>
-          </div>
+          ))}
         </div>
 
-        <div className="lg:col-span-2 flex flex-col"></div>
+        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          {[
+            {
+              label: "Recent Bank Statement (PDF)",
+              field: "bankStatementPdf",
+              accept: ".pdf,.png,.jpg",
+            },
+            {
+              label: "CAC Certificate",
+              field: "cacFile",
+              accept: ".pdf,.png,.jpg",
+            },
+          ].map((item, idx) => (
+            <div key={idx} className="flex flex-col">
+              <label className="block text-sm font-medium mb-2">
+                {item.label}
+              </label>
 
-        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col">
-            <label className="block text-sm font-medium mb-1">
-              Recent Bank Statement (PDF)
-            </label>
-            <div className="flex items-center border border-gray-300 rounded-lg p-4 h-28 cursor-pointer">
-              <Upload className="text-gray-500 mr-3" />
-              <input
-                type="file"
-                accept=".pdf"
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    bankStatementPdf: e.target.files[0],
-                  })
-                }
-                className="w-full"
-              />
+              <div
+                className="flex flex-col items-center justify-center border border-gray-300 rounded-lg p-4 h-36 cursor-pointer hover:border-green-600 transition-colors relative"
+                onClick={() => document.getElementById(item.field).click()}
+              >
+                <Upload className="text-gray-400 text-4xl mb-2" />
+
+                <span className="text-sm font-medium mb-1 text-center">
+                  Click to upload file
+                </span>
+
+                <span className="text-xs text-gray-500 mb-2 text-center">
+                  PDF, PNG, JPG — Max 10MB
+                </span>
+
+                <input
+                  type="file"
+                  accept={item.accept}
+                  id={item.field}
+                  className="hidden"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      [item.field]: e.target.files[0],
+                    })
+                  }
+                />
+
+                {formData[item.field] && (
+                  <span className="text-sm text-gray-700 mt-2 text-center truncate w-full">
+                    {formData[item.field].name}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-          <div className=" flex flex-col">
-            <label className="block text-sm font-medium mb-1">
-              CAC Certificate
-            </label>
-            <div className="flex items-center border border-gray-300 rounded-lg p-4 h-28 cursor-pointer">
-              <Upload className="text-gray-500 mr-3" />
-              <input
-                type="file"
-                onChange={(e) =>
-                  setFormData({ ...formData, cacFile: e.target.files[0] })
-                }
-                className="w-full"
-              />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

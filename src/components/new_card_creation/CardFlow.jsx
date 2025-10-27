@@ -10,11 +10,16 @@ import { cardServices } from "@/services/cardServices";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-export default function CardFlow({ employees, loadingEmployees }) {
+export default function CardFlow({
+  employees,
+  loadingEmployees,
+  setShowCardFlow,
+}) {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
   const { user, token } = useSelector((state) => state.auth);
+  const [shouldClose, setShouldClose] = useState(false);
 
   //console.log(employees);
   const [formData, setFormData] = useState({
@@ -77,14 +82,15 @@ export default function CardFlow({ employees, loadingEmployees }) {
       setApiError(error.message || "An unexpected error occurred");
     } finally {
       setIsLoading(false);
+      setShowCardFlow(false);
     }
   };
 
   return (
     <div className="max-h-[90vh] flex flex-col rounded-2xl ">
       {step < 5 && (
-        <div className="flex flex-col gap-0 px-4 py-4">
-          <h1 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6">
+        <div className="flex flex-col gap-0 px-4 py-4 bg-gray-50 rounded-2xl">
+          <h1 className="text-[color:var(--Foundation-Green-Normal,#035638)] text-2xl not-italic font-medium leading-6 ">
             Create New Card
           </h1>
           <p className="pageSubTitle mt-1">
@@ -135,7 +141,7 @@ export default function CardFlow({ employees, loadingEmployees }) {
           {step > 1 ? (
             <button
               onClick={prevStep}
-              className="px-6 py-[10px] text-sm cursor-pointer min-w-[120px] flex items-center gap-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
+              className="px-6 py-[10px] text-sm cursor-pointer min-w-[120px] flex items-center gap-2 text-green-900 border border-green-900 rounded-full "
             >
               <ChevronLeft size={14} />
               Previous
