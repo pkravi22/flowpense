@@ -58,7 +58,7 @@ export default function Sidebar({
                     onClick={() => setIsOpen(false)} // close mobile menu on click
                   >
                     {link.icon}
-                    <span className="font-sans">{link.name}</span>
+                    <span className="font-bagel">{link.name}</span>
                   </Link>
                 );
               })}
@@ -116,12 +116,15 @@ export default function Sidebar({
                 }`}
               >
                 {link.icon}
-                {!isCollapsed && <span className="font-sans">{link.name}</span>}
+                {!isCollapsed && (
+                  <span className="font-bagel">{link.name}</span>
+                )}
               </Link>
             );
           })}
         </nav>
       </div>
+      ;
     </>
   );
 }

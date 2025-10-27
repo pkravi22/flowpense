@@ -10,7 +10,9 @@
 
 }
 @theme {
-  --font-custom: "Host Grotesk"; /* Replaces default sans-serif stack */
+  --font-custom: "Host Grotesk";
+  --font-bagel: "Bagel Fat One", sans-serif;
+   /* Replaces default sans-serif stack */
 }
 
 @theme inline {
