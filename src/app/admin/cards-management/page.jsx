@@ -417,6 +417,7 @@ const Page = () => {
               token={token}
               employees={employeeSmallData}
               loadingEmployees={loadingEmployees}
+              fetchAllCards={fetchAllCards}
             />
           </div>
         </div>

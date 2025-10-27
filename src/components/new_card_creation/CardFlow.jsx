@@ -14,6 +14,7 @@ export default function CardFlow({
   employees,
   loadingEmployees,
   setShowCardFlow,
+  fetchAllCards,
 }) {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,12 +70,12 @@ export default function CardFlow({
       const result = await cardServices.createCard({ apiData, token });
       console.log("result", result);
 
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to create card");
+      if (result?.success) {
+        console.log("Card Created Successfully:", result);
+        toast.success("Card Created Successfully");
+        await fetchAllCards();
       }
 
-      console.log("Card Created Successfully:", result);
-      toast.success("Card Created Successfully");
       nextStep();
     } catch (error) {
       console.error("Error creating card:", error);

@@ -82,24 +82,33 @@ const handleAddFunds = async () => {
       amount: formData.amount,
       currency: formData.currency || "NGN",
     };
+
     const response = await bankServices.depositToBank({ payload, token });
-    console.log("deposit reponse", response.data);
-    setPaymentDetail(response.data);
-    if (response.data) {
-      toast.success(`${response.data.data.message}`);
+    console.log("Deposit response:", response.data);
+
+    // ✅ Check success
+    if (response.data?.success) {
+      // ✅ Show toast
+      toast.success(response.data.message || "Deposit successful");
+
+      // ✅ Set payment detail for modal
+      setPaymentDetail(response.data.pagaResponse);
+
+      // ✅ Close previous modals and open success modal
       setIsModalOpen(false);
       setAccountDetailModalOpen(false);
       setSucessModal(true);
-      setPaymentDetail(response.data.data);
-      fetchWalletLedger();
-      // isModalOpen(false);
+
+      // ✅ Refresh wallet ledger
+      await fetchWalletLedger();
+    } else {
+      toast.error(response.data?.message || "Deposit failed");
     }
   } catch (error) {
     console.error("Error adding funds:", error);
-    // toast.error("Something went wrong");
+    toast.error("Something went wrong while depositing to bank");
   } finally {
     setLoadingStates((prev) => ({ ...prev, payment: false }));
-    setAccountDetailModalOpen(false);
   }
 };
 
@@ -165,6 +174,7 @@ const createPaymentId = async () => {
     setIsModalOpen(false);
     setAccountDetailModalOpen(true);
   } catch (error) {
+    toast.error("Error creating payment ID", error);
     console.error("Error creating payment ID:", error);
     setErrorStates((prev) => ({ ...prev, payment: error.message }));
   } finally {
@@ -488,10 +498,10 @@ return (
 
           <div className="mb-4">
             <h2 className="text-[24px] text-[#035638]">
-              Fund Organization Wallet
+              Transfer money to Admin Bank
             </h2>
             <p className="text-[#838794] text-[16px]">
-              Add funds to wallet from your bank account
+              Transfer funds from wallet to admin bank account
             </p>
           </div>
 
@@ -563,8 +573,11 @@ return (
               <p className="text-md flex justify-between text-[#035638]">
                 Bank Name: <span>{accountDetail?.bankName}</span>
               </p>
+              <p className="text-md flex justify-between text-[#035638]">
+                Paga Charges: <span>₦43</span>
+              </p>
               <p className="text-[#838794] flex justify-between text-[16px]">
-                Account NUmber: <span>{accountDetail?.accountNumber}</span>
+                Account Number: <span>{accountDetail?.accountNumber}</span>
               </p>
             </div>
 
