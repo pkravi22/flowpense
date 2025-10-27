@@ -162,25 +162,44 @@ const getAllBanks = async () => {
 
 const createPaymentId = async () => {
   if (!user || !token) return;
+
   setLoadingStates((prev) => ({ ...prev, payment: true }));
-  setErrorStates((prev) => ({ ...prev, payment: null }));
 
   try {
-    const payload = { companyId: user.companyId, email: user.email };
-    console.log("payload for creating payment");
+    const payload = {
+      companyId: user.companyId,
+      email: user.email,
+      phone: user.phone || "",
+    };
+
     const response = await companyServices.createPayment({ payload, token });
-    console.log("account detail", response.data);
-    setAccountDetail(response.data);
-    setIsModalOpen(false);
-    setAccountDetailModalOpen(true);
+    const data = response?.data;
+    console.log("response", response);
+    if (data?.success) {
+      toast.success("Payment ID created successfully");
+      setAccountDetail(data.data);
+      setIsModalOpen(false);
+      setAccountDetailModalOpen(true);
+      return;
+    }
+
+    const errorMsg =
+      data?.error?.statusMessage || "Failed to create payment ID";
+    toast.error(errorMsg);
+    console.error("Payment Error:", data.error);
   } catch (error) {
-    toast.error("Error creating payment ID", error);
-    console.error("Error creating payment ID:", error);
-    setErrorStates((prev) => ({ ...prev, payment: error.message }));
+    const message =
+      error.response?.data?.error?.statusMessage ||
+      error.message ||
+      "Something went wrong";
+    toast.error(message);
+    console.error("Exception:", error);
   } finally {
     setLoadingStates((prev) => ({ ...prev, payment: false }));
   }
 };
+
+
 
 // const getUSerBankAccounts = async () => {
 //   if (!user || !token) return;

@@ -22,13 +22,18 @@ export const companyServices = {
   },
 
   createPayment: async ({ payload, token }) => {
-    console.log("payload", payload);
-    const { data } = await api.post("wallet/create/payment", payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return data;
+    console.log(payload, token);
+    try {
+      const response = await api.post("wallet/create/payment", payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+      throw error;
+    }
   },
   getCompanyInfo: async ({ id, token }) => {
     console.log(id);
