@@ -39,7 +39,7 @@ const RecentTransactions = ({ recentTransactions, onExport, loading }) => {
               ) : tx.txType === "credit" ? (
                 <ArrowDownRightIcon color="#21C45D" />
               ) : (
-                <ArrowRightLeft color="#EF4343" />
+                <ArrowUpRight color="#EF4343" />
               )}
             </div>
             <div className="flex-1">
