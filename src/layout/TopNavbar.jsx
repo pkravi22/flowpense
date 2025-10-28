@@ -1,13 +1,25 @@
 "use client";
 
 import { logout } from "@/redux/slices/authSlice";
-import { ArrowBigRight, Bell, LogOut, Menu, UserCircle, X } from "lucide-react";
+import { authService } from "@/services/authServices";
+import {
+  ArrowBigRight,
+  Bell,
+  LogOut,
+  Menu,
+  User2Icon,
+  UserCircle,
+  UserIcon,
+  Users2Icon,
+  X,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { email } from "zod";
 
 export default function Topbar({ setIsOpen }) {
   const [isClient, setIsClient] = useState(false);
+  const [detailedUser, setDetailedUser] = useState(null);
   const [token, setToken] = useState(null);
   const [userEmail, setUserEmail] = useState("");
   const [userModal, setUsermodal] = useState(false);
@@ -55,6 +67,20 @@ export default function Topbar({ setIsOpen }) {
     window.location.href = "/login";
   };
 
+  const getUserProfile = async () => {
+    try {
+      const response = await authService.getUserProfile({ token });
+      setDetailedUser(response.user);
+      console.log("User profile response:", response);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  };
+
+  useEffect(() => {
+    getUserProfile();
+  }, []);
+
   if (!isClient) return null;
 
   return (
@@ -82,7 +108,8 @@ export default function Topbar({ setIsOpen }) {
           <UserCircle size={32} className="text-gray-700" />
           <div className="text-gray-800 hidden sm:block">
             <p className="text-sm font-medium truncate max-w-[120px]">
-              {userEmail}
+              {detailedUser?.firstName + " " + detailedUser?.lastName ||
+                userEmail}
             </p>
             <p className="text-xs text-gray-500">{user?.role || "User"}</p>
           </div>
@@ -93,7 +120,7 @@ export default function Topbar({ setIsOpen }) {
       {userModal && (
         <div
           ref={modalRef}
-          className="absolute top-[70px] right-4 min-w-[200px] bg-white shadow-lg rounded-2xl  p-4 animate-fadeIn"
+          className="absolute top-[70px] right-4 min-w-[200px] bg-gray-100 shadow-lg rounded-2xl  p-4 animate-fadeIn"
         >
           {/* Close Button (for mobile view) */}
           <div className="flex justify-between items-center mb-3 sm:hidden">
@@ -107,11 +134,20 @@ export default function Topbar({ setIsOpen }) {
           </div>
 
           <div className="flex flex-col items-start gap-2">
-            <div className="w-full border-b pb-2">
+            <div className="w-full flex flex-col gap-1 border-b pb-2">
               <p className="text-sm font-semibold text-gray-800">
-                {user.email}
+                {detailedUser?.firstName + " " + detailedUser?.lastName ||
+                  userEmail}
               </p>
               <p className="text-xs text-gray-500">{user?.role || "User"}</p>
+
+              <div className="flex items-center justify-start gap-2 text-md font-semibold text-gray-800">
+                <UserIcon
+                  size={16}
+                  className="text-md font-semibold text-gray-800"
+                />
+                <span>Update Profile</span>
+              </div>
             </div>
 
             <button

@@ -22,6 +22,7 @@ import Example from "@/components/BarChart";
 import { fetchAllCards } from "@/redux/slices/cardSlice";
 import { fetchAllExpenses } from "@/redux/slices/expenseSlice";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 //import React, { useState } from "react";
 //import DateRangePicker from "@/components/DatePicker";
@@ -254,7 +255,9 @@ const Page = () => {
       id: 1,
       title: "Total Spent",
       value: `₦${totalSpent.toLocaleString()}`,
-      icon: <BoxSelect />,
+      icon: (
+        <Image src="/document-text1.svg" alt="Cards" width={20} height={20} />
+      ),
       iconBg: "#E5EE7D",
       iconColor: "#035638",
       sub: "10% increase from last month",
@@ -263,7 +266,7 @@ const Page = () => {
       id: 2,
       title: "Total Cards",
       value: totalCards.toString(),
-      icon: <CreditCard />,
+      icon: <Image src="/statcard.svg" alt="Cards" width={40} height={40} />,
       iconBg: "#FFD6D6",
       iconColor: "#B91C1C",
       sub: "15% increase from last month",
@@ -272,7 +275,9 @@ const Page = () => {
       id: 3,
       title: "Team Members",
       value: totalUsers.toString(),
-      icon: <Users />,
+      icon: (
+        <Image src="/profile2user.svg" alt="Cards" width={20} height={20} />
+      ),
       iconBg: "#E0E7FF",
       iconColor: "#1E40AF",
       sub: "New members added this month",
@@ -281,7 +286,7 @@ const Page = () => {
       id: 4,
       title: "Wallet Balance",
       value: `₦${walletBalance.toLocaleString()}`,
-      icon: <Wallet />,
+      icon: <Image src="/statcard.svg" alt="Cards" width={40} height={40} />,
       iconBg: "#D1FAE5",
       iconColor: "#065F46",
       sub: "Current wallet balance",
@@ -290,26 +295,26 @@ const Page = () => {
 
   return (
     <div className="p-0 md:p-4 overflow-visible bg-gray-100">
-      <div className="flex flex-col  items-center justify-between">
+      <div className=" relative flex flex-col  items-center justify-between">
         {!verified && (
-          <div className="border-l-4 bg-[#035638] rounded-xl flex flex-col md:flex-row gap-2 w-full justify-between items-center p-4 mb-4">
-            <div className="flex flex-col gap-2">
-              <p className="text-[16px] text-[#E5EE7D]">
+          <div className=" bg-[#035638] rounded-xl flex flex-row gap-2 w-full justify-between items-center px-2 py-2 sm:p-4 mb-4">
+            <div className="flex flex-col gap-1 sm:gap-2">
+              <p className=" text-[12px] sm:text-[20px] text-[#E5EE7D]">
                 Verify Your Business to Unlock Full Access
               </p>
-              <p className="text-[12px] text-white">
+              <p className="text-[10px] sm:text-[14px] text-white">
                 Verify your business to unlock all Funkash Flow features with
                 secure, fast approval.
               </p>
             </div>
             <button
               onClick={handleVerifyClick}
-              className="flex md:w-[150px] items-center gap-2 rounded-2xl px-4 py-1 cursor-pointer hover:text-white transition duration-300 ease-in-out"
+              className="flex w-[150px] md:w-[200px]  bg-white items-center pl-2 py-2  gap-1 sm:gap-2 rounded-md  sm:px-4 sm:py-2 cursor-pointer hover:text-white transition duration-300 ease-in-out"
             >
-              <span className="p-2 text-green-400 text-[12px] w-full flex items-center justify-center bg-white rounded-2xl">
-                Verify Now
-                <ArrowRight size={12} />
+              <span className=" text-[#035638] text-[10px]  sm:text-[16px]  flex items-center justify-center ">
+                Verify Account
               </span>
+              <ArrowRight size={14} color="#035638" />
             </button>
           </div>
         )}
@@ -326,18 +331,18 @@ const Page = () => {
             </div>
           </div>
         )}
-        <div className="w-full flex flex-col md:flex-row  items-start md:items-center   md:justify-between gap-4">
+        <div className="   w-full flex flex-col md:flex-row  items-start md:items-center   md:justify-between gap-4">
           <div>
             <h1 className="pageTitle bagel-fat-one ">Dashboard</h1>
             <p className="pageSubTitle mt-2 font-custom">
               Monitor your business expenses and card usage
             </p>
           </div>
-          <div>
+          <div className="">
             {/* Date selection area */}
-            {/* <div className="">
+            <div className="">
               <DateRangePicker />
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
@@ -352,7 +357,7 @@ const Page = () => {
             >
               <div className="flex items-center  gap-4 w-full">
                 <div className="flex items-center gap-4">
-                  <div className="rounded-full flex items-center justify-center">
+                  <div className="rounded-full flex items-center justify-center bg-[#F7FAD7] p-1 rounded-md">
                     {React.cloneElement(icon, { color: iconColor, size: 24 })}
                   </div>
                   <div className="flex flex-col justify-between h-full">
@@ -457,10 +462,9 @@ const Page = () => {
         </div>
         {/* Cards */}
         <div className="">
-          {/* Desktop: grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 py-4 ">
-            {allCards?.cards?.length > 0 ? (
-              allCards.cards.map((card, index) => {
+          {allCards?.cards?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 py-4">
+              {allCards.cards.map((card, index) => {
                 const color = cardColors[index % cardColors.length]; // cycle through colors
                 return (
                   <Card
@@ -472,13 +476,19 @@ const Page = () => {
                     setActiveDropdown={setActiveDropdown}
                   />
                 );
-              })
-            ) : (
-              <p className="text-gray-500  w-full">
-                No active cards available.
-              </p>
-            )}
-          </div>
+              })}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+              <Image
+                src="/not.png"
+                width={40}
+                height={40}
+                alt="not_available_data"
+              />
+              <p className="text-lg font-medium">No cards available</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

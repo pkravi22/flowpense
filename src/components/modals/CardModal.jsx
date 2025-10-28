@@ -8,7 +8,33 @@ import {
   CheckCircle,
   Clock,
   XCircle,
+  CircleCheckBig,
 } from "lucide-react";
+import CardSettings from "../cardComponents/CardSettings";
+
+const approvalsRequest = [
+  {
+    CardName: "Alpha",
+    Requester: "Pramendra Singh",
+    date: "2025-10-26T08:30:00.000Z",
+    amount: 1500,
+    Limit: 5000,
+  },
+  {
+    CardName: "Beta",
+    Requester: "Rohan Sharma",
+    date: "2025-10-25T14:20:00.000Z",
+    amount: 2000,
+    Limit: 7000,
+  },
+  {
+    CardName: "Gamma",
+    Requester: "Anita Verma",
+    date: "2025-10-24T11:10:00.000Z",
+    amount: 1200,
+    Limit: 3000,
+  },
+];
 
 const CardModal = ({ card, onClose, transactions }) => {
   const [activeTab, setActiveTab] = useState("transactions");
@@ -24,31 +50,6 @@ const CardModal = ({ card, onClose, transactions }) => {
   };
 
   if (!card) return null;
-
-  // Example hardcoded transactions
-  const hardCodedtransaction = [
-    {
-      date: "Apr 12, 2024",
-      merchant: "Jumia Food",
-      category: "Food & Dining",
-      amount: "₹1,825",
-      status: "Approved",
-    },
-    {
-      date: "Apr 10, 2024",
-      merchant: "Amazon",
-      category: "Shopping",
-      amount: "₹3,200",
-      status: "Pending",
-    },
-    {
-      date: "Apr 08, 2024",
-      merchant: "Swiggy",
-      category: "Food & Dining",
-      amount: "₹1,250",
-      status: "Failed",
-    },
-  ];
 
   return (
     <div className="fixed inset-0 flex z-50">
@@ -119,12 +120,12 @@ const CardModal = ({ card, onClose, transactions }) => {
             </div>
             <div className="flex justify-between">
               <div>
-                <p className="font-medium text-gray-300">Team Lead</p>
+                <p className="font-medium text-gray-500">Team Lead</p>
                 <p className="text-md text-gray-800">{card?.Approver[0]}</p>
               </div>
 
               <div className="">
-                <p className="font-semibold text-gray-300">Balance</p>
+                <p className="font-semibold text-gray-500">Balance</p>
                 <p className="text-lg font-bold text-green-700">
                   {card?.CardFunding}
                 </p>
@@ -140,7 +141,7 @@ const CardModal = ({ card, onClose, transactions }) => {
                 ></div>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                ₹15,000 / ₹{card?.MonthlyLimit}
+                ₹15,000 / {card?.MonthlyLimit}
               </p>
             </div>
           </div>
@@ -229,16 +230,56 @@ const CardModal = ({ card, onClose, transactions }) => {
         )}
 
         {activeTab === "approvals" && (
-          <div className="text-center py-6 text-gray-500">
-            <p>No approvals available</p>
+          <div className="py-6">
+            <div className="text-lg">Pending Approvals (hardcoded)</div>
+            {approvalsRequest && approvalsRequest.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 ">
+                {approvalsRequest.map((req, index) => (
+                  <React.Fragment key={index}>
+                    <div className=" p-3 rounded   ">
+                      <p className="text-sm text-gray-900"> {req.Requester}</p>
+                      <p className="font-normal text-gray-400">
+                        {" "}
+                        {req.CardName}
+                      </p>
+
+                      <p className="text-sm text-gray-400">
+                        Date: {new Date(req.date).toLocaleDateString()}
+                      </p>
+                    </div>
+
+                    <div className=" p-3 rounded  ">
+                      <p className="font-normal text-gray-400 flex flex-col">
+                        Amount:
+                      </p>
+                      <p className="font-medium text-gray-900">{req.amount}</p>
+                    </div>
+
+                    <div className="flex items-center justify-center">
+                      <button className=" flex justify-center items-center gap-2 w-full bg-blue-600 text-white py-2 rounded-lg ">
+                        <CircleCheckBig size={16} />
+                        Approve
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-center">
+                      <button className=" flex justify-center items-center gap-2 w-full text-red-600 border border-gray-200 py-2 rounded-lg">
+                        <CircleCheckBig size={16} />
+                        Reject
+                      </button>
+                    </div>
+                  </React.Fragment>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center text-gray-500 py-6">
+                No approvals available
+              </div>
+            )}
           </div>
         )}
 
-        {activeTab === "settings" && (
-          <div className="text-center py-6 text-gray-500">
-            <p>Settings and limits configuration will appear here.</p>
-          </div>
-        )}
+        {activeTab === "settings" && <CardSettings card={card} />}
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 import {
   BarChart,
@@ -28,14 +29,23 @@ const CurvedBar = (props) => {
 
 // Helper to get month name
 const monthNames = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 export default function ExpenseBarChart({ allExpenses }) {
-  const approvedExpenses = allExpenses?.expenses?.filter(
-    (exp) => exp.status === "Approved"
-  ) || [];
+  const approvedExpenses =
+    allExpenses?.expenses?.filter((exp) => exp.status === "Approved") || [];
 
   // Aggregate total amounts per month
   const monthlyTotals = {};
@@ -49,7 +59,7 @@ export default function ExpenseBarChart({ allExpenses }) {
   // Transform into chart-friendly array
   const data = monthNames.map((month) => ({
     name: month,
-    uv: monthlyTotals[month] || 0
+    uv: monthlyTotals[month] || 0,
   }));
 
   // Check if there is any approved data
@@ -57,8 +67,10 @@ export default function ExpenseBarChart({ allExpenses }) {
 
   if (!hasData) {
     return (
-      <div className="flex justify-center items-center h-64 text-gray-500 font-medium">
-        No Data Available
+      <div className="flex flex-col justify-center items-center h-64 text-gray-500 font-medium">
+        <Image src="/not.png" width={40} height={40} alt="not_available_data" />
+
+        <p>No Data Available</p>
       </div>
     );
   }

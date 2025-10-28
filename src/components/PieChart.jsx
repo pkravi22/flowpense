@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 
@@ -54,7 +55,9 @@ export default function Piechart({ allExpenses }) {
   if (!data.length) {
     return (
       <div className="flex flex-col items-center justify-center h-[250px] w-full text-gray-500 font-medium">
-        No Data Available
+        <Image src="/not.png" width={40} height={40} alt="not_available_data" />
+
+        <p>No Data Available</p>
       </div>
     );
   }

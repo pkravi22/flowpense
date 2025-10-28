@@ -72,6 +72,15 @@ export const authService = {
     const { data } = await api.post("api/auth/update/userprofile", payload);
     return data;
   },
+
+  getUserProfile: async ({ token }) => {
+    const { data } = await api.get("api/auth/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  },
   verifyOtpAfterLogin: async ({ otpCode, token }) => {
     console.log(otpCode, token);
     const { data } = await api.post(

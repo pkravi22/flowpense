@@ -12,36 +12,36 @@ export const sidebarLinks = [
   {
     name: "Dashboard",
     path: "/admin/dashboard",
-    icon: <Home className="w-5 h-5" />,
+    icon: <Image src="/category.svg" alt="Cards" width={20} height={20} />,
   },
   {
     name: "Cards",
     path: "/admin/cards-management",
-    icon: <CreditCard className="w-5 h-5" />,
+    icon: <Image src="/cards.svg" alt="Cards" width={20} height={20} />,
   },
   {
     name: "Expenses",
     path: "/admin/expenses",
-    icon: <Image src="/spending.png" alt="Cards" width={20} height={20} />,
+    icon: <Image src="/document-text.svg" alt="Cards" width={20} height={20} />,
   },
   {
     name: "Wallet",
     path: "/admin/wallet",
-    icon: <Wallet className="w-5 h-5" />,
+    icon: <Image src="/wallet-minus.svg" alt="Cards" width={20} height={20} />,
   },
   {
     name: "Approvals",
     path: "/admin/approvals",
-    icon: <CheckCircle className="w-5 h-5" />,
+    icon: <Image src="/direct-inbox.svg" alt="Cards" width={20} height={20} />,
   },
   {
     name: "Team Members",
     path: "/admin/team-members",
-    icon: <Users className="w-5 h-5" />,
+    icon: <Image src="/profile-2user.svg" alt="Cards" width={20} height={20} />,
   },
   {
     name: "Settings",
     path: "/admin/settings",
-    icon: <Settings className="w-5 h-5" />,
+    icon: <Image src="/setting-2.svg" alt="Cards" width={20} height={20} />,
   },
 ];
