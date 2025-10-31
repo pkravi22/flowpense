@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import TransactionTable from "../../../components/UserTable";
 import { fetchAllExpenses } from "@/redux/slices/expenseSlice";
+import Image from "next/image";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const Page = () => {
   const { allExpenses } = useSelector((state) => state.expenses) || {};
   const { company } = useSelector((state) => state.company);
   const [expenseData, setExpenseData] = useState([]);
-  
+
   // Fetch expenses
   useEffect(() => {
     const token =
@@ -66,7 +67,7 @@ const Page = () => {
       id: 1,
       title: "Total Expenses",
       value: `₦${totalExpenses.toLocaleString()}`,
-      icon: <Wallet />,
+      icon: <Image src="/statcard.svg" alt="Cards" width={40} height={40} />,
       iconColor: "#065F46",
       sub: "Overall total spent",
     },
@@ -74,7 +75,9 @@ const Page = () => {
       id: 2,
       title: "Approved Expenses",
       value: `₦${approvedExpenses.toLocaleString()}`,
-      icon: <CreditCard />,
+      icon: (
+        <Image src="/document-text1.svg" alt="Cards" width={20} height={20} />
+      ),
       iconColor: "#B91C1C",
       sub: "Approved transactions",
     },
@@ -82,14 +85,16 @@ const Page = () => {
       id: 3,
       title: "Pending Expenses",
       value: `₦${pendingExpenses.toLocaleString()}`,
-      icon: <Users />,
+      icon: (
+        <Image src="/document-text1.svg" alt="Cards" width={20} height={20} />
+      ),
       iconColor: "#1E40AF",
       sub: "Awaiting approval",
     },
   ];
 
   return (
-    <div className="p-0 md:p-4 overflow-visible bg-gray-100">
+    <div className="p-1 md:p-4 overflow-visible bg-gray-100 rounded-2xl">
       <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Expenses</h1>

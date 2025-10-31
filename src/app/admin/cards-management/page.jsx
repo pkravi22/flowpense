@@ -18,6 +18,7 @@ import { cardServices } from "@/services/cardServices";
 import { useSelector } from "react-redux";
 import { teamServices } from "@/services/teamServices";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 const cardColors = [
   { bgColor: "#4e4f2eff", textColor: "white" },
@@ -146,7 +147,7 @@ const Page = () => {
       id: 1,
       title: "Total cards created",
       value: totalCardsCreated.toString(),
-      icon: <BoxSelect />,
+      icon: <Image src="/statcard.svg" alt="Cards" width={40} height={40} />,
       iconColor: "#035638",
       sub: "Total cards in the system",
     },
@@ -154,7 +155,14 @@ const Page = () => {
       id: 2,
       title: "Active Cards",
       value: activeCardsCount.toString(),
-      icon: <CreditCard />,
+      icon: (
+        <Image
+          src="/Frame 2087325500-2.svg"
+          alt="Cards"
+          width={40}
+          height={40}
+        />
+      ),
       iconColor: "#B91C1C",
       sub: "Currently active cards",
     },
@@ -162,7 +170,14 @@ const Page = () => {
       id: 3,
       title: "Frozen Cards",
       value: frozenCardsCount.toString(),
-      icon: <Users />,
+      icon: (
+        <Image
+          src="/Frame 2087325500-2.svg"
+          alt="Cards"
+          width={40}
+          height={40}
+        />
+      ),
       iconColor: "#1E40AF",
       sub: "Cards blocked or inactive",
     },
@@ -170,7 +185,14 @@ const Page = () => {
       id: 4,
       title: "Wallet Balance",
       value: `₦${walletBalance.toLocaleString()}`,
-      icon: <Wallet />,
+      icon: (
+        <Image
+          src="/Frame 2087325500-3.svg"
+          alt="Cards"
+          width={40}
+          height={40}
+        />
+      ),
       iconColor: "#065F46",
       sub: "Sum of all card funding",
     },
@@ -263,7 +285,7 @@ const Page = () => {
   });
 
   return (
-    <div className="p-0 md:p-4 overflow-visible bg-gray-100">
+    <div className="p-1 md:p-4 overflow-visible bg-gray-100 rounded-2xl">
       <div className="w-full  flex flex-col md:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="pageTitle">Card Management</h1>

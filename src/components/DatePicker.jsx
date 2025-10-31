@@ -11,7 +11,7 @@ export default function DateRangePicker() {
   );
 
   return (
-    <div className="p-4 flex gap-2 items-center ">
+    <div className="px-4 py-2 flex gap-2 items-center bg-white rounded-xl shadow-md">
       <span>Compare to: </span>
       <DatePicker
         selectsRange={true}
@@ -23,7 +23,7 @@ export default function DateRangePicker() {
         }}
         isClearable={true}
         dateFormat="d MMM yyyy" // 👈 shows like "1 Jan 2025"
-        className="border pl-2 pr-6 py-1 rounded-3xl"
+        className=" pl-2 pr-6 py-1 rounded-3xl"
       />
     </div>
   );

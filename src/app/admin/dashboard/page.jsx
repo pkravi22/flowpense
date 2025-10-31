@@ -294,7 +294,7 @@ const Page = () => {
   ];
 
   return (
-    <div className="p-0 md:p-4 overflow-visible bg-gray-100">
+    <div className="p-1 md:p-4 overflow-visible bg-gray-100 rounded-2xl">
       <div className=" relative flex flex-col  items-center justify-between">
         {!verified && (
           <div className=" bg-[#035638] rounded-xl flex flex-row gap-2 w-full justify-between items-center px-2 py-2 sm:p-4 mb-4">
@@ -377,7 +377,7 @@ const Page = () => {
         <div className="flex flex-col flex-3 gap-6 bg-white shadow-md p-4  md:min-h-[400px] rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             {/* Header */}
-            <div className="flex flex-col gap-2 shadow-md rounded-2xl p-1  ">
+            <div className="flex flex-col gap-1 shadow-md rounded-2xl p-2  ">
               <p className="statcardTitle">Totoal Revenue</p>
               <p className="statcardNumber mt-2">$ 0</p>
               {/* <p className="text-red-500">-52% Decline in Revenue</p> */}

@@ -63,7 +63,7 @@ const Page = () => {
     ) || [];
 
   return (
-    <div>
+    <div className="p-1 md:p-4 overflow-visible bg-gray-100 rounded-2xl">
       {/* Header */}
       <div className="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>

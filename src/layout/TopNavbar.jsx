@@ -13,6 +13,7 @@ import {
   Users2Icon,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { email } from "zod";
@@ -97,8 +98,13 @@ export default function Topbar({ setIsOpen }) {
 
       {/* Right side icons */}
       <div className="flex items-center gap-1 flex-shrink-0">
-        <button className="p-2 rounded-full hover:bg-gray-100">
-          <Bell className="w-6 h-6 text-gray-700" />
+        <button className="p-2 rounded-full bg-gray-100">
+          <Image
+            width={30}
+            height={30}
+            src="/notification-bing.svg"
+            className="w-6 h-6 text-gray-700 bg-gray-100 rounded-full"
+          />
         </button>
 
         <div
