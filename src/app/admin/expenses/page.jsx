@@ -67,7 +67,7 @@ const Page = () => {
       id: 1,
       title: "Total Expenses",
       value: `₦${totalExpenses.toLocaleString()}`,
-      icon: <Image src="/statcard.svg" alt="Cards" width={40} height={40} />,
+      icon: <Image src="/cards.svg" alt="Cards" width={20} height={20} />,
       iconColor: "#065F46",
       sub: "Overall total spent",
     },
@@ -112,7 +112,7 @@ const Page = () => {
           >
             <div className="flex items-center">
               <div className="flex items-center gap-4 w-full">
-                <div className="rounded-full flex items-center justify-center">
+                <div className=" flex items-center justify-center bg-yellow-50 p-1 rounded-md">
                   {React.cloneElement(icon, { color: iconColor, size: 24 })}
                 </div>
                 <div className="flex flex-col justify-between h-full">

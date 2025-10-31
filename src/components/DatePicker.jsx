@@ -22,7 +22,7 @@ export default function DateRangePicker() {
           setEndDate(update[1]);
         }}
         isClearable={true}
-        dateFormat="d MMM yyyy" // 👈 shows like "1 Jan 2025"
+        dateFormat="d MMM yyyy"
         className=" pl-2 pr-6 py-1 rounded-3xl"
       />
     </div>

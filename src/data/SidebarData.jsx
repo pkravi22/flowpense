@@ -17,7 +17,7 @@ export const sidebarLinks = [
   {
     name: "Cards",
     path: "/admin/cards-management",
-    icon: <Image src="/cards.svg" alt="Cards" width={20} height={20} />,
+    icon: <Image src="/cardss.svg" alt="Cards" width={20} height={20} />,
   },
   {
     name: "Expenses",

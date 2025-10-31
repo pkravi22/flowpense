@@ -290,7 +290,7 @@ const Page = () => {
       id: 1,
       title: "Total Balance",
       value: `₦${totalBalance.toLocaleString()}`,
-      icon: <Image src="/statcard.svg" alt="Cards" width={40} height={40} />,
+      icon: <Image src="/cards.svg" alt="Cards" width={20} height={20} />,
       iconBg: "#dae7c3ff",
       iconColor: "#035638",
       sub: "Available + Allocated Funds",
@@ -459,11 +459,11 @@ const Page = () => {
                       <div className="h-3 bg-gray-200 rounded w-full mt-2"></div>
                     </div>
                   ) : (
-                    <>
+                    <div className="flex flex-col items-start gap-2">
                       <div className="flex items-center">
                         <div className="flex items-center  gap-4 w-full">
                           <div
-                            className="rounded-full flex items-center  p-2"
+                            className="rounded-md flex items-center  p-1"
                             style={{ backgroundColor: iconBg }}
                           >
                             {React.cloneElement(icon, {
@@ -478,7 +478,7 @@ const Page = () => {
                       </div>
                       <p className="statcardNumber">{value}</p>
                       <p className="statcardSubTitle">{sub}</p>
-                    </>
+                    </div>
                   )}
                 </div>
               )

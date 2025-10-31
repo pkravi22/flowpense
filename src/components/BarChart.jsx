@@ -43,10 +43,10 @@ const monthNames = [
   "Dec",
 ];
 
-export default function ExpenseBarChart({ allExpenses }) {
+export default function ExpenseBarChart({ allExpenses, selectedMonth }) {
   const approvedExpenses =
     allExpenses?.expenses?.filter((exp) => exp.status === "Approved") || [];
-
+  console.log("bar chart", approvedExpenses);
   // Aggregate total amounts per month
   const monthlyTotals = {};
   approvedExpenses.forEach((exp) => {

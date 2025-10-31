@@ -102,6 +102,7 @@ export default function Topbar({ setIsOpen }) {
           <Image
             width={30}
             height={30}
+            alt="notification_bell"
             src="/notification-bing.svg"
             className="w-6 h-6 text-gray-700 bg-gray-100 rounded-full"
           />

@@ -150,11 +150,15 @@ const settings = {
   ],
 };
 const Page = () => {
-  const [verified, setVerified] = useState(false);
+  const [verified, setVerified] = useState(true);
   const [showVerification, setShowVerification] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [companyData, setCompanyData] = useState(null);
   const router = useRouter();
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [selectedBarChartMonth, setSelectedBarChartMonth] = useState(
+    new Date().getMonth()
+  );
   const { user, token } = useSelector((state) => state.auth);
 
   console.log("token from store", user);
@@ -221,6 +225,7 @@ const Page = () => {
       if (data.success && data.company) {
         setCompanyData(data.company);
         const isVerified = data.company.kycStatus !== "pending";
+        console.log("verification status", isVerified);
         setVerified(isVerified);
 
         // localStorage.setItem("companyData", JSON.stringify(data.company));
@@ -238,6 +243,16 @@ const Page = () => {
 
   console.log("all cards", allCards.cards);
   console.log("all expenses", allExpenses.expenses);
+  // const getMonthlyExpenses = () => {
+  //   if (!allExpenses?.expenses) return [];
+
+  //   return allExpenses.expenses.filter((expense) => {
+  //     const expenseDate = new Date(
+  //       expense.Date || expense.date || expense.createdAt
+  //     );
+  //     return expenseDate.getMonth() === selectedMonth;
+  //   });
+  // };
 
   console.log(companyData?.users?.length);
   const totalSpent =
@@ -266,7 +281,7 @@ const Page = () => {
       id: 2,
       title: "Total Cards",
       value: totalCards.toString(),
-      icon: <Image src="/statcard.svg" alt="Cards" width={40} height={40} />,
+      icon: <Image src="/cards.svg" alt="Cards" width={20} height={20} />,
       iconBg: "#FFD6D6",
       iconColor: "#B91C1C",
       sub: "15% increase from last month",
@@ -286,7 +301,7 @@ const Page = () => {
       id: 4,
       title: "Wallet Balance",
       value: `₦${walletBalance.toLocaleString()}`,
-      icon: <Image src="/statcard.svg" alt="Cards" width={40} height={40} />,
+      icon: <Image src="/cards.svg" alt="Cards" width={20} height={20} />,
       iconBg: "#D1FAE5",
       iconColor: "#065F46",
       sub: "Current wallet balance",
@@ -357,7 +372,7 @@ const Page = () => {
             >
               <div className="flex items-center  gap-4 w-full">
                 <div className="flex items-center gap-4">
-                  <div className="rounded-full flex items-center justify-center bg-[#F7FAD7] p-1 rounded-md">
+                  <div className=" flex items-center justify-center bg-[#F7FAD7] p-1 rounded-md">
                     {React.cloneElement(icon, { color: iconColor, size: 24 })}
                   </div>
                   <div className="flex flex-col justify-between h-full">
@@ -374,13 +389,14 @@ const Page = () => {
       {/*  charts */}
       <div className="flex flex-col  md:flex-row gap-6 mt-6   rounded-2xl ">
         {/*  Bar charts */}
-        <div className="flex flex-col flex-3 gap-6 bg-white shadow-md p-4  md:min-h-[400px] rounded-2xl">
+        <div className="flex flex-col flex-3 gap-6 bg-white shadow-md p-4 md:min-h-[400px] rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             {/* Header */}
-            <div className="flex flex-col gap-1 shadow-md rounded-2xl p-2  ">
-              <p className="statcardTitle">Totoal Revenue</p>
-              <p className="statcardNumber mt-2">$ 0</p>
-              {/* <p className="text-red-500">-52% Decline in Revenue</p> */}
+            <div className="flex flex-col gap-1 shadow-md rounded-2xl p-2">
+              <p className="statcardTitle">Total Spent</p>
+              <p className="statcardNumber mt-2">
+                ₦{totalSpent.toLocaleString()}
+              </p>
             </div>
             <div className="flex flex-col md:flex-row gap-4 items-center">
               <div>
@@ -389,20 +405,38 @@ const Page = () => {
                   Expenses
                 </div>
               </div>
-              {/* <div>
-                <div className="border border-gray-400 flex gap-4 items-center rounded-2xl px-2 py-1 ">
-                  <p>This Month </p>
-                  <span>
-                    <ChevronDown />
-                  </span>
-                </div>
-              </div> */}
+              {/* Month Selection for BarChart */}
+              <div>
+                <select
+                  value={selectedBarChartMonth}
+                  onChange={(e) =>
+                    setSelectedBarChartMonth(parseInt(e.target.value))
+                  }
+                  className="border rounded-md px-2 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value={0}>January</option>
+                  <option value={1}>February</option>
+                  <option value={2}>March</option>
+                  <option value={3}>April</option>
+                  <option value={4}>May</option>
+                  <option value={5}>June</option>
+                  <option value={6}>July</option>
+                  <option value={7}>August</option>
+                  <option value={8}>September</option>
+                  <option value={9}>October</option>
+                  <option value={10}>November</option>
+                  <option value={11}>December</option>
+                </select>
+              </div>
             </div>
           </div>
-          <div className="w-full h-full min-w-[300px] min-h-[300px] ">
+          <div className="w-full h-full min-w-[300px] min-h-[300px]">
             {/* Chart area */}
-            <div className="w-full h-[250px] ">
-              <Example allExpenses={allExpenses} />
+            <div className="w-full h-[250px]">
+              <Example
+                allExpenses={allExpenses}
+                selectedMonth={selectedBarChartMonth}
+              />
             </div>
           </div>
         </div>
@@ -412,30 +446,31 @@ const Page = () => {
             <p className="font-semibold text-gray-800">Spend Category</p>
             <p>
               <select
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
                 className="border rounded-md px-2 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                defaultValue="September"
               >
-                <option>January</option>
-                <option>February</option>
-                <option>March</option>
-                <option>April</option>
-                <option>May</option>
-                <option>June</option>
-                <option>July</option>
-                <option>August</option>
-                <option>September</option>
-                <option>October</option>
-                <option>November</option>
-                <option>December</option>
+                <option value={0}>January</option>
+                <option value={1}>February</option>
+                <option value={2}>March</option>
+                <option value={3}>April</option>
+                <option value={4}>May</option>
+                <option value={5}>June</option>
+                <option value={6}>July</option>
+                <option value={7}>August</option>
+                <option value={8}>September</option>
+                <option value={9}>October</option>
+                <option value={10}>November</option>
+                <option value={11}>December</option>
               </select>
             </p>
           </div>
 
           <div className="flex justify-center">
-            <Piechart allExpenses={allExpenses} />
+            <Piechart allExpenses={allExpenses} selectedMonth={selectedMonth} />
           </div>
           <div className="w-full px-6 my-2">
-            <button className="text-text-primary  cursor-pointer flex items-center justify-center gap-2  rounded w-full py-2 text-center border border-borderColor">
+            <button className="text-text-primary cursor-pointer flex items-center justify-center gap-2 rounded w-full py-2 text-center border border-borderColor">
               View Details
               <span>
                 <ArrowRight size={18} />

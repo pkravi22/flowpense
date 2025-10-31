@@ -35,7 +35,7 @@ const AddMemberModal = ({
         {/* Close button */}
         <button
           onClick={() => setAddMemberModal(false)}
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+          className="absolute top-3 right-3 text-gray-500 bg-gray-200 rounded-full p-1 hover:text-gray-700"
         >
           <X size={20} />
         </button>
@@ -65,7 +65,7 @@ const AddMemberModal = ({
               <select
                 value={selectedEmployeeId}
                 onChange={(e) => setSelectedEmployeeId(e.target.value)}
-                className="block w-full max-w-full border border-[#E2E4E9] p-2 rounded-md outline-none text-sm truncate"
+                className="block w-[200px] max-w-full border border-[#E2E4E9] p-2 rounded-md outline-none text-sm truncate"
               >
                 <option value="">Select Employee</option>
                 {registeredEmployees.map((emp) => (
