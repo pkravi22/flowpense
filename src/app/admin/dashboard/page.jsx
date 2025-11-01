@@ -318,7 +318,7 @@ const Page = () => {
                 Verify Your Business to Unlock Full Access
               </p>
               <p className="text-[10px] sm:text-[14px] text-white">
-                Verify your business to unlock all Funkash Flow features with
+                Verify your business to unlock all Flowpense features with
                 secure, fast approval.
               </p>
             </div>
@@ -432,7 +432,7 @@ const Page = () => {
           </div>
           <div className="w-full h-full min-w-[300px] min-h-[300px]">
             {/* Chart area */}
-            <div className="w-full h-[250px]">
+            <div className="w-full h-[250px] overflow-x-auto">
               <Example
                 allExpenses={allExpenses}
                 selectedMonth={selectedBarChartMonth}

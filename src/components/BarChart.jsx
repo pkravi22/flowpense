@@ -76,7 +76,7 @@ export default function ExpenseBarChart({ allExpenses, selectedMonth }) {
   }
 
   return (
-    <div className="relative w-full h-64">
+    <div className="relative overflow-x-auto w-full h-64">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
