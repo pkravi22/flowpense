@@ -74,6 +74,7 @@ export const authService = {
   },
 
   getUserProfile: async ({ token }) => {
+    console.log("token for profile", token);
     const { data } = await api.get("api/auth/profile", {
       headers: {
         Authorization: `Bearer ${token}`,
